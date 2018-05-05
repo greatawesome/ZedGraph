@@ -675,6 +675,8 @@ namespace ZedGraph
 			set { _secondaryValueGradientColor = value; }
 		}
 
+    public float Angle { get { return _angle; } }
+
 		/// <summary>
 		/// The custom fill brush.  This can be a <see cref="SolidBrush"/>, a
 		/// <see cref="LinearGradientBrush"/>, or a <see cref="TextureBrush"/>.  This property is

@@ -3,5 +3,8 @@ obj/
 *.suo
 *.user
 
+lut/
+.vs/
+
 **/packages/*
 !**/packages/build/

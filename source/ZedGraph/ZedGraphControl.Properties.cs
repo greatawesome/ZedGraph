@@ -256,11 +256,12 @@ namespace ZedGraph
 		/// append a <see cref="CurveItem" /> to the selection list.
 		/// </summary>
 		[Bindable( true ), Category( "Display" ), NotifyParentProperty( true ),
-		 DefaultValue( Keys.Shift | Keys.Alt ),
+		 DefaultValue( Keys.Shift ),
 		 Description( "Specify modifier key for append curve selection" )]
 		public Keys SelectAppendModifierKeys
 		{
 			get { return _selectAppendModifierKeys; }
+      set { _selectAppendModifierKeys = value; }
 		}
 
 		/// <summary>

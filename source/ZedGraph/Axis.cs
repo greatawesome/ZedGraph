@@ -198,7 +198,7 @@ namespace ZedGraph
 			/// font specification <see cref="FontSpec"/>
 			/// (<see cref="FontSpec.Family"/> property).
 			/// </summary>
-			public static string TitleFontFamily = "Arial";
+			public static string TitleFontFamily = System.Windows.Forms.Control.DefaultFont.FontFamily.Name;
 			/// <summary>
 			/// The default font size for the <see cref="Axis"/> <see cref="Title" /> text
 			/// font specification <see cref="FontSpec"/>

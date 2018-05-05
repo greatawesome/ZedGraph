@@ -154,7 +154,7 @@ namespace ZedGraph
 			/// The default font family for the title
 			/// (<see cref="PaneBase.Title"/> property).
 			/// </summary>
-			public static string FontFamily = "Arial";
+      public static string FontFamily = System.Windows.Forms.Control.DefaultFont.FontFamily.Name;
 			/// <summary>
 			/// The default font size (points) for the
 			/// <see cref="PaneBase.Title"/> (<see cref="ZedGraph.FontSpec.Size"/> property).
@@ -768,7 +768,7 @@ namespace ZedGraph
 		{
 			float scaleFactor; //, xInch, yInch;
 			const float ASPECTLIMIT = 1.5F;
-			
+
 			// if font scaling is turned off, then always return a 1.0 scale factor
 			if ( !_isFontsScaled )
 				return 1.0f;
@@ -793,6 +793,8 @@ namespace ZedGraph
 			// Don't let the scaleFactor get ridiculous
 			if ( scaleFactor < 0.1F )
 				scaleFactor = 0.1F;
+      if (scaleFactor > 1.0f)
+        scaleFactor = 1.0f;
 						
 			return scaleFactor;
 		}

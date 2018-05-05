@@ -28,6 +28,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace ZedGraph
 {
@@ -201,6 +202,7 @@ namespace ZedGraph
 		/// Gets or sets the list of <see cref="CurveItem"/> items for this <see cref="GraphPane"/>
 		/// </summary>
 		/// <value>A reference to a <see cref="CurveList"/> collection object</value>
+    [XmlIgnore]
 		public CurveList CurveList
 		{
 			get { return _curveList; }
@@ -363,6 +365,7 @@ namespace ZedGraph
 		/// <summary>
 		/// Gets a reference to the <see cref="ZoomStateStack" /> for this <see cref="GraphPane" />.
 		/// </summary>
+    [XmlIgnore]
 		public ZoomStateStack ZoomStack
 		{
 			get { return _zoomStack; }

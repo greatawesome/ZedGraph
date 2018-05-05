@@ -52,6 +52,11 @@ namespace ZedGraph
 		[CLSCompliant(false)]
 		protected Line _line;
 
+    /// <summary>
+    /// True to draw the current line; false to only draw symbols. 
+    /// </summary>
+		[CLSCompliant(false)]
+    protected bool _bShowLine = true;
 	#endregion
 
 	#region Properties
@@ -74,6 +79,12 @@ namespace ZedGraph
 			get { return _line; }
 			set { _line = value; }
 		}
+
+    public bool DrawLine
+    {
+      get { return _bShowLine; }
+      set { _bShowLine = value; }
+    }
 
 		/// <summary>
 		/// Gets a flag indicating if the Z data range should be included in the axis scaling calculations.
@@ -203,6 +214,7 @@ namespace ZedGraph
 		{
 			_symbol = new Symbol( rhs.Symbol );
 			_line = new Line( rhs.Line );
+      _bShowLine = rhs._bShowLine;
 		}
 
 		/// <summary>
@@ -247,6 +259,15 @@ namespace ZedGraph
 
 			_symbol = (Symbol) info.GetValue( "symbol", typeof(Symbol) );
 			_line = (Line) info.GetValue( "line", typeof(Line) );
+
+      try
+      {
+        _bShowLine = info.GetBoolean("show-line");
+      }
+      catch (SerializationException)
+      {
+        _bShowLine = true;  // default to true if not present. 
+      }
 		}
 		/// <summary>
 		/// Populates a <see cref="SerializationInfo"/> instance with the data needed to serialize the target object
@@ -260,6 +281,7 @@ namespace ZedGraph
 			info.AddValue( "schema2", schema2 );
 			info.AddValue( "symbol", _symbol );
 			info.AddValue( "line", _line );
+      info.AddValue("show-line", _bShowLine);
 		}
 	#endregion
 
@@ -290,7 +312,8 @@ namespace ZedGraph
 		{
 			if ( _isVisible )
 			{
-				Line.Draw( g, pane, this, scaleFactor );
+				if (_bShowLine)
+          Line.Draw( g, pane, this, scaleFactor );
 				
 				Symbol.Draw( g, pane, this, scaleFactor, IsSelected );
 			}
@@ -324,9 +347,12 @@ namespace ZedGraph
 			//rect2.Y = yMid;
 			//rect2.Height = rect.Height / 2.0f;
 
-			_line.Fill.Draw( g, rect );
+      if (_bShowLine)
+      {
+        _line.Fill.Draw(g, rect);
 
-			_line.DrawSegment( g, pane, rect.Left, yMid, rect.Right, yMid, scaleFactor );
+        _line.DrawSegment(g, pane, rect.Left, yMid, rect.Right, yMid, scaleFactor);
+      }
 
             // Draw a sample symbol to the left of the label text				
 			_symbol.DrawSymbol( g, pane, xMid, yMid, scaleFactor, false, null );

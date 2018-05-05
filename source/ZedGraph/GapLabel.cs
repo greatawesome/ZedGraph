@@ -61,6 +61,11 @@ namespace ZedGraph
 			_gap = Default.Gap;
 		}
 
+    protected GapLabel()
+    {
+      _gap = Default.Gap;
+    }
+
 		/// <summary>
 		/// Copy constructor
 		/// </summary>

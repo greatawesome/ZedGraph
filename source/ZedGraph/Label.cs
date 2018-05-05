@@ -165,7 +165,14 @@ namespace ZedGraph
 		/// </summary>
 		public const int schema = 10;
 
-		/// <summary>
+    protected Label()
+    {
+      _text = string.Empty;
+      _isVisible = true;
+      _fontSpec = null;
+    }
+
+    /// <summary>
 		/// Constructor for deserializing objects
 		/// </summary>
 		/// <param name="info">A <see cref="SerializationInfo"/> instance that defines the serialized data

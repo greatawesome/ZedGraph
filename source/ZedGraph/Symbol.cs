@@ -365,7 +365,7 @@ namespace ZedGraph
 		/// <param name="brush">A <see cref="Brush"/> class representing a default solid brush for this symbol
 		/// If this symbol uses a <see cref="LinearGradientBrush"/>, it will be created on the fly for
 		/// each point, since it has to be scaled to the individual point coordinates.</param>
-		private void DrawSymbol( Graphics g, int x, int y, GraphicsPath path,
+		public void DrawSymbol( Graphics g, int x, int y, GraphicsPath path,
 							Pen pen, Brush brush )
 		{
 			// Only draw if the symbol is visible

@@ -21,6 +21,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
@@ -467,7 +468,7 @@ namespace ZedGraph
 		/// Construct a <see cref="FontSpec"/> object with default properties.
 		/// </summary>
 		public FontSpec()
-			: this( "Arial", 12, Color.Black, false, false, false )
+      : this(System.Windows.Forms.Control.DefaultFont.FontFamily.Name, 12, Color.Black, false, false, false)
 		{
 		}
 
@@ -1044,11 +1045,20 @@ namespace ZedGraph
 		/// <returns>The scaled text width, in pixels</returns>
 		public float GetWidth( Graphics g, string text, float scaleFactor )
 		{
-			Remake( scaleFactor, this.Size, ref _scaledSize, ref _font );
-			float width = g.MeasureString( text, _font ).Width;
-			if ( _isDropShadow )
-				width += (float)( Math.Cos( _dropShadowAngle ) * _dropShadowOffset * _font.Height );
-			return width;
+      try
+      {
+        Remake(scaleFactor, this.Size, ref _scaledSize, ref _font);
+        float width = g.MeasureString(text, _font).Width;
+        if (_isDropShadow)
+          width += (float)(Math.Cos(_dropShadowAngle) * _dropShadowOffset * _font.Height);
+        return width;
+      }
+      catch (ExternalException)
+      {
+        // seems to be some kind of bug in measure string. Stop it throwing.
+      }
+
+      return 0;
 		}
 		/// <summary>
 		/// Get a <see cref="SizeF"/> struct representing the width and height

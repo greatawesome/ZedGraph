@@ -64,6 +64,12 @@ namespace ZedGraph
 			_isTitleAtCross = true;
 		}
 
+    protected AxisLabel() 
+    {
+      _isOmitMag = false;
+      _isTitleAtCross = true;
+    }
+
 		/// <summary>
 		/// Copy constructor
 		/// </summary>

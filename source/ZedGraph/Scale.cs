@@ -27,8 +27,6 @@ using System.Drawing.Drawing2D;
 
 namespace ZedGraph
 {
-	using System.Globalization;
-
 	/// <summary>
 	/// The Scale class is an abstract base class that encompasses the properties
 	/// and methods associated with a scale of data.
@@ -369,7 +367,7 @@ namespace ZedGraph
 			/// This value normally defaults to 0.125 days (3 hours).
 			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
 			/// </summary>
-			public static double RangeHourMinute = 0.125;  // 3 hours
+			public static double RangeHourMinute = 3d/24; // [days]. 1/24 = 1 hour
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -379,7 +377,7 @@ namespace ZedGraph
 			/// This value normally defaults to 6.94e-3 days (10 minutes).
 			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
 			/// </summary>
-			public static double RangeMinuteMinute = 6.94e-3;  // 10 Minutes
+			public static double RangeMinuteMinute = 30d/(24*60); // [days]. 1/(24*60) = 1 minute
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -389,7 +387,7 @@ namespace ZedGraph
 			/// This value normally defaults to 2.083e-3 days (3 minutes).
 			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
 			/// </summary>
-			public static double RangeMinuteSecond = 2.083e-3;  // 3 Minutes
+			public static double RangeMinuteSecond = 10d/(24*60); // [days]. 1/(24*60) = 1 minute
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -399,7 +397,7 @@ namespace ZedGraph
 			/// This value normally defaults to 3.472e-5 days (3 seconds).
 			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
 			/// </summary>
-			public static double RangeSecondSecond = 3.472e-5;  // 3 Seconds
+			public static double RangeSecondSecond = 30d/(24*60*60); // [days] 1/24*60*60 = 1 second
 
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
@@ -550,7 +548,7 @@ namespace ZedGraph
 			/// font specification <see cref="FontSpec"/>
 			/// (<see cref="ZedGraph.FontSpec.Family"/> property).
 			/// </summary>
-			public static string FontFamily = "Arial";
+      public static string FontFamily = System.Windows.Forms.Control.DefaultFont.FontFamily.Name;
 			/// <summary>
 			/// The default font size for the <see cref="Axis"/> scale values
 			/// font specification <see cref="FontSpec"/>
@@ -2528,47 +2526,37 @@ namespace ZedGraph
 			return maxLabels;
 		}
 
-		/// <summary>
-		/// Sets the Magnitude factor for the scale if the <see cref="_magAuto"/> is set to <c>true</c>.
-		/// </summary>
-		/// <remarks>
-		/// if <see cref="_formatAuto"/> is set to <c>true</c> then the label formatting will
-		/// be adjusted for the requried number of decimal places.
-		/// </remarks>
-		/// <param name="min">the minimum scale value.</param>
-		/// <param name="max">the maximum scale value.</param>
-		/// <param name="step">the scale stepping.</param>
-		internal void SetScaleMag(double min, double max, double step)
+		internal void SetScaleMag( double min, double max, double step )
 		{
 			// set the scale magnitude if required
-			if (this._magAuto)
+			if ( _magAuto )
 			{
 				// Find the optimal scale display multiple
-				double minMag = Math.Floor(Math.Log10(Math.Abs(this._min)));
-				double maxMag = Math.Floor(Math.Log10(Math.Abs(this._max)));
+				double mag = -100;
+				double mag2 = -100;
 
-				double mag = Math.Max(maxMag, minMag);
+				if ( Math.Abs( _min ) > 1.0e-30 )
+					mag = Math.Floor( Math.Log10( Math.Abs( _min ) ) );
+				if ( Math.Abs( _max ) > 1.0e-30 )
+					mag2 = Math.Floor( Math.Log10( Math.Abs( _max ) ) );
+
+				mag = Math.Max( mag2, mag );
 
 				// Do not use scale multiples for magnitudes below 4
-				if (Math.Abs(mag) <= 3)
-				{
+				if ( mag == -100 || Math.Abs( mag ) <= 3 )
 					mag = 0;
-				}
 
 				// Use a power of 10 that is a multiple of 3 (engineering scale)
-				this._mag = (int)(Math.Floor(mag / 3.0) * 3.0);
+				_mag = (int) ( Math.Floor( mag / 3.0 ) * 3.0 );
 			}
 
 			// Calculate the appropriate number of dec places to display if required
-			if (this._formatAuto)
+			if ( _formatAuto )
 			{
-				int numDec = 0 - (int)(Math.Floor(Math.Log10(this._majorStep)) - this._mag);
-				if (numDec < 0)
-				{
+				int numDec = 0 - (int) ( Math.Floor( Math.Log10( _majorStep ) ) - _mag );
+				if ( numDec < 0 )
 					numDec = 0;
-				}
-
-				this._format = "f" + numDec.ToString(CultureInfo.InvariantCulture);
+				_format = "f" + numDec.ToString();
 			}
 		}
 
