@@ -446,7 +446,7 @@ namespace ZedGraph
 						Default.TargetXSteps : Default.TargetYSteps;
 
 			// Calculate the step size based on target steps
-			double tempStep = CalcDateStepSize( _max - _min, targetSteps );
+			double tempStep = CalcDateStepSize( _max, _min, targetSteps );
 
 			// Calculate the new step size
 			if ( _majorStepAuto )
@@ -459,7 +459,7 @@ namespace ZedGraph
 					double maxLabels = (double) this.CalcMaxLabels( g, pane, scaleFactor );
 
 					if ( maxLabels < this.CalcNumTics() )
-						_majorStep = CalcDateStepSize( _max - _min, maxLabels );
+						_majorStep = CalcDateStepSize( _max , _min, maxLabels );
 				}
 			}
 
@@ -487,9 +487,23 @@ namespace ZedGraph
 		/// calculates and sets the values for <see cref="Scale.MajorUnit"/>,
 		/// <see cref="Scale.MinorUnit"/>, <see cref="Scale.MinorStep"/>, and
 		/// <see cref="Scale.Format"/></returns>
-		protected double CalcDateStepSize( double range, double targetSteps )
+		protected double CalcDateStepSize( double dMax, double dMin, double targetSteps )
 		{
-			return CalcDateStepSize( range, targetSteps, this );
+      double range = dMax - dMin; 
+      double dStep = CalcDateStepSize( range, targetSteps, this );
+
+      if (_formatAuto)
+      {
+        // Choose a format that supplies context for the epoch being displayed. 
+        double dNow = XDate.DateTimeToXLDate(DateTime.Now);
+        double dAverage = (dMax + dMin) / 2;
+        double dFromNow = Math.Abs(dAverage - dNow);
+        DateLabelFields FieldsToInclude = AutoDateLabelField.SelectFields(range);
+        FieldsToInclude = AutoDateLabelField.SelectFields(dFromNow, FieldsToInclude);
+        _format = AutoDateLabelField.CreateFormatString(FieldsToInclude);
+      }
+
+      return dStep;
 		}
 
 		/// <summary>

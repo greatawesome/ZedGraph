@@ -8,10 +8,10 @@
 
     using NUnit.Framework;
 
-    using Ploeh.Albedo;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.AutoRhinoMock;
-    using Ploeh.AutoFixture.Idioms;
+    using Albedo;
+    using AutoFixture;
+    using AutoFixture.AutoRhinoMock;
+    using AutoFixture.Idioms;
 
     using Rhino.Mocks;
 

@@ -14,7 +14,9 @@
 Update zoom frame drawing to support HDPI display modes.
 Updated the PrintDialog to use the UseEXDialog property, functionally controlled through UseExtendedPrintDialog property.
 Fixed an issue with the OHLCBarItems where the width of the bars was incorrect on non-oridinal axis.
-Fixed an issue with the scales that caused very small ranges to not display the scale with a magnitude.</releaseNotes>
+Fixed an issue with the scales that caused very small ranges to not display the scale with a magnitude.
+Modified automatic date time formating to include context
+</releaseNotes>
     <copyright>Copyright © 2003-2007 John Champion</copyright>
     <language />
   </metadata>
