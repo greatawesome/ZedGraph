@@ -55,7 +55,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\source\ZedGraph.csproj">
+    <ProjectReference Include="..\source\ZedGraph\ZedGraph.csproj">
       <Project>{2541686b-1673-43bf-af89-3163945db009}</Project>
       <Name>ZedGraph</Name>
     </ProjectReference>

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ZedGraph
 {
   [TestClass]
-  public class UnitTest1
+  public class DateLabelFormatTests
   {
     [TestMethod]
     public void TestSecondRange()
