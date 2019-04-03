@@ -1,3 +1,13 @@
+# N8I Fork Change log
+
+## 6.5.19094.0404
+Enhancements:
+- Extended designer support for editing with property grid. 
+- Integrated changes from ZedGraph
+
+Bug fix:
+- DateScale::CalcDateStepSize was updating major unit even if auto was turned off. 
+
 # ZedGraph Changelog
 
 ## Unreleased

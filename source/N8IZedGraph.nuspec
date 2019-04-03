@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>N8I.ZedGraph</id>
-    <version>6.4.19092.0403</version>
+    <version>6.5.19094.0404</version>
     <title />
     <authors>ZedGraph Project, Number Eight Innovation</authors>
     <owners>ZedGraph Project</owners>
