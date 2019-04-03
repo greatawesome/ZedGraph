@@ -2,10 +2,10 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>N8I.ZedGraph</id>
-    <version>$version$</version>
+    <version>6.4.19092.0403</version>
     <title />
-    <authors>ZedGraph Project</authors>
-    <owners />
+    <authors>ZedGraph Project, Number Eight Innovation</authors>
+    <owners>ZedGraph Project</owners>
     <licenseUrl>http://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
     <projectUrl>https://github.com/zedgraph/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -13,15 +13,16 @@
     <copyright>Copyright © 2003-2007 John Champion</copyright>
     <language />
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Windows.Forms" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net35" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net40" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net45" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net46" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net47" />
     </frameworkAssemblies>
-    <dependencies>
-      <dependency id="ZedGraph" version="$version$" />
-    </dependencies>
   </metadata>
   <files>
-    <file src="ZedGraph.WinForms\bin\Release\**\ZedGraph.WinForms*.dll" target="lib" />
-    <file src="ZedGraph.WinForms\bin\Release\**\ZedGraph.WinForms.XML" target="lib" />
+    <file src="ZedGraph\bin\Release\**\ZedGraph*.dll" target="lib" />
+    <file src="ZedGraph\bin\Release\**\ZedGraph.XML" target="lib" />
     <file src="..\CHANGELOG.md"/>
   </files>
 </package>

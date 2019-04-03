@@ -22,6 +22,7 @@ using System.Drawing;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.ComponentModel;
 
 namespace ZedGraph
 {
@@ -33,7 +34,8 @@ namespace ZedGraph
 	/// <author> John Champion </author>
 	/// <version> $Revision: 3.2 $ $Date: 2007-03-11 02:08:16 $ </version>
 	[Serializable]
-	public class Label : ICloneable, ISerializable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  public class Label : ICloneable, ISerializable
 	{
 		/// <summary>
 		/// private field that stores the <see cref="string" /> text for this label
@@ -202,8 +204,11 @@ namespace ZedGraph
 			info.AddValue( "isVisible", _isVisible );
 			info.AddValue( "fontSpec", _fontSpec );
 		}
-	#endregion
+    #endregion
 
-
-	}
+    public override string ToString()
+    {
+      return Text;
+    }
+  }
 }

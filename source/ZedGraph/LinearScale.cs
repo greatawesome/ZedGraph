@@ -23,6 +23,7 @@ using System.Text;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.ComponentModel;
 
 namespace ZedGraph
 {
@@ -37,7 +38,8 @@ namespace ZedGraph
 	/// <author> John Champion  </author>
 	/// <version> $Revision: 1.10 $ $Date: 2007-04-16 00:03:02 $ </version>
 	[Serializable]
-	class LinearScale : Scale, ISerializable //, ICloneable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  class LinearScale : Scale, ISerializable //, ICloneable
 	{
 
 	#region constructors

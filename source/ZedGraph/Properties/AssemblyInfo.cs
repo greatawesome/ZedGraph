@@ -7,7 +7,7 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyDescription( "ZedGraph Library" )]
+[assembly: AssemblyDescription("ZedGraph is a class library, user control, and web control for .net, written in C#, for drawing 2D Line, Bar, and Pie Charts. It features full, detailed customization capabilities, but most options have defaults for ease of use.")]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -28,7 +28,18 @@ using System.Resources;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("6.4.18170.0619")]
-[assembly: AssemblyFileVersion("6.4.18170.0619")]
+[assembly: AssemblyVersion("6.4.19092.0403")]
+[assembly: AssemblyFileVersion("6.4.19092.0403")]
 //[assembly: AllowPartiallyTrustedCallers ]
 [assembly: NeutralResourcesLanguageAttribute( "" )]
+
+/* 
+Here's some power-shell code (can be used in the Package Manager Console too) that gives the last part of the version number:
+
+$d = Get-Date
+"{0:yy}{1:D3}.{0:MMdd}" -f $d, $d.DayOfYear
+
+
+Here's some code that works in the new C# Interactive window too:
+Console.WriteLine(string.Format("{0:yy}{1:D3}.{0:MMdd}", DateTime.Now, DateTime.Now.DayOfYear));
+*/

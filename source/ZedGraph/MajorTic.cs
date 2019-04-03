@@ -22,6 +22,7 @@ using System.Drawing;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.ComponentModel;
 
 namespace ZedGraph
 {
@@ -32,7 +33,8 @@ namespace ZedGraph
 	/// <author> John Champion </author>
 	/// <version> $Revision: 3.1 $ $Date: 2006-06-24 20:26:44 $ </version>
 	[Serializable]
-	public class MajorTic : MinorTic, ICloneable, ISerializable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  public class MajorTic : MinorTic, ICloneable, ISerializable
 	{
 		internal bool	_isBetweenLabels;
 

@@ -18,6 +18,7 @@
 //=============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
@@ -186,12 +187,12 @@ namespace ZedGraph
 			/// The default size for the gap between multiple axes
 			/// (<see cref="Axis.AxisGap"/> property). Units are in points (1/72 inch).
 			/// </summary>
-			public static float AxisGap = 5;
+			public const float AxisGap = 5;
 
 			/// <summary>
 			/// The default setting for the gap between the scale labels and the axis title.
 			/// </summary>
-			public static float TitleGap = 0.0f;
+			public const float TitleGap = 0.0f;
 
 			/// <summary>
 			/// The default font family for the <see cref="Axis"/> <see cref="Title" /> text
@@ -205,7 +206,7 @@ namespace ZedGraph
 			/// (<see cref="FontSpec.Size"/> property).  Units are
 			/// in points (1/72 inch).
 			/// </summary>
-			public static float TitleFontSize = 14;
+			public const float TitleFontSize = 14;
 			/// <summary>
 			/// The default font color for the <see cref="Axis"/> <see cref="Title" /> text
 			/// font specification <see cref="FontSpec"/>
@@ -218,21 +219,21 @@ namespace ZedGraph
 			/// (<see cref="FontSpec.IsBold"/> property). true
 			/// for a bold typeface, false otherwise.
 			/// </summary>
-			public static bool TitleFontBold = true;
+			public const bool TitleFontBold = true;
 			/// <summary>
 			/// The default font italic mode for the <see cref="Axis"/> <see cref="Title" /> text
 			/// font specification <see cref="FontSpec"/>
 			/// (<see cref="FontSpec.IsItalic"/> property). true
 			/// for an italic typeface, false otherwise.
 			/// </summary>
-			public static bool TitleFontItalic = false;
+			public const bool TitleFontItalic = false;
 			/// <summary>
 			/// The default font underline mode for the <see cref="Axis"/> <see cref="Title" /> text
 			/// font specification <see cref="FontSpec"/>
 			/// (<see cref="FontSpec.IsUnderline"/> property). true
 			/// for an underlined typeface, false otherwise.
 			/// </summary>
-			public static bool TitleFontUnderline = false;
+			public const bool TitleFontUnderline = false;
 			/// <summary>
 			/// The default color for filling in the <see cref="Title" /> text background
 			/// (see <see cref="ZedGraph.Fill.Color"/> property).
@@ -242,12 +243,12 @@ namespace ZedGraph
 			/// The default custom brush for filling in the <see cref="Title" /> text background
 			/// (see <see cref="ZedGraph.Fill.Brush"/> property).
 			/// </summary>
-			public static Brush TitleFillBrush = null;
+			public const Brush TitleFillBrush = null;
 			/// <summary>
 			/// The default fill mode for filling in the <see cref="Title" /> text background
 			/// (see <see cref="ZedGraph.Fill.Type"/> property).
 			/// </summary>
-			public static FillType TitleFillType = FillType.None;
+			public const FillType TitleFillType = FillType.None;
 
 			/// <summary>
 			/// The default color for the <see cref="Axis"/> itself
@@ -259,19 +260,20 @@ namespace ZedGraph
 			/// The default value for <see cref="Axis.IsAxisSegmentVisible"/>, which determines
 			/// whether or not the scale segment itself is visible
 			/// </summary>
-			public static bool IsAxisSegmentVisible = true;
+			public const bool IsAxisSegmentVisible = true;
 
 			/// <summary>
 			/// The default setting for the <see cref="Axis"/> scale axis type
 			/// (<see cref="Axis.Type"/> property).  This value is set as per
 			/// the <see cref="AxisType"/> enumeration
 			/// </summary>
-			public static AxisType Type = AxisType.Linear;
+			public const AxisType Type = AxisType.Linear;
 
 			/// <summary>
 			/// The default color for the axis segment.
 			/// </summary>
 			public static Color Color = Color.Black;
+      internal const string DefaultColor = "0x000000";
 
 			/// <summary>
 			/// The default setting for the axis space allocation.  This term, expressed in
@@ -281,7 +283,7 @@ namespace ZedGraph
 			/// <see cref="PaneBase.Rect"/>.  This minimum space
 			/// applies whether <see cref="Axis.IsVisible"/> is true or false.
 			/// </summary>
-			public static float MinSpace = 0f;
+			public const float MinSpace = 0f;
 		}
 
 	#endregion
@@ -472,14 +474,15 @@ namespace ZedGraph
 
 		}
 
-	#endregion
+    #endregion
 
-	#region Scale Properties
+    #region Scale Properties
 
-		/// <summary>
-		/// Gets the <see cref="Scale" /> instance associated with this <see cref="Axis" />.
-		/// </summary>
-		public Scale Scale
+    /// <summary>
+    /// Gets the <see cref="Scale" /> instance associated with this <see cref="Axis" />.
+    /// </summary>
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public Scale Scale
 		{
 			get { return _scale; }
 		}
@@ -500,6 +503,8 @@ namespace ZedGraph
 		/// <seealso cref="ZedGraph.Scale.Max"/>
 		/// <seealso cref="ZedGraph.Scale.MajorStep"/>
 		/// <seealso cref="CrossAuto"/>
+    [DefaultValue(0.0)]
+    [Description("Determines the scale value where this axis should cross the perpendicular axis")]
 		public double Cross
 		{
 			get { return _cross; }
@@ -515,6 +520,8 @@ namespace ZedGraph
 		/// <seealso cref="ZedGraph.Scale.Max"/>
 		/// <seealso cref="ZedGraph.Scale.MajorStep"/>
 		/// <seealso cref="Cross"/>
+    [DefaultValue(true)]
+    [Description("Determines if the cross value should be set automatically")]
 		public bool CrossAuto
 		{
 			get { return _crossAuto; }
@@ -532,6 +539,8 @@ namespace ZedGraph
 		/// <see cref="PaneBase.Rect">GraphPane.Rect</see>.  This minimum space
 		/// applies whether <see cref="IsVisible"/> is true or false.
 		/// </remarks>
+    [DefaultValue(Default.MinSpace)]
+    [Description("The minimum amount of space between the graph area and the axis")]
 		public float MinSpace
 		{
 			get { return _minSpace; }
@@ -556,6 +565,7 @@ namespace ZedGraph
 		/// <see cref="System.Drawing.Color"/> class</value>
 		/// <seealso cref="Default.Color"/>.
 		/// <seealso cref="IsVisible"/>
+    [DefaultValue(typeof(Color), Default.DefaultColor)]
 		public Color Color
 		{
 			get { return _color; }
@@ -619,42 +629,47 @@ namespace ZedGraph
 		/// <seealso cref="XAxis.Default.IsVisible"/>.
 		/// <seealso cref="YAxis.Default.IsVisible"/>.
 		/// <seealso cref="Y2Axis.Default.IsVisible"/>.
+    [DefaultValue(true)]
 		public bool IsVisible
 		{
 			get { return _isVisible; }
 			set { _isVisible = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets a property that determines whether or not the axis segment (the line that
-		/// represents the axis itself) is drawn.
-		/// </summary>
-		/// <remarks>
-		/// Under normal circumstances, this value won't affect the appearance of the display because
-		/// the Axis segment is overlain by the Axis border (see <see cref="Chart.Border"/>).
-		/// However, when the border is not visible, or when <see cref="Axis.CrossAuto"/> is set to
-		/// false, this value will make a difference.
-		/// </remarks>
-		public bool IsAxisSegmentVisible
+    /// <summary>
+    /// Gets or sets a property that determines whether or not the axis segment (the line that
+    /// represents the axis itself) is drawn.
+    /// </summary>
+    /// <remarks>
+    /// Under normal circumstances, this value won't affect the appearance of the display because
+    /// the Axis segment is overlain by the Axis border (see <see cref="Chart.Border"/>).
+    /// However, when the border is not visible, or when <see cref="Axis.CrossAuto"/> is set to
+    /// false, this value will make a difference.
+    /// </remarks>
+    [DefaultValue(Default.IsAxisSegmentVisible)]
+    [Description("Gets or sets a property that determines whether or not the axis segment (the line that represents the axis itself) is drawn.")]
+    public bool IsAxisSegmentVisible
 		{
 			get { return _isAxisSegmentVisible; }
 			set { _isAxisSegmentVisible = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the <see cref="AxisType"/> for this <see cref="Axis"/>.
-		/// </summary>
-		/// <remarks>
-		/// The type can be either <see cref="AxisType.Linear"/>,
-		/// <see cref="AxisType.Log"/>, <see cref="AxisType.Date"/>,
-		/// or <see cref="AxisType.Text"/>.
-		/// </remarks>
-		/// <seealso cref="ZedGraph.Scale.IsLog"/>
-		/// <seealso cref="ZedGraph.Scale.IsText"/>
-		/// <seealso cref="ZedGraph.Scale.IsOrdinal"/>
-		/// <seealso cref="ZedGraph.Scale.IsDate"/>
-		/// <seealso cref="ZedGraph.Scale.IsReverse"/>
-		public AxisType Type
+    /// <summary>
+    /// Gets or sets the <see cref="AxisType"/> for this <see cref="Axis"/>.
+    /// </summary>
+    /// <remarks>
+    /// The type can be either <see cref="AxisType.Linear"/>,
+    /// <see cref="AxisType.Log"/>, <see cref="AxisType.Date"/>,
+    /// or <see cref="AxisType.Text"/>.
+    /// </remarks>
+    /// <seealso cref="ZedGraph.Scale.IsLog"/>
+    /// <seealso cref="ZedGraph.Scale.IsText"/>
+    /// <seealso cref="ZedGraph.Scale.IsOrdinal"/>
+    /// <seealso cref="ZedGraph.Scale.IsDate"/>
+    /// <seealso cref="ZedGraph.Scale.IsReverse"/>
+    [DefaultValue(Default.AxisGap)]
+    [Description("Gets or sets the AxisType for this Axis.")]
+    public AxisType Type
 		{
 			get { return _scale.Type; }
 			set { _scale = Scale.MakeNewScale( _scale, value ); }
@@ -692,6 +707,8 @@ namespace ZedGraph
 		/// </remarks>
 		/// <value>The axis gap is measured in points (1/72 inch)</value>
 		/// <seealso cref="Default.AxisGap"/>.
+    [DefaultValue(Default.AxisGap)]
+    [Description("The size of the gap between multiple axes")]
 		public float AxisGap
 		{
 			get { return _axisGap; }
@@ -1444,8 +1461,16 @@ namespace ZedGraph
 				return "?";
 		}
 
-	#endregion
+    #endregion
 
-	}
+    /// <summary>
+    /// Creates descriptive string of scale. 
+    /// </summary>
+    public override string ToString()
+    {
+      return Title?.Text;
+    }
+
+  }
 }
 

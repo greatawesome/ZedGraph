@@ -18,6 +18,7 @@
 //=============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -38,7 +39,8 @@ namespace ZedGraph
 	/// <author> John Champion </author>
 	/// <version> $Revision: 3.24 $ $Date: 2007-01-25 07:56:08 $ </version>
 	[Serializable]
-	public class FontSpec : ICloneable, ISerializable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  public class FontSpec : ICloneable, ISerializable
 	{
 	#region Fields
 		/// <summary>
@@ -185,62 +187,76 @@ namespace ZedGraph
 			/// The default size fraction of the superscript font, expressed as a fraction
 			/// of the size of the main font.
 			/// </summary>
-			public static float SuperSize = 0.85F;
+			public const float SuperSize = 0.85F;
 			/// <summary>
 			/// The default shift fraction of the superscript, expressed as a
 			/// fraction of the superscripted character height.  This is the height
 			/// above the main font (a zero shift means the main font and the superscript
 			/// font have the tops aligned).
 			/// </summary>
-			public static float SuperShift = 0.4F;
+			public const float SuperShift = 0.4F;
 			/// <summary>
 			/// The default color for filling in the background of the text block
 			/// (<see cref="ZedGraph.Fill.Color"/> property).
 			/// </summary>
 			public static Color FillColor = Color.White;
+      internal const string FillColorString = "0xffffff";
+
 			/// <summary>
 			/// The default custom brush for filling in this <see cref="FontSpec"/>
 			/// (<see cref="ZedGraph.Fill.Brush"/> property).
 			/// </summary>
 			public static Brush FillBrush = null;
+
 			/// <summary>
 			/// The default fill mode for this <see cref="FontSpec"/>
 			/// (<see cref="ZedGraph.Fill.Type"/> property).
 			/// </summary>
-			public static FillType FillType = FillType.Solid;
+			public const FillType FillType = ZedGraph.FillType.Solid;
+
 			/// <summary>
 			/// Default value for the alignment with which this
 			/// <see cref="FontSpec"/> object is drawn.  This alignment really only
 			/// affects multi-line strings.
 			/// </summary>
 			/// <value>A <see cref="StringAlignment"/> enumeration.</value>
-			public static StringAlignment StringAlignment = StringAlignment.Center;
+			public const StringAlignment StringAlignment = System.Drawing.StringAlignment.Center;
 
 			/// <summary>
 			/// Default value for <see cref="FontSpec.IsDropShadow"/>, which determines
 			/// if the drop shadow is displayed for this <see cref="FontSpec" />.
 			/// </summary>
-			public static bool IsDropShadow = false;
-			/// <summary>
-			/// Default value for <see cref="FontSpec.IsAntiAlias"/>, which determines
-			/// if anti-aliasing logic is used for this <see cref="FontSpec" />.
-			/// </summary>
-			public static bool IsAntiAlias = false;
-			/// <summary>
+			public const bool IsDropShadow = false;
+
+      /// <summary>
+      /// Default value for <see cref="FontSpec.IsAntiAlias"/>, which determines
+      /// if anti-aliasing logic is used for this <see cref="FontSpec" />.
+      /// </summary>
+      public const bool IsAntiAlias = false;
+			
+      /// <summary>
 			/// Default value for <see cref="FontSpec.DropShadowColor"/>, which determines
 			/// the color of the drop shadow for this <see cref="FontSpec" />.
 			/// </summary>
 			public static Color DropShadowColor = Color.Black;
-			/// <summary>
+      internal const string DropShadowColorString = "0x000000";
+			
+      /// <summary>
 			/// Default value for <see cref="FontSpec.DropShadowAngle"/>, which determines
 			/// the offset angle of the drop shadow for this <see cref="FontSpec" />.
 			/// </summary>
-			public static float DropShadowAngle = 45f;
-			/// <summary>
+			public const float DropShadowAngle = 45f;
+			
+      /// <summary>
 			/// Default value for <see cref="FontSpec.DropShadowOffset"/>, which determines
 			/// the offset distance of the drop shadow for this <see cref="FontSpec" />.
 			/// </summary>
-			public static float DropShadowOffset = 0.05f;
+			public const float DropShadowOffset = 0.05f;
+
+      /// <summary>
+      /// Default value for <see cref="FontSpec.Size"/>
+      /// </summary>
+      public const float Size = 12.0F;
 
 		}
 	#endregion
@@ -253,6 +269,8 @@ namespace ZedGraph
 		/// <see cref="ZedGraph.Fill.Color"/> properties, respectively.
 		/// </summary>
 		/// <value>A system <see cref="System.Drawing.Color"/> reference.</value>
+    [DefaultValue(typeof(Color), Default.FillColorString)]
+    [Description("Color of the font")]
 		public Color FontColor
 		{
 			get { return _fontColor; }
@@ -262,6 +280,7 @@ namespace ZedGraph
 		/// The font family name for this <see cref="FontSpec"/>.
 		/// </summary>
 		/// <value>A text string with the font family name, e.g., "Arial"</value>
+    [Description("The font family")]
 		public string Family
 		{
 			get { return _family; }
@@ -279,6 +298,8 @@ namespace ZedGraph
 		/// drawn with bold typeface.
 		/// </summary>
 		/// <value>A boolean value, true for bold, false for normal</value>
+    [DefaultValue(false)]
+    [Description("Determines if this font is drawn with a bold typeface")]
 		public bool IsBold
 		{
 			get { return _isBold; }
@@ -291,12 +312,14 @@ namespace ZedGraph
 				}
 			}
 		}
-		/// <summary>
-		/// Determines whether this <see cref="FontSpec"/> is
-		/// drawn with italic typeface.
-		/// </summary>
-		/// <value>A boolean value, true for italic, false for normal</value>
-		public bool IsItalic
+    /// <summary>
+    /// Determines whether this <see cref="FontSpec"/> is
+    /// drawn with italic typeface.
+    /// </summary>
+    /// <value>A boolean value, true for italic, false for normal</value>
+    [DefaultValue(false)]
+    [Description("Determines if this font is drawn with an italic typeface")]
+    public bool IsItalic
 		{
 			get { return _isItalic; }
 			set
@@ -308,12 +331,14 @@ namespace ZedGraph
 				}
 			}
 		}
-		/// <summary>
-		/// Determines whether this <see cref="FontSpec"/> is
-		/// drawn with underlined typeface.
-		/// </summary>
-		/// <value>A boolean value, true for underline, false for normal</value>
-		public bool IsUnderline
+    /// <summary>
+    /// Determines whether this <see cref="FontSpec"/> is
+    /// drawn with underlined typeface.
+    /// </summary>
+    /// <value>A boolean value, true for underline, false for normal</value>
+    [DefaultValue(false)]
+    [Description("Determines if this font is drawn with an underlined typeface")]
+    public bool IsUnderline
 		{
 			get { return _isUnderline; }
 			set
@@ -325,12 +350,14 @@ namespace ZedGraph
 				}
 			}
 		}
-		/// <summary>
-		/// The angle at which this <see cref="FontSpec"/> object is drawn.
-		/// </summary>
-		/// <value>The angle of the font, measured in anti-clockwise degrees from
-		/// horizontal.  Negative values are permitted.</value>
-		public float Angle
+    /// <summary>
+    /// The angle at which this <see cref="FontSpec"/> object is drawn.
+    /// </summary>
+    /// <value>The angle of the font, measured in anti-clockwise degrees from
+    /// horizontal.  Negative values are permitted.</value>
+    [DefaultValue(0f)]
+    [Description("The angle at which this font is drawn")]
+    public float Angle
 		{
 			get { return _angle; }
 			set { _angle = value; }
@@ -342,6 +369,8 @@ namespace ZedGraph
 		/// affects multi-line strings.
 		/// </summary>
 		/// <value>A <see cref="StringAlignment"/> enumeration.</value>
+    [DefaultValue(Default.StringAlignment)]
+    [Description("Sets the alignment for multi-line strings")]
 		public StringAlignment StringAlignment
 		{
 			get { return _stringAlignment; }
@@ -352,6 +381,8 @@ namespace ZedGraph
 		/// The size of the font for this <see cref="FontSpec"/> object.
 		/// </summary>
 		/// <value>The size of the font, measured in points (1/72 inch).</value>
+    [DefaultValue(Default.Size)]
+    [Description("The size of the font in points")]
 		public float Size
 		{
 			get { return _size; }
@@ -369,6 +400,7 @@ namespace ZedGraph
 		/// Gets or sets the <see cref="Border"/> class used to draw the border border
 		/// around this text.
 		/// </summary>
+    [Description("The boarder specification which can be drawn around this text. ")]
 		public Border Border
 		{
 			get { return _border; }
@@ -380,6 +412,7 @@ namespace ZedGraph
 		/// <see cref="FontSpec"/>, which controls how the background
 		/// behind the text is filled.
 		/// </summary>
+    [Description("Controls how the background behind the text is filled")]
 		public Fill Fill
 		{
 			get { return _fill; }
@@ -397,6 +430,8 @@ namespace ZedGraph
 		/// the the current setting of <see cref="Graphics.SmoothingMode" /> will be
 		/// left as-is.
 		/// </remarks>
+    [DefaultValue(Default.IsAntiAlias)]
+    [Description("Determines if the font will be drawn using anti-aliasing. ")]
 		public bool IsAntiAlias
 		{
 			get { return _isAntiAlias; }
@@ -409,6 +444,8 @@ namespace ZedGraph
 		/// <seealso cref="DropShadowColor" />
 		/// <seealso cref="DropShadowAngle" />
 		/// <seealso cref="DropShadowOffset" />
+    [DefaultValue(Default.IsDropShadow)]
+    [Description("Determines if this font will be drawn with a drop-shadow.")]
 		public bool IsDropShadow
 		{
 			get { return _isDropShadow; }
@@ -423,6 +460,8 @@ namespace ZedGraph
 		/// <seealso cref="IsDropShadow" />
 		/// <seealso cref="DropShadowAngle" />
 		/// <seealso cref="DropShadowOffset" />
+    [DefaultValue(typeof(Color), Default.DropShadowColorString)]
+    [Description("Determines the color used for the drop-shadow")]
 		public Color DropShadowColor
 		{
 			get { return _dropShadowColor; }
@@ -439,6 +478,8 @@ namespace ZedGraph
 		/// <seealso cref="IsDropShadow" />
 		/// <seealso cref="DropShadowColor" />
 		/// <seealso cref="DropShadowOffset" />
+    [DefaultValue(typeof(Color), Default.DropShadowColorString)]
+    [Description("Determines the offset angle of the drop-shadow")]
 		public float DropShadowAngle
 		{
 			get { return _dropShadowAngle; }
@@ -454,6 +495,8 @@ namespace ZedGraph
 		/// <seealso cref="IsDropShadow" />
 		/// <seealso cref="DropShadowColor" />
 		/// <seealso cref="DropShadowAngle" />
+    [DefaultValue(Default.DropShadowOffset)]
+    [Description("Determines the offset distance, measured as a fraction of the font-height, for the drop-shadow")]
 		public float DropShadowOffset
 		{
 			get { return _dropShadowOffset; }
@@ -468,7 +511,7 @@ namespace ZedGraph
 		/// Construct a <see cref="FontSpec"/> object with default properties.
 		/// </summary>
 		public FontSpec()
-      : this(System.Windows.Forms.Control.DefaultFont.FontFamily.Name, 12, Color.Black, false, false, false)
+      : this(System.Windows.Forms.Control.DefaultFont.FontFamily.Name, Default.Size, Color.Black, false, false, false)
 		{
 		}
 
@@ -1507,7 +1550,11 @@ namespace ZedGraph
 			return pts;
 		}
 
-	#endregion
+    #endregion
 
-	}
+    public override string ToString()
+    {
+      return $"{_family}, {_size} pt";
+    }
+  }
 }

@@ -290,6 +290,7 @@ namespace ZedGraph
 			/// (X decreasing to the left, Y/Y2 decreasing upwards), false otherwise.
 			/// </summary>
 			public static bool IsReverse = false;
+
 			/// <summary>
 			/// The default setting for the <see cref="Axis"/> scale format string
 			/// (<see cref="Format"/> property).  For numeric values, this value is
@@ -298,16 +299,18 @@ namespace ZedGraph
 			/// </summary>
 			//public static string ScaleFormat = "&dd-&mmm-&yy &hh:&nn";
 			public static string Format = "g";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// If the total span of data exceeds this number (in days), then the auto-range
-			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Year"/>
-			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Year"/>.
-			/// This value normally defaults to 1825 days (5 years).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			public static double RangeYearYear = 1825;  // 5 years
+
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// If the total span of data exceeds this number (in days), then the auto-range
+      /// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Year"/>
+      /// and <see cref="MinorUnit"/> = <see cref="DateUnit.Year"/>.
+      /// This value normally defaults to 1825 days (5 years).
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      public static double RangeYearYear = 1825;  // 5 years
+
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -315,9 +318,10 @@ namespace ZedGraph
 			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Year"/>
 			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Month"/>.
 			/// This value normally defaults to 730 days (2 years).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
+			/// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
 			/// </summary>
 			public static double RangeYearMonth = 730;  // 2 years
+
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -325,9 +329,10 @@ namespace ZedGraph
 			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Month"/>
 			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Month"/>.
 			/// This value normally defaults to 300 days (10 months).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
+			/// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
 			/// </summary>
 			public static double RangeMonthMonth = 300;  // 10 months
+
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -335,9 +340,10 @@ namespace ZedGraph
 			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Day"/>
 			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Day"/>.
 			/// This value normally defaults to 10 days.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
+			/// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
 			/// </summary>
 			public static double RangeDayDay = 10;  // 10 days
+
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -345,9 +351,10 @@ namespace ZedGraph
 			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Day"/>
 			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Hour"/>.
 			/// This value normally defaults to 3 days.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
+			/// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
 			/// </summary>
 			public static double RangeDayHour = 3;  // 3 days
+
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -355,83 +362,89 @@ namespace ZedGraph
 			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Hour"/>
 			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Hour"/>.
 			/// This value normally defaults to 0.4167 days (10 hours).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
+			/// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
 			/// </summary>
 			public static double RangeHourHour = 0.4167;  // 10 hours
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// If the total span of data exceeds this number (in days), then the auto-range
-			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Hour"/>
-			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Minute"/>.
-			/// This value normally defaults to 0.125 days (3 hours).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			public static double RangeHourMinute = 3d/24; // [days]. 1/24 = 1 hour
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// If the total span of data exceeds this number (in days), then the auto-range
-			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Minute"/>
-			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Minute"/>.
-			/// This value normally defaults to 6.94e-3 days (10 minutes).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			public static double RangeMinuteMinute = 30d/(24*60); // [days]. 1/(24*60) = 1 minute
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// If the total span of data exceeds this number (in days), then the auto-range
-			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Minute"/>
-			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Second"/>.
-			/// This value normally defaults to 2.083e-3 days (3 minutes).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			public static double RangeMinuteSecond = 10d/(24*60); // [days]. 1/(24*60) = 1 minute
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// If the total span of data exceeds this number (in days), then the auto-range
-			/// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Second"/>
-			/// and <see cref="MinorUnit"/> = <see cref="DateUnit.Second"/>.
-			/// This value normally defaults to 3.472e-5 days (3 seconds).
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			public static double RangeSecondSecond = 30d/(24*60*60); // [days] 1/24*60*60 = 1 second
 
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Year"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Year"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatYearYear = "yyyy";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Year"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Month"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatYearMonth = "MMM-yyyy";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Month"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Month"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatMonthMonth = "MMM-yyyy";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// If the total span of data exceeds this number (in days), then the auto-range
+      /// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Hour"/>
+      /// and <see cref="MinorUnit"/> = <see cref="DateUnit.Minute"/>.
+      /// This value normally defaults to 0.125 days (3 hours).
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      public static double RangeHourMinute = 3d/24; // [days]. 1/24 = 1 hour
+
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// If the total span of data exceeds this number (in days), then the auto-range
+      /// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Minute"/>
+      /// and <see cref="MinorUnit"/> = <see cref="DateUnit.Minute"/>.
+      /// This value normally defaults to 6.94e-3 days (10 minutes).
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      public static double RangeMinuteMinute = 30d/(24*60); // [days]. 1/(24*60) = 1 minute
+
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// If the total span of data exceeds this number (in days), then the auto-range
+      /// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Minute"/>
+      /// and <see cref="MinorUnit"/> = <see cref="DateUnit.Second"/>.
+      /// This value normally defaults to 2.083e-3 days (3 minutes).
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      public static double RangeMinuteSecond = 10d/(24*60); // [days]. 1/(24*60) = 1 minute
+
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// If the total span of data exceeds this number (in days), then the auto-range
+      /// code will select <see cref="MajorUnit"/> = <see cref="DateUnit.Second"/>
+      /// and <see cref="MinorUnit"/> = <see cref="DateUnit.Second"/>.
+      /// This value normally defaults to 3.472e-5 days (3 seconds).
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      public static double RangeSecondSecond = 30d/(24*60*60); // [days] 1/24*60*60 = 1 second
+
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Year"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Year"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      /// 
+      public static string FormatYearYear = "yyyy";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Year"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Month"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      /// 
+      public static string FormatYearMonth = "MMM-yyyy";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Month"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Month"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatMonthMonth = "MMM-yyyy";
 			/// <summary>
 			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
 			/// This values applies only to Date-Time type axes.
@@ -439,87 +452,87 @@ namespace ZedGraph
 			/// selects a <see cref="Format"/> of <see cref="DateUnit.Day"/>
 			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Day"/> for 
 			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
+			/// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
 			/// </summary>
 			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
 			public static string FormatDayDay = "d-MMM";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Day"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Hour"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatDayHour = "d-MMM HH:mm";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Hour"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Hour"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatHourHour = "HH:mm";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Hour"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Minute"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatHourMinute = "HH:mm";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Minute"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Minute"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatMinuteMinute = "HH:mm";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Minute"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Second"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatMinuteSecond = "mm:ss";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Second"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Second"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatSecondSecond = "mm:ss";
-			/// <summary>
-			/// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
-			/// This values applies only to Date-Time type axes.
-			/// This is the format used for the scale values when auto-ranging code
-			/// selects a <see cref="Format"/> of <see cref="DateUnit.Millisecond"/>
-			/// for <see cref="MajorUnit"/> and <see cref="DateUnit.Millisecond"/> for 
-			/// for <see cref="MinorUnit"/>.
-			/// This value is used by the <see cref="DateScale.CalcDateStepSize"/> method.
-			/// </summary>
-			/// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
-			public static string FormatMillisecond = "ss.fff";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Day"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Hour"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatDayHour = "d-MMM HH:mm";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Hour"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Hour"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatHourHour = "HH:mm";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Hour"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Minute"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatHourMinute = "HH:mm";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Minute"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Minute"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatMinuteMinute = "HH:mm";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Minute"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Second"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatMinuteSecond = "mm:ss";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Second"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Second"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatSecondSecond = "mm:ss";
+      /// <summary>
+      /// A default setting for the <see cref="AxisType.Date"/> auto-ranging code.
+      /// This values applies only to Date-Time type axes.
+      /// This is the format used for the scale values when auto-ranging code
+      /// selects a <see cref="Format"/> of <see cref="DateUnit.Millisecond"/>
+      /// for <see cref="MajorUnit"/> and <see cref="DateUnit.Millisecond"/> for 
+      /// for <see cref="MinorUnit"/>.
+      /// This value is used by the <see cref="DateScale.CalcDateStepSize(Double, Double, Double)"/> method.
+      /// </summary>
+      /// <seealso cref="System.Globalization.DateTimeFormatInfo"/>
+      public static string FormatMillisecond = "ss.fff";
 
 			/*  Prior format assignments using original XDate.ToString()
 					this.scaleFormat = "&yyyy";
@@ -3025,5 +3038,14 @@ namespace ZedGraph
 
             return (_rangeMax - _rangeMin) * grace;
         }
+
+    /// <summary>
+    /// Creates descriptive string of scale. 
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      return $"{_min} - {_max}";
     }
+  }
 }

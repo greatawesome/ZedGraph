@@ -18,6 +18,7 @@
 //=============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -35,7 +36,8 @@ namespace ZedGraph
 	/// <author> John Champion </author>
 	/// <version> $Revision: 3.22 $ $Date: 2007-01-26 09:01:49 $ </version>
 	[Serializable]
-	public class Fill : ISerializable, ICloneable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  public class Fill : ISerializable, ICloneable
 	{
 	#region Fields
 
@@ -140,17 +142,17 @@ namespace ZedGraph
 			/// The default scaling mode for <see cref="Brush"/> fills.
 			/// This is the default value for the <see cref="Fill.IsScaled"/> property.
 			/// </summary>
-			public static bool IsScaled = true;
+			public const bool IsScaled = true;
 			/// <summary>
 			/// The default horizontal alignment for <see cref="Brush"/> fills.
 			/// This is the default value for the <see cref="Fill.AlignH"/> property.
 			/// </summary>
-			public static AlignH AlignH = AlignH.Center;
+			public const AlignH AlignH = ZedGraph.AlignH.Center;
 			/// <summary>
 			/// The default vertical alignment for <see cref="Brush"/> fills.
 			/// This is the default value for the <see cref="Fill.AlignV"/> property.
 			/// </summary>
-			public static AlignV AlignV = AlignV.Center;
+			public const AlignV AlignV = ZedGraph.AlignV.Center;
 		}
 	#endregion
 	
@@ -636,45 +638,51 @@ namespace ZedGraph
 
 			info.AddValue( "rangeDefault", _rangeDefault );
 		}
-	#endregion
+    #endregion
 
-	#region Properties
+    #region Properties
 
-		/// <summary>
-		/// The fill color.  This property is used as a single color to make a solid fill
-		/// (<see cref="Type"/> is <see cref="FillType.Solid"/>), or it can be used in 
-		/// combination with <see cref="System.Drawing.Color.White"/> to make a
-		/// <see cref="LinearGradientBrush"/>
-		/// when <see cref="Type"/> is <see cref="FillType.Brush"/> and <see cref="Brush"/>
-		/// is null.
-		/// </summary>
-		/// <seealso cref="Type"/>
-		public Color Color
+    /// <summary>
+    /// The fill color.  This property is used as a single color to make a solid fill
+    /// (<see cref="Type"/> is <see cref="FillType.Solid"/>), or it can be used in 
+    /// combination with <see cref="System.Drawing.Color.White"/> to make a
+    /// <see cref="LinearGradientBrush"/>
+    /// when <see cref="Type"/> is <see cref="FillType.Brush"/> and <see cref="Brush"/>
+    /// is null.
+    /// </summary>
+    /// <seealso cref="Type"/>
+    [DefaultValue(typeof(Color), "0xffffff")]
+    [Description("The fill color.")]
+    public Color Color
 		{
 			get { return _color; }
 			set { _color = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the secondary color for gradientByValue fills.
-		/// </summary>
-		/// <remarks>
-		/// This property is only applicable if the <see cref="Type"/> is
-		/// <see cref="ZedGraph.FillType.GradientByX"/>,
-		/// <see cref="ZedGraph.FillType.GradientByY"/>, or
-		/// <see cref="ZedGraph.FillType.GradientByZ"/>.  Once the gradient-by-value logic picks
-		/// a color, a new gradient will be created using the SecondaryValueGradientColor, the
-		/// resulting gradient-by-value color, and the angle setting for this
-		/// <see cref="Fill" />. Use a value of <see cref="System.Drawing.Color.Empty">Color.Empty</see> to have
-		/// a solid-color <see cref="Fill" /> resulting from a gradient-by-value
-		/// <see cref="FillType" />.
-		/// </remarks>
-		public Color SecondaryValueGradientColor
+    /// <summary>
+    /// Gets or sets the secondary color for gradientByValue fills.
+    /// </summary>
+    /// <remarks>
+    /// This property is only applicable if the <see cref="Type"/> is
+    /// <see cref="ZedGraph.FillType.GradientByX"/>,
+    /// <see cref="ZedGraph.FillType.GradientByY"/>, or
+    /// <see cref="ZedGraph.FillType.GradientByZ"/>.  Once the gradient-by-value logic picks
+    /// a color, a new gradient will be created using the SecondaryValueGradientColor, the
+    /// resulting gradient-by-value color, and the angle setting for this
+    /// <see cref="Fill" />. Use a value of <see cref="System.Drawing.Color.Empty">Color.Empty</see> to have
+    /// a solid-color <see cref="Fill" /> resulting from a gradient-by-value
+    /// <see cref="FillType" />.
+    /// </remarks>
+    [DefaultValue(typeof(Color), "0xffffff")]
+    [Description("Gets or sets the secondary color for gradientByValue fills.")]
+    public Color SecondaryValueGradientColor
 		{
 			get { return _secondaryValueGradientColor; }
 			set { _secondaryValueGradientColor = value; }
 		}
 
+    [DefaultValue(0f)]
+    [Description("Angle of gradient fills")]
     public float Angle { get { return _angle; } }
 
 		/// <summary>
@@ -683,6 +691,8 @@ namespace ZedGraph
 		/// only applicable if the <see cref="Type"/> property is set
 		/// to <see cref="FillType.Brush"/>.
 		/// </summary>
+    [DefaultValue(null)]
+    [Description("The custom fill brush. Only applicable for FillType.Brush")]
 		public Brush Brush
 		{
 			get { return _brush; }
@@ -695,6 +705,8 @@ namespace ZedGraph
 		/// more information.
 		/// </summary>
 		/// <seealso cref="ZedGraph.Fill.Color"/>
+    [DefaultValue(FillType.None)]
+    [Description("Determines the type of fill")]
 		public FillType Type
 		{
 			get { return _type; }
@@ -715,6 +727,8 @@ namespace ZedGraph
 		/// <seealso cref="Color"/>
 		/// <seealso cref="Brush"/>
 		/// <seealso cref="Type"/>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public bool IsVisible
 		{
 			get { return _type != FillType.None; }
@@ -727,7 +741,9 @@ namespace ZedGraph
 		/// with the filled object based on the <see cref="AlignH"/> and <see cref="AlignV"/>
 		/// properties.
 		/// </summary>
-		public bool IsScaled
+    [DefaultValue(Default.IsScaled)]
+    [Description("Determines if the brush will be scaled to the bounding box of the filled object. If this value is false, then the brush will only be aligned with the filled object based on the AlighH and AlignV properties.")]
+    public bool IsScaled
 		{
 			get { return _isScaled; }
 			set { _isScaled = value; }
@@ -739,48 +755,53 @@ namespace ZedGraph
 		/// This field only applies if <see cref="IsScaled"/> is false.
 		/// </summary>
 		/// <seealso cref="AlignV"/>
+    [DefaultValue(Default.AlignH)]
+    [Description("Determines how the brush will be aligned with the filled object in the horizontal direction. Only applies if IsScaled is false")]
 		public AlignH AlignH
 		{
 			get { return _alignH; }
 			set { _alignH = value; }
 		}
-		
-		/// <summary>
-		/// Determines how the brush will be aligned with the filled object
-		/// in the vertical direction.  This value is a <see cref="ZedGraph.AlignV"/> enumeration.
-		/// This field only applies if <see cref="IsScaled"/> is false.
-		/// </summary>
-		/// <seealso cref="AlignH"/>
-		public AlignV AlignV
+
+    /// <summary>
+    /// Determines how the brush will be aligned with the filled object
+    /// in the vertical direction.  This value is a <see cref="ZedGraph.AlignV"/> enumeration.
+    /// This field only applies if <see cref="IsScaled"/> is false.
+    /// </summary>
+    /// <seealso cref="AlignH"/>
+    [DefaultValue(Default.AlignV)]
+    [Description("Determines how the brush will be aligned with the filled object in the vertical direction. Only applies if IsScaled is false")]
+    public AlignV AlignV
 		{
 			get { return _alignV; }
 			set { _alignV = value; }
 		}
 
-		/// <summary>
-		/// Returns a boolean value indicating whether or not this fill is a "Gradient-By-Value"
-		/// type.  This is true for <see cref="FillType.GradientByX"/>, <see cref="FillType.GradientByY"/>,
-		/// or <see cref="FillType.GradientByZ"/>.
-		/// </summary>
-		/// <remarks>
-		/// The gradient by value fill method allows the fill color for each point or bar to
-		/// be based on a value for that point (either X, Y, or Z in the <see cref="IPointList"/>.
-		/// For example, assume a <see cref="Fill"/> class is defined with a linear gradient ranging from
-		/// <see cref="System.Drawing.Color.Blue"/> to <see cref="System.Drawing.Color.Red"/> and the <see cref="Fill.Type"/>
-		/// is set to <see cref="FillType.GradientByY"/>.  If <see cref="RangeMin"/> is set to 
-		/// 100.0 and <see cref="RangeMax"/> is set to 200.0, then a point that has a Y value of
-		/// 100 or less will be colored blue, a point with a Y value of 200 or more will be
-		/// colored red, and a point between 100 and 200 will have a color based on a linear scale
-		/// between blue and red.  Note that the fill color is always solid for any given point.
-		/// You can use the Z value from <see cref="IPointList"/> along with
-		/// <see cref="FillType.GradientByZ"/> to color individual points according to some
-		/// property that is independent of the X,Y point pair.
-		/// </remarks>
-		/// <value>true if this is a Gradient-by-value type, false otherwise</value>
-		/// <seealso cref="FillType.GradientByX"/>
-		/// <seealso cref="FillType.GradientByY"/>
-		/// <seealso cref="FillType.GradientByZ"/>
-		public bool IsGradientValueType
+    /// <summary>
+    /// Returns a boolean value indicating whether or not this fill is a "Gradient-By-Value"
+    /// type.  This is true for <see cref="FillType.GradientByX"/>, <see cref="FillType.GradientByY"/>,
+    /// or <see cref="FillType.GradientByZ"/>.
+    /// </summary>
+    /// <remarks>
+    /// The gradient by value fill method allows the fill color for each point or bar to
+    /// be based on a value for that point (either X, Y, or Z in the <see cref="IPointList"/>.
+    /// For example, assume a <see cref="Fill"/> class is defined with a linear gradient ranging from
+    /// <see cref="System.Drawing.Color.Blue"/> to <see cref="System.Drawing.Color.Red"/> and the <see cref="Fill.Type"/>
+    /// is set to <see cref="FillType.GradientByY"/>.  If <see cref="RangeMin"/> is set to 
+    /// 100.0 and <see cref="RangeMax"/> is set to 200.0, then a point that has a Y value of
+    /// 100 or less will be colored blue, a point with a Y value of 200 or more will be
+    /// colored red, and a point between 100 and 200 will have a color based on a linear scale
+    /// between blue and red.  Note that the fill color is always solid for any given point.
+    /// You can use the Z value from <see cref="IPointList"/> along with
+    /// <see cref="FillType.GradientByZ"/> to color individual points according to some
+    /// property that is independent of the X,Y point pair.
+    /// </remarks>
+    /// <value>true if this is a Gradient-by-value type, false otherwise</value>
+    /// <seealso cref="FillType.GradientByX"/>
+    /// <seealso cref="FillType.GradientByY"/>
+    /// <seealso cref="FillType.GradientByZ"/>
+    [Browsable(false)]
+    public bool IsGradientValueType
 		{
 			get { return _type == FillType.GradientByX || _type == FillType.GradientByY ||
 					_type == FillType.GradientByZ || _type == FillType.GradientByColorValue; }
@@ -797,23 +818,27 @@ namespace ZedGraph
 		/// <seealso cref="RangeMax"/>
 		/// <seealso cref="RangeDefault"/>
 		/// <value>A double value, in user scale unit</value>
+    [DefaultValue(0.0)]
+    [Description("The minimum user-scale value for the gradient-by-value determination.  This defines the user-scale value for the start of the gradient.")]
 		public double RangeMin
 		{
 			get { return _rangeMin; }
 			set { _rangeMin = value; }
 		}
-		/// <summary>
-		/// The maximum user-scale value for the gradient-by-value determination.  This defines
-		/// the user-scale value for the end of the gradient.
-		/// </summary>
-		/// <seealso cref="FillType.GradientByX"/>
-		/// <seealso cref="FillType.GradientByY"/>
-		/// <seealso cref="FillType.GradientByZ"/>
-		/// <seealso cref="IsGradientValueType"/>
-		/// <seealso cref="RangeMin"/>
-		/// <seealso cref="RangeDefault"/>
-		/// <value>A double value, in user scale unit</value>
-		public double RangeMax
+    /// <summary>
+    /// The maximum user-scale value for the gradient-by-value determination.  This defines
+    /// the user-scale value for the end of the gradient.
+    /// </summary>
+    /// <seealso cref="FillType.GradientByX"/>
+    /// <seealso cref="FillType.GradientByY"/>
+    /// <seealso cref="FillType.GradientByZ"/>
+    /// <seealso cref="IsGradientValueType"/>
+    /// <seealso cref="RangeMin"/>
+    /// <seealso cref="RangeDefault"/>
+    /// <value>A double value, in user scale unit</value>
+    [DefaultValue(1.0)]
+    [Description("The maximum user-scale value for the gradient-by-value determination.  This defines the user-scale value for the end of the gradient.")]
+    public double RangeMax
 		{
 			get { return _rangeMax; }
 			set { _rangeMax = value; }
@@ -837,7 +862,9 @@ namespace ZedGraph
 		/// <seealso cref="RangeMin"/>
 		/// <seealso cref="RangeMax"/>
 		/// <value>A double value, in user scale unit</value>
-		public double RangeDefault
+    [DefaultValue(double.MaxValue)]
+    [Description("The default user-scale value for the gradient-by-value determination.  This defines the value that will be used when there is no point value available, or the actual point value is invalid.")]
+    public double RangeDefault
 		{
 			get { return _rangeDefault; }
 			set { _rangeDefault = value; }
@@ -1143,6 +1170,15 @@ namespace ZedGraph
 		}
 
 
-	#endregion
-	}
+    #endregion
+
+    /// <summary>
+    /// Description of fill.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      return _type.ToString();
+    }
+  }
 }

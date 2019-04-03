@@ -18,6 +18,7 @@
 //=============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -34,7 +35,8 @@ namespace ZedGraph
 	/// <author> John Champion </author>
 	/// <version> $Revision: 3.16 $ $Date: 2007-04-16 00:03:06 $ </version>
 	[Serializable]
-	public class YAxis : Axis, ICloneable, ISerializable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  public class YAxis : Axis, ICloneable, ISerializable
 	{
 		#region Defaults
 		/// <summary>
@@ -243,13 +245,14 @@ namespace ZedGraph
 			return pane.XAxis;
 		}
 
-		//		override internal float GetMinPix( GraphPane pane )
-		//		{
-		//			return pane.Chart._rect.Top;
-		//		}
+    //		override internal float GetMinPix( GraphPane pane )
+    //		{
+    //			return pane.Chart._rect.Top;
+    //		}
 
 
-		#endregion
-	}
+    #endregion
+
+  }
 }
 

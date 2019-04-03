@@ -59,7 +59,7 @@ namespace ZedGraph
 			/// The default value for <see cref="Border.InflateFactor"/>, in units of points (1/72 inch).
 			/// </summary>
 			/// <seealso cref="Border.InflateFactor"/>
-			public static float InflateFactor = 0.0F;
+			public const float InflateFactor = 0.0F;
 		}
 	#endregion
 		
