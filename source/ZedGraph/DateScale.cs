@@ -558,7 +558,11 @@ namespace ZedGraph
 
       if (range > Default.RangeYearYear)
       {
-        scale._majorUnit = DateUnit.Year;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Year;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatYearYear;
@@ -581,7 +585,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeYearMonth)
       {
-        scale._majorUnit = DateUnit.Year;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Year;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatYearMonth;
@@ -608,7 +616,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeMonthMonth)
       {
-        scale._majorUnit = DateUnit.Month;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Month;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatMonthMonth;
@@ -624,7 +636,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeDayDay)
       {
-        scale._majorUnit = DateUnit.Day;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Day;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatDayDay;
@@ -641,7 +657,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeDayHour)
       {
-        scale._majorUnit = DateUnit.Day;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Day;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatDayHour;
@@ -672,8 +692,13 @@ namespace ZedGraph
       }
       else if (range > Default.RangeHourHour)
       {
-        scale._majorUnit = DateUnit.Hour;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Hour;
+        }
+
         tempStep = Math.Ceiling(tempStep * XDate.HoursPerDay);
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatHourHour;
@@ -723,7 +748,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeHourMinute)
       {
-        scale._majorUnit = DateUnit.Hour;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Hour;
+        }
+
         tempStep = Math.Ceiling(tempStep * XDate.HoursPerDay);
 
         if (scale._formatAuto)
@@ -758,7 +787,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeMinuteMinute)
       {
-        scale._majorUnit = DateUnit.Minute;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Minute;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatMinuteMinute;
@@ -802,7 +835,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeMinuteSecond)
       {
-        scale._majorUnit = DateUnit.Minute;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Minute;
+        }
+
         tempStep = Math.Ceiling(tempStep * XDate.MinutesPerDay);
 
         if (scale._formatAuto)
@@ -837,7 +874,11 @@ namespace ZedGraph
       }
       else if (range > Default.RangeSecondSecond) // SecondSecond
       {
-        scale._majorUnit = DateUnit.Second;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Second;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatSecondSecond;
@@ -881,7 +922,11 @@ namespace ZedGraph
       }
       else // MilliSecond
       {
-        scale._majorUnit = DateUnit.Millisecond;
+        if (scale._majorStepAuto)
+        {
+          scale._majorUnit = DateUnit.Millisecond;
+        }
+
         if (scale._formatAuto)
         {
           scale._format = Default.FormatMillisecond;
@@ -1122,9 +1167,7 @@ namespace ZedGraph
 
     public override string ToString()
     {
-      var xdMin = new XDate(_rangeMin);
-      var xdMax = new XDate(_rangeMax);
-      return $"{xdMin.ToString()} - {xdMax.ToString()}";
+      return $"{Start} - {End}";
     }
   }
 }
