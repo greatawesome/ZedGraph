@@ -566,15 +566,29 @@ namespace ZedGraph
 			set { _isEnableVPan = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets a value that determines whether or not the context menu will be available.
-		/// </summary>
-		/// <remarks>The context menu is a menu that appears when you right-click on the
-		/// <see cref="ZedGraphControl"/>.  It provides options for Zoom, Pan, AutoScale, Clipboard
-		/// Copy, and toggle <see cref="IsShowPointValues"/>.
-		/// </remarks>
-		/// <value>true to allow the context menu, false to disable it</value>
-		[Bindable( true ), Category( "Display" ), NotifyParentProperty( true ),
+    /// <summary>
+    /// Gets/sets property that determines if horizontal cursors can be moved with the mouse. 
+    /// </summary>
+    [Bindable(true), Category(""), NotifyParentProperty(true), DefaultValue(true),
+      Description("True to allow moving horizontal cursors using the mouse")]
+    public bool IsEnableHCursorMove { get; set; } = true;
+
+    /// <summary>
+    /// Gets/sets property that determines if vertical cursors can be moved with the mouse. 
+    /// </summary>
+    [Bindable(true), Category(""), NotifyParentProperty(true), DefaultValue(true),
+      Description("True to allow moving vertical cursors using the mouse")]
+    public bool IsEnableVCursorMove { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value that determines whether or not the context menu will be available.
+    /// </summary>
+    /// <remarks>The context menu is a menu that appears when you right-click on the
+    /// <see cref="ZedGraphControl"/>.  It provides options for Zoom, Pan, AutoScale, Clipboard
+    /// Copy, and toggle <see cref="IsShowPointValues"/>.
+    /// </remarks>
+    /// <value>true to allow the context menu, false to disable it</value>
+    [Bindable( true ), Category( "Display" ), NotifyParentProperty( true ),
 		 DefaultValue( true ),
 		 Description( "true to enable the right mouse button context menu" )]
 		public bool IsShowContextMenu

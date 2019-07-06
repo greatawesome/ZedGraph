@@ -452,6 +452,13 @@ namespace ZedGraph
 		/// </summary>
 		private bool _isEditing = false;
 
+    /// <summary>
+    /// Variable that indicates a cursor is currently being edited. The cursor
+    /// being edited is stored in <see cref="_dragCursor"/> and the graph pane 
+    /// it belongs to is in <see cref="_dragPane"/>
+    /// </summary>
+    private bool _isEditingCursor = false;
+
 		// Revision: JCarpenter 10/06
 		/// <summary>
 		/// Internal variable that indicates the control is currently using selection. 
@@ -473,6 +480,12 @@ namespace ZedGraph
 		private int _dragIndex;
 		private CurveItem _dragCurve;
 		private PointPair _dragStartPair;
+
+    /// <summary>
+    /// Cursor being edited when <see cref="_isEditingCursor"/> is true. 
+    /// </summary>
+    private CursorObj _dragCursor;
+
 		/// <summary>
 		/// private field that stores the state of the scale ranges prior to starting a panning action.
 		/// </summary>

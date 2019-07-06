@@ -19,6 +19,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -122,6 +123,20 @@ namespace ZedGraph
 		[Bindable( true ), Category( "Events" ),
 		 Description( "Subscribe this event to be notified of general scroll events" )]
 		public event ScrollEventHandler ScrollEvent;
+
+    /// <summary>
+    /// A delegate the receives notification after a cursor edit operation is completed. 
+    /// </summary>
+    /// <param name="sender">The source <see cref="ZedGraphControl"/> object</param>
+    /// 
+    /// <param name="pane"></param>
+    /// <param name="cursor"></param>
+    public delegate void CursorEditHandler(ZedGraphControl sender, GraphPane pane, CursorObj cursor);
+
+    /// <summary>
+    /// Subscribe to this event to be notified when a cursor is edited by the user. 
+    /// </summary>
+    public event CursorEditHandler CursorEdited;
 
 		/// <summary>
 		/// A delegate that receives notification after a point-edit operation is completed.
@@ -396,6 +411,7 @@ namespace ZedGraph
 			_isZooming = false;
 			_isEditing = false;
 			_isSelecting = false;
+      _isEditingCursor = false; 
 			_dragPane = null;
 
 			Point mousePt = new Point( e.X, e.Y );
@@ -454,62 +470,93 @@ namespace ZedGraph
 
 			// Second, Check to see if it's within a Chart Rect
 			pane = this.MasterPane.FindChartRect( mousePt );
-			//Rectangle rect = new Rectangle( mousePt, new Size( 1, 1 ) );
+      //Rectangle rect = new Rectangle( mousePt, new Size( 1, 1 ) );
+      if (pane != null)
+      {
+        if ((_isEnableHPan || _isEnableVPan) &&
+            ((e.Button == _panButtons && Control.ModifierKeys == _panModifierKeys) ||
+            (e.Button == _panButtons2 && Control.ModifierKeys == _panModifierKeys2)))
+        {
+          BeginPan(mousePt, pane);
+        }
+        else if (_isEnableSelection && e.Button == _selectButtons &&
+                (Control.ModifierKeys == _selectModifierKeys || Control.ModifierKeys == _selectAppendModifierKeys))
+        {
+          BeginSelection(mousePt, pane);
+        }
+        else if ((IsEnableHCursorMove || IsEnableVCursorMove) && e.Button == MouseButtons.Left)
+        {
+          BeginMoveCursor(mousePt, pane);
+        }
+        else if ((_isEnableHEdit || _isEnableVEdit) &&
+                 (e.Button == EditButtons && Control.ModifierKeys == EditModifierKeys))
+        {
+          BeginEdit(mousePt, pane);
+        }
+        else if ((_isEnableHZoom || _isEnableVZoom) &&
+               ((e.Button == _zoomButtons && Control.ModifierKeys == _zoomModifierKeys) ||
+               (e.Button == _zoomButtons2 && Control.ModifierKeys == _zoomModifierKeys2)))
+        {
+          BeginZoom(mousePt, pane);
+        }
+      }
+    }
 
-			if ( pane != null &&
-				( _isEnableHPan || _isEnableVPan ) &&
-				( ( e.Button == _panButtons && Control.ModifierKeys == _panModifierKeys ) ||
-				( e.Button == _panButtons2 && Control.ModifierKeys == _panModifierKeys2 ) ) )
-			{
-				_isPanning = true;
-				_dragStartPt = mousePt;
-				_dragPane = pane;
-				//_zoomState = new ZoomState( _dragPane, ZoomState.StateType.Pan );
-				ZoomStateSave( _dragPane, ZoomState.StateType.Pan );
-			}
-			else if ( pane != null && ( _isEnableHZoom || _isEnableVZoom ) &&
-				( ( e.Button == _zoomButtons && Control.ModifierKeys == _zoomModifierKeys ) ||
-				( e.Button == _zoomButtons2 && Control.ModifierKeys == _zoomModifierKeys2 ) ) )
-			{
-				_isZooming = true;
-				_dragStartPt = mousePt;
-				_dragEndPt = mousePt;
-				_dragEndPt.Offset( 1, 1 );
-				_dragPane = pane;
-				ZoomStateSave( _dragPane, ZoomState.StateType.Zoom );
-			}
-			//Revision: JCarpenter 10/06
-			else if ( pane != null && _isEnableSelection && e.Button == _selectButtons &&
-				( Control.ModifierKeys == _selectModifierKeys ||
-					Control.ModifierKeys == _selectAppendModifierKeys ) )
-			{
-				_isSelecting = true;
-				_dragStartPt = mousePt;
-				_dragEndPt = mousePt;
-				_dragEndPt.Offset( 1, 1 );
-				_dragPane = pane;
-			}
-			else if ( pane != null && ( _isEnableHEdit || _isEnableVEdit ) &&
-				 ( e.Button == EditButtons && Control.ModifierKeys == EditModifierKeys ) )
-			{
+    private void BeginMoveCursor(Point ptMouse, GraphPane p)
+    {
+      if (p.FindNearestCursor(ptMouse, IsEnableHCursorMove, IsEnableVCursorMove, out _dragCursor))
+      {
+        _isEditingCursor = true;
+        _dragPane = p;
+        _dragStartPt = ptMouse;
+      }
+    }
 
-				// find the point that was clicked, and make sure the point list is editable
-				// and that it's a primary Y axis (the first Y or Y2 axis)
-				if ( pane.FindNearestPoint( mousePt, out _dragCurve, out _dragIndex ) &&
-							_dragCurve.Points is IPointListEdit )
-				{
-					_isEditing = true;
-					_dragPane = pane;
-					_dragStartPt = mousePt;
-					_dragStartPair = _dragCurve[_dragIndex];
-				}
-			}
-		}
+    private void BeginEdit(Point mousePt, GraphPane pane)
+    {
+      // find the point that was clicked, and make sure the point list is editable
+      // and that it's a primary Y axis (the first Y or Y2 axis)
+      if (pane.FindNearestPoint(mousePt, out _dragCurve, out _dragIndex) &&
+            _dragCurve.Points is IPointListEdit)
+      {
+        _isEditing = true;
+        _dragPane = pane;
+        _dragStartPt = mousePt;
+        _dragStartPair = _dragCurve[_dragIndex];
+      }
+    }
 
-		/// <summary>
-		/// Set the cursor according to the current mouse location.
-		/// </summary>
-		protected void SetCursor()
+    private void BeginSelection(Point mousePt, GraphPane pane)
+    {
+      _isSelecting = true;
+      _dragStartPt = mousePt;
+      _dragEndPt = mousePt;
+      _dragEndPt.Offset(1, 1);
+      _dragPane = pane;
+    }
+
+    private void BeginZoom(Point mousePt, GraphPane pane)
+    {
+      _isZooming = true;
+      _dragStartPt = mousePt;
+      _dragEndPt = mousePt;
+      _dragEndPt.Offset(1, 1);
+      _dragPane = pane;
+      ZoomStateSave(_dragPane, ZoomState.StateType.Zoom);
+    }
+
+    private void BeginPan(Point mousePt, GraphPane pane)
+    {
+      _isPanning = true;
+      _dragStartPt = mousePt;
+      _dragPane = pane;
+      ZoomStateSave(_dragPane, ZoomState.StateType.Pan);
+    }
+
+    /// <summary>
+    /// Set the cursor according to the current mouse location.
+    /// </summary>
+    protected void SetCursor()
 		{
 			SetCursor( this.PointToClient( Control.MousePosition ) );
 		}
@@ -522,15 +569,27 @@ namespace ZedGraph
 			if ( _masterPane != null )
 			{
 				GraphPane pane = _masterPane.FindChartRect( mousePt );
-				if ( ( _isEnableHPan || _isEnableVPan ) && ( Control.ModifierKeys == Keys.Shift || _isPanning ) &&
-					( pane != null || _isPanning ) )
-					this.Cursor = Cursors.Hand;
-				else if ( ( _isEnableVZoom || _isEnableHZoom ) && ( pane != null || _isZooming ) )
-					this.Cursor = Cursors.Cross;
-				else if ( _isEnableSelection && ( pane != null || _isSelecting ) )
-					this.Cursor = Cursors.Cross;
-				else
-					this.Cursor = Cursors.Default;
+        if ((_isEnableHPan || _isEnableVPan) && (Control.ModifierKeys == Keys.Shift || _isPanning) &&
+          (pane != null || _isPanning))
+        {
+          this.Cursor = Cursors.Hand;
+        }
+        else if (pane != null && pane.FindNearestCursor(mousePt, IsEnableHCursorMove, IsEnableVCursorMove, out CursorObj c))
+        {
+          this.Cursor = c.Orientation == CursorOrientation.Horizontal ? Cursors.HSplit : Cursors.VSplit;
+        }
+        else if ((_isEnableVZoom || _isEnableHZoom) && (pane != null || _isZooming))
+        {
+          this.Cursor = Cursors.Cross;
+        }
+        else if (_isEnableSelection && (pane != null || _isSelecting))
+        {
+          this.Cursor = Cursors.Cross;
+        }
+        else
+        {
+          this.Cursor = Cursors.Default;
+        }
 
 				//			else if ( isZoomMode || isPanMode )
 				//				this.Cursor = Cursors.No;
@@ -564,6 +623,9 @@ namespace ZedGraph
 					HandleZoomCancel();
 				if ( _isEditing )
 					HandleEditCancel();
+        if (_isEditingCursor)
+          HandleEditCursorCancel();
+
 				//if ( _isSelecting )
 				// Esc always cancels the selection
 				HandleSelectionCancel();
@@ -572,6 +634,7 @@ namespace ZedGraph
 				_isPanning = false;
 				_isEditing = false;
 				_isSelecting = false;
+        _isEditingCursor = false;
 
 				Refresh();
 			}
@@ -593,16 +656,18 @@ namespace ZedGraph
 
 			if ( _masterPane != null && _dragPane != null )
 			{
-				// If the MouseUp event occurs, the user is done dragging.
-				if ( _isZooming )
-					HandleZoomFinish( sender, e );
-				else if ( _isPanning )
-					HandlePanFinish();
-				else if ( _isEditing )
-					HandleEditFinish();
-				//Revision: JCarpenter 10/06
-				else if ( _isSelecting )
-					HandleSelectionFinish( sender, e );
+        // If the MouseUp event occurs, the user is done dragging.
+        if (_isZooming)
+          HandleZoomFinish(sender, e);
+        else if (_isPanning)
+          HandlePanFinish();
+        else if (_isEditing)
+          HandleEditFinish();
+        //Revision: JCarpenter 10/06
+        else if (_isSelecting)
+          HandleSelectionFinish(sender, e);
+        else if (_isEditingCursor)
+          HandleEditCursorFinish();
 			}
 
 			// Reset the rectangle.
@@ -612,6 +677,7 @@ namespace ZedGraph
 			_isPanning = false;
 			_isEditing = false;
 			_isSelecting = false;
+      _isEditingCursor = false;
 
 			Cursor.Current = Cursors.Default;
 		}
@@ -681,21 +747,23 @@ namespace ZedGraph
 
 				SetCursor( mousePt );
 
-				// If the mouse is being dragged,
-				// undraw and redraw the rectangle as the mouse moves.
-				if ( _isZooming )
-					HandleZoomDrag( mousePt );
-				else if ( _isPanning )
-					HandlePanDrag( mousePt );
-				else if ( _isEditing )
-					HandleEditDrag( mousePt );
-				else if ( _isShowCursorValues )
-					HandleCursorValues( mousePt );
-				else if ( _isShowPointValues )
-					HandlePointValues( mousePt );
-				//Revision: JCarpenter 10/06
-				else if ( _isSelecting )
-					HandleZoomDrag( mousePt );
+        // If the mouse is being dragged,
+        // undraw and redraw the rectangle as the mouse moves.
+        if (_isZooming)
+          HandleZoomDrag(mousePt);
+        else if (_isPanning)
+          HandlePanDrag(mousePt);
+        else if (_isEditing)
+          HandleEditDrag(mousePt);
+        else if (_isShowCursorValues)
+          HandleCursorValues(mousePt);
+        else if (_isShowPointValues)
+          HandlePointValues(mousePt);
+        //Revision: JCarpenter 10/06
+        else if (_isSelecting)
+          HandleZoomDrag(mousePt);
+        else if (_isEditingCursor)
+          HandleEditCursor(mousePt);
 			}
 		}
 
@@ -1103,12 +1171,44 @@ namespace ZedGraph
 				Refresh();
 			}
 		}
+    #endregion
 
-	#endregion
+    #region Edit Cursor
 
-	#region Zoom Events
+    private void HandleEditCursor(Point ptMouse)
+    {
+      PointD ptLocation = _dragPane.ReverseTransformCoord(ptMouse, _dragCursor.CoordinateUnit);
+      if (_dragCursor.Orientation == CursorOrientation.Horizontal)
+      {
+        _dragCursor.Location = ptLocation.Y;
+      }
+      else
+      {
+        _dragCursor.Location = ptLocation.X;
+      }
 
-		private void HandleZoomDrag( Point mousePt )
+      Refresh();
+    }
+
+    private void HandleEditCursorFinish()
+    {
+      CursorEdited?.Invoke(this, _dragPane, _dragCursor);
+    }
+
+    private void HandleEditCursorCancel()
+    {
+      if (_isEditingCursor)
+      {
+        _isEditingCursor = false;
+        Refresh();
+      }
+    }
+
+    #endregion
+
+    #region Zoom Events
+
+    private void HandleZoomDrag( Point mousePt )
 		{
 			using (Graphics g = Graphics.FromHwnd(this.Handle))
 			{

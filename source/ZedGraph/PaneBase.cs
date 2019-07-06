@@ -1227,7 +1227,85 @@ namespace ZedGraph
 			return ptPix;
 		}
 
-	#endregion
+    /// <summary>
+    /// Transforms screen coordinate into selected coordinate type. 
+    /// </summary>
+    /// <param name="ptScreen">Screen coordinate</param>
+    /// <param name="coord">Desired coordinate type</param>
+    /// <returns>Transformed coordinate</returns>
+    public PointD ReverseTransformCoord(Point ptScreen, CoordType coord)
+    {
+      // Some coordinate transforms only work for graph panes. But we
+      // implement in base class because that's where TransformCoord is. 
+      GraphPane gPane = this as GraphPane;
+      RectangleF rcChart = new RectangleF(0, 0, 1, 1);
+      if (gPane != null)
+      {
+        rcChart = gPane.Chart._rect;
+      }
 
-	}
+      // If the Transformation is an illegal type, make it so
+      if (gPane == null && coord != CoordType.PaneFraction)
+      {
+        coord = CoordType.PaneFraction;
+      }
+
+      PointD ptResult = new PointD();
+
+      Func<int, double> fnChartFractionX = x => (x - rcChart.Left) / rcChart.Width;
+      Func<int, double> fnChartFractionY = y => (y - rcChart.Top) / rcChart.Height;
+      Func<int, double> fnPaneFractionX = x => (x - _rect.Left) / _rect.Width;
+      Func<int, double> fnPaneFractionY = y => (y - _rect.Top) / _rect.Height;
+
+      if (coord == CoordType.ChartFraction)
+      {
+        ptResult.X = fnChartFractionX(ptScreen.X);
+        ptResult.Y = fnChartFractionY(ptScreen.Y);
+      }
+      else if (coord == CoordType.AxisXYScale)
+      {
+        ptResult.X = gPane.XAxis.Scale.ReverseTransform(ptScreen.X);
+        ptResult.Y = gPane.YAxis.Scale.ReverseTransform(ptScreen.Y);
+      }
+      else if (coord == CoordType.AxisXY2Scale)
+      {
+        ptResult.X = gPane.XAxis.Scale.ReverseTransform(ptScreen.X);
+        ptResult.Y = gPane.Y2Axis.Scale.ReverseTransform(ptScreen.Y);
+      }
+      else if (coord == CoordType.XScaleYChartFraction)
+      {
+        ptResult.X = gPane.XAxis.Scale.ReverseTransform(ptScreen.X);
+        ptResult.Y = fnChartFractionY(ptScreen.Y);
+      }
+      else if (coord == CoordType.XChartFractionYScale)
+      {
+        ptResult.X = fnChartFractionX(ptScreen.X);
+        ptResult.Y = gPane.YAxis.Scale.ReverseTransform(ptScreen.Y);
+      }
+      else if (coord == CoordType.XChartFractionY2Scale)
+      {
+        ptResult.X = fnChartFractionX(ptScreen.X);
+        ptResult.Y = gPane.Y2Axis.Scale.ReverseTransform(ptScreen.Y);
+      }
+      else if (coord == CoordType.XChartFractionYPaneFraction)
+      {
+        ptResult.X = fnChartFractionX(ptScreen.X);
+        ptResult.Y = fnPaneFractionY(ptScreen.Y);
+      }
+      else if (coord == CoordType.XPaneFractionYChartFraction)
+      {
+        ptResult.X = fnPaneFractionX(ptScreen.X);
+        ptResult.Y = fnChartFractionY(ptScreen.Y);
+      }
+      else  // PaneFraction
+      {
+        ptResult.X = fnPaneFractionX(ptScreen.X);
+        ptResult.Y = fnPaneFractionY(ptScreen.Y);
+      }
+
+      return ptResult;
+    }
+    #endregion
+
+  }
 }

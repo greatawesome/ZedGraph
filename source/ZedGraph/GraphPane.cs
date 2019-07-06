@@ -142,6 +142,12 @@ namespace ZedGraph
 		/// <seealso cref="Default.LineType"/>
 		private LineType _lineType;
 
+    /// <summary>
+    /// Cursors that can be displayed on the graph. Typically horizontal and
+    /// vertical lines. 
+    /// </summary>
+    private CursorObjList _Cursors = new CursorObjList();
+
 	#endregion
 
 	#region Defaults
@@ -279,6 +285,12 @@ namespace ZedGraph
 	#endregion
 
 	#region General Properties
+
+    public CursorObjList Cursors
+    {
+      get { return _Cursors; }
+      set { _Cursors = value; }
+    }
 
 		/// <summary>
 		/// Gets or sets a boolean value that affects the data range that is considered
@@ -583,25 +595,25 @@ namespace ZedGraph
 				AxisChange( g );
 		}
 
-		/// <summary>
-		/// AxisChange causes the axes scale ranges to be recalculated based on the current data range.
-		/// </summary>
-		/// <remarks>
-		/// There is no obligation to call AxisChange() for manually scaled axes.  AxisChange() is only
-		/// intended to handle auto scaling operations.  Call this function anytime you change, add, or
-		/// remove curve data to insure that the scale range of the axes are appropriate for the data range.
-		/// This method calculates
-		/// a scale minimum, maximum, and step size for each axis based on the current curve data.
-		/// Only the axis attributes (min, max, step) that are set to auto-range
-		/// (<see cref="Scale.MinAuto"/>, <see cref="Scale.MaxAuto"/>, <see cref="Scale.MajorStepAuto"/>)
-		/// will be modified.  You must call
-		/// <see cref="Control.Invalidate()"/> after calling AxisChange to make sure the display gets updated.
-		/// </remarks>
-		/// <param name="g">
-		/// A graphic device object to be drawn into.  This is normally e.Graphics from the
-		/// PaintEventArgs argument to the Paint() method.
-		/// </param>
-		public void AxisChange( Graphics g )
+    /// <summary>
+    /// AxisChange causes the axes scale ranges to be recalculated based on the current data range.
+    /// </summary>
+    /// <remarks>
+    /// There is no obligation to call AxisChange() for manually scaled axes.  AxisChange() is only
+    /// intended to handle auto scaling operations.  Call this function anytime you change, add, or
+    /// remove curve data to insure that the scale range of the axes are appropriate for the data range.
+    /// This method calculates
+    /// a scale minimum, maximum, and step size for each axis based on the current curve data.
+    /// Only the axis attributes (min, max, step) that are set to auto-range
+    /// (<see cref="Scale.MinAuto"/>, <see cref="Scale.MaxAuto"/>, <see cref="Scale.MajorStepAuto"/>)
+    /// will be modified.  You must call
+    /// <see cref="Control.Invalidate()"/> after calling AxisChange to make sure the display gets updated.
+    /// </remarks>
+    /// <param name="g">
+    /// A graphic device object to be drawn into.  This is normally e.Graphics from the
+    /// PaintEventArgs argument to the Paint() method.
+    /// </param>
+    public void AxisChange( Graphics g )
 		{
 			//double	xMin, xMax, yMin, yMax, y2Min, y2Max;
 
@@ -739,7 +751,6 @@ namespace ZedGraph
 			if ( _chart._isRectAuto )
 			{
 				_chart._rect = CalcChartRect( g, scaleFactor );
-				//this.pieRect = PieItem.CalcPieRect( g, this, scaleFactor, this.chartRect );
 			}
 			else
 				CalcChartRect( g, scaleFactor );
@@ -828,6 +839,9 @@ namespace ZedGraph
 
 				// Draw the GraphItems that are in front of all other items
 				_graphObjList.Draw( g, this, scaleFactor, ZOrder.A_InFront );
+
+        // Draw the cursors
+        _Cursors.Draw(g, this, scaleFactor);
 			}
 
 			// Reset the clipping
@@ -1761,42 +1775,63 @@ namespace ZedGraph
 			return _y2AxisList.Count - 1;
 		}
 
-		/// <summary>
-		/// Find the object that lies closest to the specified mouse (screen) point.
-		/// </summary>
-		/// <remarks>
-		/// This method will search through all of the graph objects, such as
-		/// <see cref="Axis"/>, <see cref="Legend"/>, <see cref="PaneBase.Title"/>,
-		/// <see cref="GraphObj"/>, and <see cref="CurveItem"/>.
-		/// If the mouse point is within the bounding box of the items (or in the case
-		/// of <see cref="ArrowObj"/> and <see cref="CurveItem"/>, within
-		/// <see cref="Default.NearestTol"/> pixels), then the object will be returned.
-		/// You must check the type of the object to determine what object was
-		/// selected (for example, "if ( object is Legend ) ...").  The
-		/// <see paramref="index"/> parameter returns the index number of the item
-		/// within the selected object (such as the point number within a
-		/// <see cref="CurveItem"/> object.
-		/// </remarks>
-		/// <param name="mousePt">The screen point, in pixel coordinates.</param>
-		/// <param name="g">
-		/// A graphic device object to be drawn into.  This is normally e.Graphics from the
-		/// PaintEventArgs argument to the Paint() method.
-		/// </param>
-		/// <param name="nearestObj">A reference to the nearest object to the
-		/// specified screen point.  This can be any of <see cref="Axis"/>,
-		/// <see cref="Legend"/>, <see cref="PaneBase.Title"/>,
-		/// <see cref="TextObj"/>, <see cref="ArrowObj"/>, or <see cref="CurveItem"/>.
-		/// Note: If the pane title is selected, then the <see cref="GraphPane"/> object
-		/// will be returned.
-		/// </param>
-		/// <param name="index">The index number of the item within the selected object
-		/// (where applicable).  For example, for a <see cref="CurveItem"/> object,
-		/// <see paramref="index"/> will be the index number of the nearest data point,
-		/// accessible via <see cref="CurveItem.Points">CurveItem.Points[index]</see>.
-		/// index will be -1 if no data points are available.</param>
-		/// <returns>true if an object was found, false otherwise.</returns>
-		/// <seealso cref="FindNearestObject"/>
-		public bool FindNearestObject( PointF mousePt, Graphics g, 
+    /// <summary>
+    /// Search for a cursor near the mouse position. 
+    /// </summary>
+    /// <param name="ptTest">The point to test</param>
+    /// <param name="Cursor">The matching cursor</param>
+    /// <returns></returns>
+    public bool FindNearestCursor(Point ptTest, bool bIncludeHorizontalCursors, bool bIncludeVerticalCursors, out CursorObj Cursor)
+    {
+      if (AxisRangesValid())
+      {
+        float scaleFactor = CalcScaleFactor();
+        Cursor = Cursors.Find(x => 
+          ((x.Orientation == CursorOrientation.Horizontal && bIncludeHorizontalCursors) ||
+          (x.Orientation == CursorOrientation.Vertical && bIncludeVerticalCursors)) &&
+          x.PointInBox(ptTest, this, scaleFactor));
+        return Cursor != null;
+      }
+      Cursor = null;
+      return false;
+    }
+
+    /// <summary>
+    /// Find the object that lies closest to the specified mouse (screen) point.
+    /// </summary>
+    /// <remarks>
+    /// This method will search through all of the graph objects, such as
+    /// <see cref="Axis"/>, <see cref="Legend"/>, <see cref="PaneBase.Title"/>,
+    /// <see cref="GraphObj"/>, and <see cref="CurveItem"/>.
+    /// If the mouse point is within the bounding box of the items (or in the case
+    /// of <see cref="ArrowObj"/> and <see cref="CurveItem"/>, within
+    /// <see cref="Default.NearestTol"/> pixels), then the object will be returned.
+    /// You must check the type of the object to determine what object was
+    /// selected (for example, "if ( object is Legend ) ...").  The
+    /// <see paramref="index"/> parameter returns the index number of the item
+    /// within the selected object (such as the point number within a
+    /// <see cref="CurveItem"/> object.
+    /// </remarks>
+    /// <param name="mousePt">The screen point, in pixel coordinates.</param>
+    /// <param name="g">
+    /// A graphic device object to be drawn into.  This is normally e.Graphics from the
+    /// PaintEventArgs argument to the Paint() method.
+    /// </param>
+    /// <param name="nearestObj">A reference to the nearest object to the
+    /// specified screen point.  This can be any of <see cref="Axis"/>,
+    /// <see cref="Legend"/>, <see cref="PaneBase.Title"/>,
+    /// <see cref="TextObj"/>, <see cref="ArrowObj"/>, or <see cref="CurveItem"/>.
+    /// Note: If the pane title is selected, then the <see cref="GraphPane"/> object
+    /// will be returned.
+    /// </param>
+    /// <param name="index">The index number of the item within the selected object
+    /// (where applicable).  For example, for a <see cref="CurveItem"/> object,
+    /// <see paramref="index"/> will be the index number of the nearest data point,
+    /// accessible via <see cref="CurveItem.Points">CurveItem.Points[index]</see>.
+    /// index will be -1 if no data points are available.</param>
+    /// <returns>true if an object was found, false otherwise.</returns>
+    /// <seealso cref="FindNearestObject"/>
+    public bool FindNearestObject( PointF mousePt, Graphics g, 
 			out object nearestObj, out int index )
 		{
 			nearestObj = null;

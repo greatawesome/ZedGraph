@@ -243,7 +243,6 @@ namespace ZedGraph
 
 				// get a pen according to this arrow properties
 				using ( Pen pen = _line.GetPen( pane, scaleFactor ) )
-				//new Pen( _line._color, pane.ScaledPenWidth( _line._width, scaleFactor ) ) )
 				{
 					//pen.DashStyle = _style;
 

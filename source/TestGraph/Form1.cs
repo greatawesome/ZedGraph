@@ -55,6 +55,12 @@ namespace TestGraph
       points.Add(XDate.DateTimeToXLDate(dtEnd), 0);
       zgGraph.GraphPane.AddCurve("Fish", points, Color.Black);
 
+
+      zgGraph.GraphPane.Cursors.Add(new CursorObj(XDate.DateTimeToXLDate(dtStart + TimeSpan.FromMinutes(5)), CursorOrientation.Vertical));
+      zgGraph.GraphPane.Cursors.Add(new CursorObj(XDate.DateTimeToXLDate(dtEnd - TimeSpan.FromMinutes(1)), CursorOrientation.Vertical));
+
+      zgGraph.GraphPane.Cursors.Add(new CursorObj(1.1, CursorOrientation.Horizontal));
+      zgGraph.GraphPane.Cursors.Add(new CursorObj(8.2, CursorOrientation.Horizontal));
       zgGraph.AxisChange();
       zgGraph.Invalidate();
 
