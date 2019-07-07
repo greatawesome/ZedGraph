@@ -1,5 +1,9 @@
 # N8I Fork Change log
 
+## 6.6.19188.0707
+Enhancements:
+- Added basic support for graph cursors
+
 ## 6.5.19094.0404
 Enhancements:
 - Extended designer support for editing with property grid. 

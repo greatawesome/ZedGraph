@@ -62,6 +62,11 @@ namespace ZedGraph
     #region Properties
 
     /// <summary>
+    /// A name that can be used to identify the cursor. 
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
     /// A <see cref="LineBase" /> class that contains the attributes for drawing this
     /// <see cref="LineObj" />.
     /// </summary>

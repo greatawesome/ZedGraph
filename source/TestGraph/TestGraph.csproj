@@ -44,9 +44,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="ZedGraph">
-      <HintPath>..\ZedGraph\bin\Debug\net35\ZedGraph.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -84,8 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ZedGraph.WinForms\ZedGraph.WinForms.csproj">
-      <Project>{E656C1D4-95AD-4DF5-810B-51A9228C5ADC}</Project>
+      <Project>{e656c1d4-95ad-4df5-810b-51a9228c5adc}</Project>
       <Name>ZedGraph.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZedGraph\ZedGraph.csproj">
+      <Project>{2541686b-1673-43bf-af89-3163945db009}</Project>
+      <Name>ZedGraph</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
