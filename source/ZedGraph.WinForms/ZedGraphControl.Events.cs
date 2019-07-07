@@ -755,15 +755,15 @@ namespace ZedGraph
           HandlePanDrag(mousePt);
         else if (_isEditing)
           HandleEditDrag(mousePt);
-        else if (_isShowCursorValues)
-          HandleCursorValues(mousePt);
-        else if (_isShowPointValues)
-          HandlePointValues(mousePt);
-        //Revision: JCarpenter 10/06
         else if (_isSelecting)
           HandleZoomDrag(mousePt);
         else if (_isEditingCursor)
           HandleEditCursor(mousePt);
+
+        if (_isShowCursorValues)
+          HandleCursorValues(mousePt);
+        else if (_isShowPointValues)
+          HandlePointValues(mousePt);
 			}
 		}
 
