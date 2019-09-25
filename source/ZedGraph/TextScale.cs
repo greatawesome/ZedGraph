@@ -114,13 +114,9 @@ namespace ZedGraph
 		/// <returns>
 		/// First major tic value (floating point double).
 		/// </returns>
-		override internal double CalcBaseTic()
+		override public double CalculateFirstTic()
 		{
-			if ( _baseTic != PointPair.Missing )
-				return _baseTic;
-			else
-				return 1.0;
-
+  	  return 1.0;
 		}
 		
 		/// <summary>

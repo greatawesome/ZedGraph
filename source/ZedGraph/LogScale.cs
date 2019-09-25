@@ -252,16 +252,10 @@ namespace ZedGraph
 		/// <returns>
 		/// First major tic value (floating point double).
 		/// </returns>
-		override internal double CalcBaseTic()
+		override public double CalculateFirstTic()
 		{
-			if ( _baseTic != PointPair.Missing )
-				return _baseTic;
-			else
-			{
-				// go to the nearest even multiple of the step size
-				return Math.Ceiling( Scale.SafeLog( _min ) - 0.00000001 );
-			}
-
+			// go to the nearest even multiple of the step size
+			return Math.Ceiling( Scale.SafeLog( _min ) - 0.00000001 );
 		}
 		
 		/// <summary>

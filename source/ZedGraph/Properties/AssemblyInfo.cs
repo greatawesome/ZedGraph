@@ -28,8 +28,11 @@ using System.Resources;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("6.6.19188.0707")]
-[assembly: AssemblyFileVersion("6.6.19188.0707")]
+[assembly: AssemblyVersion("6.7.19268.0925")]
+[assembly: AssemblyFileVersion("6.7.19268.0925")]
+
+// Remember to update version in nuspec files (in source folder). 
+
 //[assembly: AllowPartiallyTrustedCallers ]
 [assembly: NeutralResourcesLanguageAttribute( "" )]
 

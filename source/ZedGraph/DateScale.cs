@@ -274,78 +274,71 @@ namespace ZedGraph
     /// <returns>
     /// First major tic value (floating point double).
     /// </returns>
-    override internal double CalcBaseTic()
+    override public double CalculateFirstTic()
     {
-      if (_baseTic != PointPair.Missing)
+      int year, month, day, hour, minute, second, millisecond;
+      XDate.XLDateToCalendarDate(_min, out year, out month, out day, out hour, out minute,
+                    out second, out millisecond);
+      switch (_majorUnit)
       {
-        return _baseTic;
+        case DateUnit.Year:
+        default:
+          month = 1; day = 1; hour = 0; minute = 0; second = 0; millisecond = 0;
+          break;
+        case DateUnit.Month:
+          day = 1; hour = 0; minute = 0; second = 0; millisecond = 0;
+          break;
+        case DateUnit.Day:
+          hour = 0; minute = 0; second = 0; millisecond = 0;
+          break;
+        case DateUnit.Hour:
+          minute = 0; second = 0; millisecond = 0;
+          break;
+        case DateUnit.Minute:
+          second = 0; millisecond = 0;
+          break;
+        case DateUnit.Second:
+          millisecond = 0;
+          break;
+        case DateUnit.Millisecond:
+          break;
+
       }
-      else
+
+      double xlDate = XDate.CalendarDateToXLDate(year, month, day, hour, minute, second, millisecond);
+      if (xlDate < _min)
       {
-        int year, month, day, hour, minute, second, millisecond;
-        XDate.XLDateToCalendarDate(_min, out year, out month, out day, out hour, out minute,
-                      out second, out millisecond);
         switch (_majorUnit)
         {
           case DateUnit.Year:
           default:
-            month = 1; day = 1; hour = 0; minute = 0; second = 0; millisecond = 0;
+            year++;
             break;
           case DateUnit.Month:
-            day = 1; hour = 0; minute = 0; second = 0; millisecond = 0;
+            month++;
             break;
           case DateUnit.Day:
-            hour = 0; minute = 0; second = 0; millisecond = 0;
+            day++;
             break;
           case DateUnit.Hour:
-            minute = 0; second = 0; millisecond = 0;
+            hour++;
             break;
           case DateUnit.Minute:
-            second = 0; millisecond = 0;
+            minute++;
             break;
           case DateUnit.Second:
-            millisecond = 0;
+            second++;
             break;
           case DateUnit.Millisecond:
+            millisecond++;
             break;
 
         }
 
-        double xlDate = XDate.CalendarDateToXLDate(year, month, day, hour, minute, second, millisecond);
-        if (xlDate < _min)
-        {
-          switch (_majorUnit)
-          {
-            case DateUnit.Year:
-            default:
-              year++;
-              break;
-            case DateUnit.Month:
-              month++;
-              break;
-            case DateUnit.Day:
-              day++;
-              break;
-            case DateUnit.Hour:
-              hour++;
-              break;
-            case DateUnit.Minute:
-              minute++;
-              break;
-            case DateUnit.Second:
-              second++;
-              break;
-            case DateUnit.Millisecond:
-              millisecond++;
-              break;
-
-          }
-
-          xlDate = XDate.CalendarDateToXLDate(year, month, day, hour, minute, second, millisecond);
-        }
-
-        return xlDate;
+        xlDate = XDate.CalendarDateToXLDate(year, month, day, hour, minute, second, millisecond);
       }
+
+      return xlDate;
     }
 
     /// <summary>

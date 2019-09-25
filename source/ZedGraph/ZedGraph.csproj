@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;net46;net47</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;net472</TargetFrameworks>
     <RootNamespace>ZedGraph</RootNamespace>
     <AssemblyName>ZedGraph</AssemblyName>
 
@@ -32,8 +32,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
     <DocumentationFile>bin\Release\net46\ZedGraph.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net47|AnyCPU'">
-    <DocumentationFile>bin\Release\net47\ZedGraph.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
+    <DocumentationFile>bin\Release\net472\ZedGraph.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

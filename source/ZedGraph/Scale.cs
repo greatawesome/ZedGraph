@@ -1951,57 +1951,67 @@ namespace ZedGraph
 		/// <returns>
 		/// First major tic value (floating point double).
 		/// </returns>
-		virtual internal double CalcBaseTic()
+		internal double CalcBaseTic()
 		{
 			if ( _baseTic != PointPair.Missing )
 				return _baseTic;
-			else if ( IsAnyOrdinal )
-			{
-				// basetic is always 1 for ordinal types
-				return 1;
-			}
 			else
-			{
-				// default behavior is linear or ordinal type
-				// go to the nearest even multiple of the step size
-				return Math.Ceiling( (double)_min / (double)_majorStep - 0.00000001 )
-														* (double)_majorStep;
-			}
+      return CalculateFirstTic();
 		}
 
-		/// <summary>
-		/// Draw the value labels, tic marks, and grid lines as
-		/// required for this <see cref="Axis"/>.
-		/// </summary>
-		/// <param name="g">
-		/// A graphic device object to be drawn into.  This is normally e.Graphics from the
-		/// PaintEventArgs argument to the Paint() method.
-		/// </param>
-		/// <param name="pane">
-		/// A reference to the <see cref="GraphPane"/> object that is the parent or
-		/// owner of this object.
-		/// </param>
-		/// <param name="baseVal">
-		/// The first major tic value for the axis
-		/// </param>
-		/// <param name="nTics">
-		/// The total number of major tics for the axis
-		/// </param>
-		/// <param name="topPix">
-		/// The pixel location of the far side of the ChartRect from this axis.
-		/// This value is the ChartRect.Height for the XAxis, or the ChartRect.Width
-		/// for the YAxis and Y2Axis.
-		/// </param>
-		/// <param name="shift">The number of pixels to shift this axis, based on the
-		/// value of <see cref="Axis.Cross"/>.  A positive value is into the ChartRect relative to
-		/// the default axis position.</param>
-		/// <param name="scaleFactor">
-		/// The scaling factor to be used for rendering objects.  This is calculated and
-		/// passed down by the parent <see cref="GraphPane"/> object using the
-		/// <see cref="PaneBase.CalcScaleFactor"/> method, and is used to proportionally adjust
-		/// font sizes, etc. according to the actual size of the graph.
-		/// </param>
-		internal void DrawLabels( Graphics g, GraphPane pane, double baseVal, int nTics,
+    /// <summary>
+    /// Determine the location for the first major tick, ignoring the base tic
+    /// </summary>
+    /// <returns></returns>
+    virtual public double CalculateFirstTic()
+    {
+      if (IsAnyOrdinal)
+      {
+        // basetic is always 1 for ordinal types
+        return 1;
+      }
+      else
+      {
+        // default behavior is linear or ordinal type
+        // go to the nearest even multiple of the step size
+        return Math.Ceiling((double)_min / (double)_majorStep - 0.00000001)
+                            * (double)_majorStep;
+      }
+    }
+
+    /// <summary>
+    /// Draw the value labels, tic marks, and grid lines as
+    /// required for this <see cref="Axis"/>.
+    /// </summary>
+    /// <param name="g">
+    /// A graphic device object to be drawn into.  This is normally e.Graphics from the
+    /// PaintEventArgs argument to the Paint() method.
+    /// </param>
+    /// <param name="pane">
+    /// A reference to the <see cref="GraphPane"/> object that is the parent or
+    /// owner of this object.
+    /// </param>
+    /// <param name="baseVal">
+    /// The first major tic value for the axis
+    /// </param>
+    /// <param name="nTics">
+    /// The total number of major tics for the axis
+    /// </param>
+    /// <param name="topPix">
+    /// The pixel location of the far side of the ChartRect from this axis.
+    /// This value is the ChartRect.Height for the XAxis, or the ChartRect.Width
+    /// for the YAxis and Y2Axis.
+    /// </param>
+    /// <param name="shift">The number of pixels to shift this axis, based on the
+    /// value of <see cref="Axis.Cross"/>.  A positive value is into the ChartRect relative to
+    /// the default axis position.</param>
+    /// <param name="scaleFactor">
+    /// The scaling factor to be used for rendering objects.  This is calculated and
+    /// passed down by the parent <see cref="GraphPane"/> object using the
+    /// <see cref="PaneBase.CalcScaleFactor"/> method, and is used to proportionally adjust
+    /// font sizes, etc. according to the actual size of the graph.
+    /// </param>
+    internal void DrawLabels( Graphics g, GraphPane pane, double baseVal, int nTics,
 						float topPix, float shift, float scaleFactor )
 		{
 			MajorTic tic = _ownerAxis._majorTic;
