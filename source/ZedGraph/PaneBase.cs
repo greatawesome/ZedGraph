@@ -283,7 +283,7 @@ namespace ZedGraph
 		/// <seealso cref="Default.FontUnderline"/>
 		/// <seealso cref="Default.FontFamily"/>
 		/// <seealso cref="Default.FontSize"/>
-		public Label Title
+		public GapLabel Title
 		{
 			get { return _title; }
 		}
