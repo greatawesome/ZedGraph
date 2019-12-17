@@ -24,6 +24,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Xml.Serialization;
 
 namespace ZedGraph
 {
@@ -653,6 +654,7 @@ namespace ZedGraph
     /// <seealso cref="Type"/>
     [DefaultValue(typeof(Color), "0xffffff")]
     [Description("The fill color.")]
+    [XmlElement(Type = typeof(XmlColor))]
     public Color Color
 		{
 			get { return _color; }
@@ -675,6 +677,7 @@ namespace ZedGraph
     /// </remarks>
     [DefaultValue(typeof(Color), "0xffffff")]
     [Description("Gets or sets the secondary color for gradientByValue fills.")]
+    [XmlElement(Type = typeof(XmlColor))]
     public Color SecondaryValueGradientColor
 		{
 			get { return _secondaryValueGradientColor; }
@@ -693,7 +696,8 @@ namespace ZedGraph
 		/// </summary>
     [DefaultValue(null)]
     [Description("The custom fill brush. Only applicable for FillType.Brush")]
-		public Brush Brush
+    [XmlElement(Type = typeof(XmlBrush))]
+    public Brush Brush
 		{
 			get { return _brush; }
 			set { _brush = value; }

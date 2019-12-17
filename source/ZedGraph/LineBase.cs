@@ -23,6 +23,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Xml.Serialization;
 
 namespace ZedGraph
 {
@@ -157,6 +158,7 @@ namespace ZedGraph
     /// <seealso cref="GradientFill"/>
     [DefaultValue(typeof(Color), Default.ColorDefault)]
     [Description("Color of the line.")]
+    [XmlElement(Type=typeof(XmlColor))]
     public Color Color
     {
       get { return _color; }

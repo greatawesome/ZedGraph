@@ -25,6 +25,7 @@ using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Xml.Serialization;
 
 namespace ZedGraph
 {
@@ -271,6 +272,7 @@ namespace ZedGraph
 		/// <value>A system <see cref="System.Drawing.Color"/> reference.</value>
     [DefaultValue(typeof(Color), Default.FillColorString)]
     [Description("Color of the font")]
+    [XmlElement(Type=typeof(XmlColor))]
 		public Color FontColor
 		{
 			get { return _fontColor; }
@@ -462,7 +464,8 @@ namespace ZedGraph
 		/// <seealso cref="DropShadowOffset" />
     [DefaultValue(typeof(Color), Default.DropShadowColorString)]
     [Description("Determines the color used for the drop-shadow")]
-		public Color DropShadowColor
+    [XmlElement(Type = typeof(XmlColor))]
+    public Color DropShadowColor
 		{
 			get { return _dropShadowColor; }
 			set { _dropShadowColor = value; }
@@ -478,7 +481,7 @@ namespace ZedGraph
 		/// <seealso cref="IsDropShadow" />
 		/// <seealso cref="DropShadowColor" />
 		/// <seealso cref="DropShadowOffset" />
-    [DefaultValue(typeof(Color), Default.DropShadowColorString)]
+    [DefaultValue(45.0F)]
     [Description("Determines the offset angle of the drop-shadow")]
 		public float DropShadowAngle
 		{

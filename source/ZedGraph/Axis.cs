@@ -23,6 +23,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Xml.Serialization;
 
 namespace ZedGraph
 {
@@ -482,6 +483,7 @@ namespace ZedGraph
     /// Gets the <see cref="Scale" /> instance associated with this <see cref="Axis" />.
     /// </summary>
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [XmlElement(Type=typeof(XmlScale))]
     public Scale Scale
 		{
 			get { return _scale; }
@@ -566,7 +568,8 @@ namespace ZedGraph
 		/// <seealso cref="Default.Color"/>.
 		/// <seealso cref="IsVisible"/>
     [DefaultValue(typeof(Color), Default.DefaultColor)]
-		public Color Color
+    [XmlElement(Type = typeof(XmlColor))]
+    public Color Color
 		{
 			get { return _color; }
 			set { _color = value; }
@@ -667,7 +670,7 @@ namespace ZedGraph
     /// <seealso cref="ZedGraph.Scale.IsOrdinal"/>
     /// <seealso cref="ZedGraph.Scale.IsDate"/>
     /// <seealso cref="ZedGraph.Scale.IsReverse"/>
-    [DefaultValue(Default.AxisGap)]
+    [DefaultValue(AxisType.Linear)]
     [Description("Gets or sets the AxisType for this Axis.")]
     public AxisType Type
 		{
