@@ -478,7 +478,7 @@ namespace ZedGraph
 		/// <seealso cref="IsDropShadow" />
 		/// <seealso cref="DropShadowColor" />
 		/// <seealso cref="DropShadowOffset" />
-    [DefaultValue(typeof(Color), Default.DropShadowColorString)]
+    [DefaultValue(Default.DropShadowAngle)]
     [Description("Determines the offset angle of the drop-shadow")]
 		public float DropShadowAngle
 		{
