@@ -189,9 +189,38 @@ namespace ZedGraph.XmlPersistence
           && Read(xnFill.SelectSingleNode("range-default"), out double dRangeDefault)
           && Read(xnFill.SelectSingleNode("scaled"), out bool bIsScaled))
         {
-          fill = new Fill(clr, clrSecondary, fFillAngle);
+          Read(xnFill.SelectSingleNode("brush"), out Brush LoadedBrush);
+
+          switch (FillType)
+          {
+            case FillType.None:
+              fill = new Fill();
+              break;
+
+            case FillType.Solid:
+              fill = new Fill(clr);
+              break;
+
+            case FillType.Brush:
+              fill = new Fill(LoadedBrush);
+              break;
+
+            case FillType.GradientByX:
+            case FillType.GradientByY:
+            case FillType.GradientByZ:
+            case FillType.GradientByColorValue:
+              fill = new Fill();
+              fill.Type = FillType;
+              break;
+
+            default:
+              fill = new Fill();
+              break;
+          }
+
           fill.Color = clr;
           fill.SecondaryValueGradientColor = clrSecondary;
+          fill.Angle = fFillAngle;
           fill.IsScaled = bIsScaled;
           fill.AlignH = HorzAlign;
           fill.AlignV = VerticalAlign;
@@ -199,11 +228,7 @@ namespace ZedGraph.XmlPersistence
           fill.RangeMax = dRangeMax;
           fill.RangeDefault = dRangeDefault;
 
-          if (Read(xnFill.SelectSingleNode("brush"), out Brush LoadedBrush))
-          {
-            fill.Brush = LoadedBrush;
-            return true; 
-          }
+          return true; 
         }
       }
       fill = null;
@@ -331,10 +356,8 @@ namespace ZedGraph.XmlPersistence
       }
 
       byte[] abyImageContent = Convert.FromBase64String(xnImage.InnerText);
-      using (var ms = new MemoryStream(abyImageContent))
-      {
-        return Image.FromStream(ms);
-      }
+      var ms = new MemoryStream(abyImageContent); // Don't dispose the memory stream. The Image is still using it. 
+      return Image.FromStream(ms);
     }
 
     private Matrix ReadMatrix(XmlNode xnMatrix)

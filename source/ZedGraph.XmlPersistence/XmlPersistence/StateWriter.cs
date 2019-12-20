@@ -63,21 +63,6 @@ namespace ZedGraph.XmlPersistence
 
     private void Write(string strNodeName, Fill fill)
     {
-#if false
-      var brFill = fill.Brush as LinearGradientBrush;
-      Color clr1, clr2;
-      if (brFill != null && brFill.InterpolationColors.Colors.Length == 2)
-      {
-        clr1 = brFill.InterpolationColors.Colors[0];
-        clr2 = brFill.InterpolationColors.Colors[1];
-      }
-      else
-      {
-        clr1 = fill.Color;
-        clr2 = fill.SecondaryValueGradientColor;
-      }
-      float fAngle = fill.Angle;
-#endif
       m_xDoc.WriteStartElement(strNodeName);
       Write("color", fill.Color);
       Write("secondary-color", fill.SecondaryValueGradientColor);

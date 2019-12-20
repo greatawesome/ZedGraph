@@ -8,6 +8,7 @@ using System.Xml;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ZedGraph.XmlPersistence.Test.Properties;
 
 namespace ZedGraph.XmlPersistence.Test
 {
@@ -52,15 +53,74 @@ namespace ZedGraph.XmlPersistence.Test
 
       Border.GradientFill = new Fill(Color.OldLace, Color.AliceBlue, 12f);
 
+      // Persist the object
       var Persisted = Write(x => x.WriteTitle(Template));
-
       Dump(Persisted);
 
+      // Restore it. 
       var Target = new GraphPane();
       var Restorer = new StateRestorer(Persisted.DocumentElement);
       Restorer.RestoreTitle(Target);
 
+      // Check fidelity. 
       Target.Title.Should().BeEquivalentTo(Template.Title, options=> options.Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestSolidBackgroundFill()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      Template.Chart.Fill = new Fill(Color.Purple);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteBackgroundFill(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreBackgroundFill(Target);
+
+      // Check fidelity. 
+      Target.Chart.Fill.Should().BeEquivalentTo(Template.Chart.Fill, options => options.Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestGradientBackgroundFill()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      Template.Chart.Fill = new Fill(Color.AliceBlue, Color.Azure, 11f);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteBackgroundFill(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreBackgroundFill(Target);
+
+      // Check fidelity. 
+      Target.Chart.Fill.Should().BeEquivalentTo(Template.Chart.Fill, options => options.Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestTextureBackgroundFill()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      Template.Chart.Fill = new Fill(Resources.TrafficCone, WrapMode.Clamp);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteBackgroundFill(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreBackgroundFill(Target);
+
+      // Check fidelity. 
+      Target.Chart.Fill.Should().BeEquivalentTo(Template.Chart.Fill, options => options.Excluding(x => IsObjectHandle(x)));
     }
 
     private XmlDocument Write(Action<StateWriter> fn)

@@ -683,7 +683,11 @@ namespace ZedGraph
 
     [DefaultValue(0f)]
     [Description("Angle of gradient fills")]
-    public float Angle { get { return _angle; } }
+    public float Angle
+    {
+      get{ return _angle; }
+      set { _angle = value; }
+    }
 
 		/// <summary>
 		/// The custom fill brush.  This can be a <see cref="SolidBrush"/>, a
