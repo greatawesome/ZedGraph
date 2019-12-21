@@ -202,7 +202,14 @@ namespace ZedGraph
 			Init();
 			_color = color;
 			_brush = brush;
-			_type = type;
+      if (brush == null && type == FillType.Brush)
+      {
+        _type = FillType.Solid;
+      }
+      else
+      {
+        _type = type;
+      }
 		}
 		
 		/// <summary>

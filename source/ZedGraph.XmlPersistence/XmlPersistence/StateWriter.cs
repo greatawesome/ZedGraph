@@ -37,23 +37,17 @@ namespace ZedGraph.XmlPersistence
 
     public void WriteXAxis(GraphPane gp)
     {
-      m_xDoc.WriteStartElement("x-axis");
-      Write(gp.XAxis);
-      m_xDoc.WriteEndElement();
+      Write("x-axis", gp.XAxis);
     }
 
     public void WriteYAxis(GraphPane gp)
     {
-      m_xDoc.WriteStartElement("y-axis");
-      Write(gp.YAxis);
-      m_xDoc.WriteEndElement();
+      Write("y-axis", gp.YAxis);
     }
 
     public void WriteY2Axis(GraphPane gp)
     {
-      m_xDoc.WriteStartElement("y2-axis");
-      Write(gp.Y2Axis);
-      m_xDoc.WriteEndElement();
+      Write("y2-axis", gp.Y2Axis);
     }
 
     public void WriteBackgroundFill(GraphPane gp)
@@ -188,6 +182,28 @@ namespace ZedGraph.XmlPersistence
       }
     }
 
+    private void Write(string strNodeName, float[] aValues, string strValueName = "v")
+    {
+      m_xDoc.WriteStartElement(strNodeName);
+      foreach (float f in aValues)
+      {
+        m_xDoc.WriteElementString(strValueName, XmlConvert.ToString(f));
+      }
+      m_xDoc.WriteEndElement();
+    }
+
+    private void Write(string strNodeName, string[] astrValues, string strValueName = "t")
+    {
+      m_xDoc.WriteStartElement(strNodeName);
+
+      foreach (string strValue in astrValues)
+      {
+        m_xDoc.WriteElementString(strValueName, strValue);
+      }
+
+      m_xDoc.WriteEndElement();
+    }
+
     private void Write(string strNodeName, ColorBlend cb)
     {
       if (cb != null)
@@ -210,30 +226,107 @@ namespace ZedGraph.XmlPersistence
       }
     }
 
-    private void Write(string strNodeName, float[] aValues, string strValueName = "v")
+    private void Write(string strNodeName, Axis Axis)
     {
       m_xDoc.WriteStartElement(strNodeName);
-      foreach (float f in aValues)
-      {
-        m_xDoc.WriteElementString(strValueName, XmlConvert.ToString(f));
-      }
+      m_xDoc.WriteAttributeString("type", Axis.Type.ToString());
+
+      m_xDoc.WriteElementString("visible", XmlConvert.ToString(Axis.IsVisible));
+      m_xDoc.WriteElementString("axis-segment-visible", XmlConvert.ToString(Axis.IsAxisSegmentVisible));
+      m_xDoc.WriteElementString("cross", XmlConvert.ToString(Axis.Cross));
+      m_xDoc.WriteElementString("cross-auto", XmlConvert.ToString(Axis.CrossAuto));
+      m_xDoc.WriteElementString("min-space", XmlConvert.ToString(Axis.MinSpace));
+      Write("color", Axis.Color);
+      WriteElement("major-tic", Axis.MajorTic, Write);
+      WriteElement("minor-tic", Axis.MinorTic, Write);
+      WriteElement("major-grid", Axis.MajorGrid, Write);
+      WriteElement("minor-grid", Axis.MinorGrid, Write);
+      Write(Axis.Scale);
+      Write(Axis.Title);
+
       m_xDoc.WriteEndElement();
     }
 
-    private void Write(Axis Axis)
+    private void WriteElement<T>(string strNodeName, T value, Action<T> fnWriter)
     {
-      m_xDoc.WriteElementString("minimum", XmlConvert.ToString(Axis.Scale.Min));
-      m_xDoc.WriteElementString("maximum", XmlConvert.ToString(Axis.Scale.Max));
-      m_xDoc.WriteElementString("major-step", XmlConvert.ToString(Axis.Scale.MajorStep));
-      m_xDoc.WriteElementString("minor-step", XmlConvert.ToString(Axis.Scale.MinorStep));
-      m_xDoc.WriteElementString("major-unit", Axis.Scale.MajorUnit.ToString());
-      m_xDoc.WriteElementString("minor-unit", Axis.Scale.MinorUnit.ToString());
-      m_xDoc.WriteElementString("minimum-auto", XmlConvert.ToString(Axis.Scale.MinAuto));
-      m_xDoc.WriteElementString("maximum-auto", XmlConvert.ToString(Axis.Scale.MaxAuto));
-      m_xDoc.WriteElementString("major-step-auto", XmlConvert.ToString(Axis.Scale.MajorStepAuto));
-      m_xDoc.WriteElementString("minor-step-auto", XmlConvert.ToString(Axis.Scale.MinorStepAuto));
-      m_xDoc.WriteElementString("visible", XmlConvert.ToString(Axis.IsVisible));
-      Write(Axis.Title);
+      m_xDoc.WriteStartElement(strNodeName);
+      fnWriter(value);
+      m_xDoc.WriteEndElement();
+    }
+
+    private void Write(MajorTic value)
+    {
+      m_xDoc.WriteElementString("between-labels", XmlConvert.ToString(value.IsBetweenLabels));
+      Write((MinorTic)value);
+    }
+
+    private void Write(MinorTic value)
+    {
+      Write("color", value.Color);
+      m_xDoc.WriteElementString("size", XmlConvert.ToString(value.Size));
+      m_xDoc.WriteElementString("outside", XmlConvert.ToString(value.IsOutside));
+      m_xDoc.WriteElementString("inside", XmlConvert.ToString(value.IsInside));
+      m_xDoc.WriteElementString("opposite", XmlConvert.ToString(value.IsOpposite));
+      m_xDoc.WriteElementString("cross-outside", XmlConvert.ToString(value.IsCrossOutside));
+      m_xDoc.WriteElementString("cross-inside", XmlConvert.ToString(value.IsCrossInside));
+      m_xDoc.WriteElementString("pen-width", XmlConvert.ToString(value.PenWidth));
+    }
+
+    private void Write(MajorGrid value)
+    {
+      m_xDoc.WriteElementString("zero-line", XmlConvert.ToString(value.IsZeroLine));
+      Write((MinorGrid)value);
+    }
+
+    private void Write(MinorGrid value)
+    {
+      m_xDoc.WriteElementString("visible", XmlConvert.ToString(value.IsVisible));
+      m_xDoc.WriteElementString("dash-on", XmlConvert.ToString(value.DashOn));
+      m_xDoc.WriteElementString("dash-off", XmlConvert.ToString(value.DashOff));
+      m_xDoc.WriteElementString("pen-width", XmlConvert.ToString(value.PenWidth));
+      Write("color", value.Color);
+    }
+
+    private void Write(Scale Scale)
+    {
+      m_xDoc.WriteElementString("minimum", XmlConvert.ToString(Scale.Min));
+      m_xDoc.WriteElementString("maximum", XmlConvert.ToString(Scale.Max));
+      m_xDoc.WriteElementString("major-step", XmlConvert.ToString(Scale.MajorStep));
+      m_xDoc.WriteElementString("minor-step", XmlConvert.ToString(Scale.MinorStep));
+      m_xDoc.WriteElementString("major-unit", Scale.MajorUnit.ToString());
+      m_xDoc.WriteElementString("minor-unit", Scale.MinorUnit.ToString());
+      m_xDoc.WriteElementString("minimum-auto", XmlConvert.ToString(Scale.MinAuto));
+      m_xDoc.WriteElementString("maximum-auto", XmlConvert.ToString(Scale.MaxAuto));
+      m_xDoc.WriteElementString("major-step-auto", XmlConvert.ToString(Scale.MajorStepAuto));
+      m_xDoc.WriteElementString("minor-step-auto", XmlConvert.ToString(Scale.MinorStepAuto));
+
+      m_xDoc.WriteElementString("exponent", XmlConvert.ToString(Scale.Exponent));
+      m_xDoc.WriteElementString("base-tic", XmlConvert.ToString(Scale.BaseTic));
+      m_xDoc.WriteElementString("format-auto", XmlConvert.ToString(Scale.FormatAuto));
+      m_xDoc.WriteElementString("format", Scale.Format);
+      m_xDoc.WriteElementString("magnitude-multiplier", XmlConvert.ToString(Scale.Mag));
+      m_xDoc.WriteElementString("magnitude-multiplier-auto", XmlConvert.ToString(Scale.MagAuto));
+      m_xDoc.WriteElementString("min-grace", XmlConvert.ToString(Scale.MinGrace));
+      m_xDoc.WriteElementString("max-grace", XmlConvert.ToString(Scale.MaxGrace));
+      m_xDoc.WriteElementString("tic-alignment", Scale.Align.ToString());
+      m_xDoc.WriteElementString("tic-label-alignment", Scale.AlignH.ToString());
+      m_xDoc.WriteElementString("label-gap", XmlConvert.ToString(Scale.LabelGap));
+      m_xDoc.WriteElementString("labels-inside", XmlConvert.ToString(Scale.IsLabelsInside));
+      m_xDoc.WriteElementString("skip-first-label", XmlConvert.ToString(Scale.IsSkipFirstLabel));
+      m_xDoc.WriteElementString("skip-last-label", XmlConvert.ToString(Scale.IsSkipLastLabel));
+      m_xDoc.WriteElementString("skip-cross-label", XmlConvert.ToString(Scale.IsSkipCrossLabel));
+      m_xDoc.WriteElementString("is-reverse", XmlConvert.ToString(Scale.IsReverse));
+      m_xDoc.WriteElementString("use-ten-power", XmlConvert.ToString(Scale.IsUseTenPower));
+      m_xDoc.WriteElementString("prevent-label-overlap", XmlConvert.ToString(Scale.IsPreventLabelOverlap));
+      m_xDoc.WriteElementString("scale-visible", XmlConvert.ToString(Scale.IsVisible));
+
+      Write("scale-font", Scale.FontSpec);
+
+      if (Scale.TextLabels != null)
+      {
+        Write("text-labels", Scale.TextLabels);
+      }
+
     }
 
     private void Write(AxisLabel Label)
@@ -248,13 +341,12 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteElementString("text", Label.Text);
       m_xDoc.WriteElementString("visible", XmlConvert.ToString(Label.IsVisible));
       m_xDoc.WriteElementString("gap", XmlConvert.ToString(Label.Gap));
-      m_xDoc.WriteStartElement("font");
-      Write(Label.FontSpec);
-      m_xDoc.WriteEndElement();
+      Write("font", Label.FontSpec);
     }
 
-    private void Write(FontSpec Font)
+    private void Write(string strNodeName, FontSpec Font)
     {
+      m_xDoc.WriteStartElement(strNodeName);
       Write("color", Font.FontColor);
       m_xDoc.WriteElementString("family", Font.Family);
       m_xDoc.WriteElementString("bold", XmlConvert.ToString(Font.IsBold));
@@ -275,7 +367,7 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteElementString("drop-shadow-angle", XmlConvert.ToString(Font.DropShadowAngle));
       m_xDoc.WriteElementString("drop-shadow-offset", XmlConvert.ToString(Font.DropShadowOffset));
 
-
+      m_xDoc.WriteEndElement();
     }
 
     private void Write(Border border)
