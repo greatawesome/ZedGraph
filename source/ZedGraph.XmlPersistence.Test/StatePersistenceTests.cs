@@ -138,112 +138,12 @@ namespace ZedGraph.XmlPersistence.Test
 
     }
 
-    private void Check(XAxis Test, XAxis Original)
-    {
-      // Ignore cyclic references because scale points back to axis. 
-      // Ignore object handles because brushes have an NativeBrush property that points to a GDI+ brush handle which
-      // is created for each brush. 
-      Test.Should().BeEquivalentTo(Original, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
-    }
-
     [TestMethod]
     public void TestXAxisPersistence()
     {
       GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
-      var XAxis = Template.XAxis;
 
-      XAxis.Scale.Min = 10; 
-      XAxis.Scale.Max = 100;
-      XAxis.Scale.MajorStep = 20;
-      XAxis.Scale.MinorStep = 5;
-      XAxis.Scale.Exponent = 2;
-      XAxis.Scale.BaseTic = 15;
-      XAxis.Scale.MajorUnit = DateUnit.Minute;
-      XAxis.Scale.MinorUnit = DateUnit.Second;
-      XAxis.Scale.MinAuto = ! XAxis.Scale.MinAuto;
-      XAxis.Scale.MaxAuto = ! XAxis.Scale.MaxAuto;
-      XAxis.Scale.MajorStepAuto = ! XAxis.Scale.MajorStepAuto;
-      XAxis.Scale.MinorStepAuto = ! XAxis.Scale.MinorStepAuto;
-      XAxis.Scale.FormatAuto = ! XAxis.Scale.FormatAuto;
-      XAxis.Scale.Format = "0.00";
-      XAxis.Scale.Mag = 10;
-      XAxis.Scale.MagAuto = !XAxis.Scale.MagAuto;
-      XAxis.Scale.MinGrace = 2;
-      XAxis.Scale.MaxGrace = 1.3;
-      XAxis.Scale.Align = AlignP.Outside;
-      XAxis.Scale.AlignH = AlignH.Left;
-      CreateFontSpec(XAxis.Scale.FontSpec);
-      XAxis.Scale.LabelGap = 4.2f;
-      XAxis.Scale.IsLabelsInside = !XAxis.Scale.IsLabelsInside;
-      XAxis.Scale.IsSkipFirstLabel = !XAxis.Scale.IsSkipFirstLabel;
-      XAxis.Scale.IsSkipLastLabel = !XAxis.Scale.IsSkipLastLabel;
-      XAxis.Scale.IsSkipCrossLabel = !XAxis.Scale.IsSkipCrossLabel;
-      XAxis.Scale.IsReverse = !XAxis.Scale.IsReverse;
-      XAxis.Scale.IsUseTenPower = !XAxis.Scale.IsUseTenPower;
-      XAxis.Scale.IsPreventLabelOverlap = !XAxis.Scale.IsPreventLabelOverlap;
-      XAxis.Scale.IsVisible = !XAxis.Scale.IsVisible;
-
-      XAxis.Cross = 1.2;
-      XAxis.CrossAuto = false;
-      XAxis.MinSpace = 4;
-      XAxis.Color = Color.Bisque;
-
-
-      {
-        var mg = XAxis.MajorGrid;
-        mg.Color = Color.BlanchedAlmond;
-        mg.DashOff = 3;
-        mg.DashOn = 7;
-        mg.IsVisible = !mg.IsVisible;
-        mg.IsZeroLine = !mg.IsZeroLine;
-        mg.PenWidth = 8;
-      }
-
-      {
-        var mg = XAxis.MinorGrid;
-        mg.Color = Color.AliceBlue;
-        mg.DashOff = 4;
-        mg.DashOn = 6;
-        mg.IsVisible = !mg.IsVisible;
-        mg.PenWidth = 10;
-      }
-
-      {
-        var mt = XAxis.MajorTic;
-        mt.Color = Color.PaleGoldenrod;
-        mt.IsBetweenLabels = !mt.IsBetweenLabels;
-        mt.IsCrossInside = !mt.IsCrossInside;
-        mt.IsCrossOutside = !mt.IsCrossOutside;
-        mt.IsInside = !mt.IsInside;
-        mt.IsOpposite = !mt.IsOpposite;
-        mt.IsOutside = !mt.IsOutside;
-        mt.PenWidth = 11;
-        mt.Size = 3;
-      }
-
-      {
-        var mt = XAxis.MinorTic;
-        mt.Color = Color.IndianRed;
-        mt.IsCrossInside = !mt.IsCrossInside;
-        mt.IsCrossOutside = !mt.IsCrossOutside;
-        mt.IsInside = !mt.IsInside;
-        mt.IsOpposite = !mt.IsOpposite;
-        mt.IsOutside = !mt.IsOutside;
-        mt.PenWidth = 2.32f;
-        mt.Size = 3.2f;
-      }
-
-      XAxis.IsVisible = !XAxis.IsVisible;
-      XAxis.IsAxisSegmentVisible = !XAxis.IsAxisSegmentVisible;
-      XAxis.AxisGap = 8;
-
-      var t = XAxis.Title;
-      CreateFontSpec(t.FontSpec);
-      t.Gap = 47;
-      t.IsOmitMag = !t.IsOmitMag;
-      t.IsTitleAtCross = !t.IsTitleAtCross;
-      t.IsVisible = !t.IsVisible;
-
+      FillAxisValues(Template.XAxis);
 
       // Persist the object
       var Persisted = Write(x => x.WriteXAxis(Template));
@@ -259,6 +159,86 @@ namespace ZedGraph.XmlPersistence.Test
 
     }
 
+    [TestMethod]
+    public void TestYAxisDefault()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteYAxis(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreYAxis(Target);
+
+      // Check fidelity. 
+      Check(Target.YAxis, Template.YAxis);
+    }
+
+    [TestMethod]
+    public void TestYAxisPersistence()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      FillAxisValues(Template.YAxis);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteYAxis(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreYAxis(Target);
+
+      // Check fidelity. 
+      Check(Target.YAxis, Template.YAxis);
+    }
+
+    [TestMethod]
+    public void TestY2AxisDefault()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteY2Axis(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreY2Axis(Target);
+
+      // Check fidelity. 
+      Check(Target.Y2Axis, Template.Y2Axis);
+    }
+
+    [TestMethod]
+    public void TestY2AxisPersistence()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      FillAxisValues(Template.Y2Axis);
+      Template.Y2Axis.Title.Text= "Y2 Axis";
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteY2Axis(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreY2Axis(Target);
+
+      // Check fidelity. 
+      Check(Target.Y2Axis, Template.Y2Axis);
+    }
+
+
+
+    #region Helpers
     private XmlDocument Write(Action<StateWriter> fn)
     {
       using (var ms = new MemoryStream())
@@ -279,6 +259,15 @@ namespace ZedGraph.XmlPersistence.Test
       }
     }
 
+    private void Check(Axis Test, Axis Original)
+    {
+      // Ignore cyclic references because scale points back to axis. 
+      // Ignore object handles because brushes have an NativeBrush property that points to a GDI+ brush handle which
+      // is created for each brush. 
+      Test.Should().BeEquivalentTo(Original, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+
     private void Dump(XmlDocument xd)
     {
       using (var ms = new MemoryStream())
@@ -296,7 +285,9 @@ namespace ZedGraph.XmlPersistence.Test
     {
       return mi.SelectedMemberPath.EndsWith(".NativeBrush");
     }
+    #endregion
 
+    #region Setup values. 
     private static void CreateFontSpec(FontSpec Font)
     {
       Font.Angle = m_RNG.Next(2, 50);
@@ -326,6 +317,103 @@ namespace ZedGraph.XmlPersistence.Test
 
       Border.GradientFill = new Fill(Color.OldLace, Color.AliceBlue, 12f);
     }
+
+    private static void FillAxisValues(Axis Axis)
+    {
+      Axis.Scale.Min = 10;
+      Axis.Scale.Max = 100;
+      Axis.Scale.MajorStep = 20;
+      Axis.Scale.MinorStep = 5;
+      Axis.Scale.Exponent = 2;
+      Axis.Scale.BaseTic = 15;
+      Axis.Scale.MajorUnit = DateUnit.Minute;
+      Axis.Scale.MinorUnit = DateUnit.Second;
+      Axis.Scale.MinAuto = !Axis.Scale.MinAuto;
+      Axis.Scale.MaxAuto = !Axis.Scale.MaxAuto;
+      Axis.Scale.MajorStepAuto = !Axis.Scale.MajorStepAuto;
+      Axis.Scale.MinorStepAuto = !Axis.Scale.MinorStepAuto;
+      Axis.Scale.FormatAuto = !Axis.Scale.FormatAuto;
+      Axis.Scale.Format = "0.00";
+      Axis.Scale.Mag = 10;
+      Axis.Scale.MagAuto = !Axis.Scale.MagAuto;
+      Axis.Scale.MinGrace = 2;
+      Axis.Scale.MaxGrace = 1.3;
+      Axis.Scale.Align = AlignP.Outside;
+      Axis.Scale.AlignH = AlignH.Left;
+      CreateFontSpec(Axis.Scale.FontSpec);
+      Axis.Scale.LabelGap = 4.2f;
+      Axis.Scale.IsLabelsInside = !Axis.Scale.IsLabelsInside;
+      Axis.Scale.IsSkipFirstLabel = !Axis.Scale.IsSkipFirstLabel;
+      Axis.Scale.IsSkipLastLabel = !Axis.Scale.IsSkipLastLabel;
+      Axis.Scale.IsSkipCrossLabel = !Axis.Scale.IsSkipCrossLabel;
+      Axis.Scale.IsReverse = !Axis.Scale.IsReverse;
+      Axis.Scale.IsUseTenPower = !Axis.Scale.IsUseTenPower;
+      Axis.Scale.IsPreventLabelOverlap = !Axis.Scale.IsPreventLabelOverlap;
+      Axis.Scale.IsVisible = !Axis.Scale.IsVisible;
+
+      Axis.Cross = 1.2;
+      Axis.CrossAuto = false;
+      Axis.MinSpace = 4;
+      Axis.Color = Color.Bisque;
+
+
+      {
+        var mg = Axis.MajorGrid;
+        mg.Color = Color.BlanchedAlmond;
+        mg.DashOff = 3;
+        mg.DashOn = 7;
+        mg.IsVisible = !mg.IsVisible;
+        mg.IsZeroLine = !mg.IsZeroLine;
+        mg.PenWidth = 8;
+      }
+
+      {
+        var mg = Axis.MinorGrid;
+        mg.Color = Color.AliceBlue;
+        mg.DashOff = 4;
+        mg.DashOn = 6;
+        mg.IsVisible = !mg.IsVisible;
+        mg.PenWidth = 10;
+      }
+
+      {
+        var mt = Axis.MajorTic;
+        mt.Color = Color.PaleGoldenrod;
+        mt.IsBetweenLabels = !mt.IsBetweenLabels;
+        mt.IsCrossInside = !mt.IsCrossInside;
+        mt.IsCrossOutside = !mt.IsCrossOutside;
+        mt.IsInside = !mt.IsInside;
+        mt.IsOpposite = !mt.IsOpposite;
+        mt.IsOutside = !mt.IsOutside;
+        mt.PenWidth = 11;
+        mt.Size = 3;
+      }
+
+      {
+        var mt = Axis.MinorTic;
+        mt.Color = Color.IndianRed;
+        mt.IsCrossInside = !mt.IsCrossInside;
+        mt.IsCrossOutside = !mt.IsCrossOutside;
+        mt.IsInside = !mt.IsInside;
+        mt.IsOpposite = !mt.IsOpposite;
+        mt.IsOutside = !mt.IsOutside;
+        mt.PenWidth = 2.32f;
+        mt.Size = 3.2f;
+      }
+
+      Axis.IsVisible = !Axis.IsVisible;
+      Axis.IsAxisSegmentVisible = !Axis.IsAxisSegmentVisible;
+      Axis.AxisGap = 8;
+
+      var t = Axis.Title;
+      CreateFontSpec(t.FontSpec);
+      t.Gap = 47;
+      t.IsOmitMag = !t.IsOmitMag;
+      t.IsTitleAtCross = !t.IsTitleAtCross;
+      t.IsVisible = !t.IsVisible;
+    }
+    #endregion
+
 
   }
 }
