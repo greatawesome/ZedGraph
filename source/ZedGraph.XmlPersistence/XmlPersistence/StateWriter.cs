@@ -68,7 +68,7 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteElementString("range-min", XmlConvert.ToString(fill.RangeMin));
       m_xDoc.WriteElementString("range-max", XmlConvert.ToString(fill.RangeMax));
       m_xDoc.WriteElementString("range-default", XmlConvert.ToString(fill.RangeDefault));
-      if (fill.Type == FillType.Brush)
+      if (fill.Brush != null)
       {
         const string BrushNodeName = "brush";
         switch (fill.Brush)
@@ -236,13 +236,20 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteElementString("cross", XmlConvert.ToString(Axis.Cross));
       m_xDoc.WriteElementString("cross-auto", XmlConvert.ToString(Axis.CrossAuto));
       m_xDoc.WriteElementString("min-space", XmlConvert.ToString(Axis.MinSpace));
+      m_xDoc.WriteElementString("axis-gap", XmlConvert.ToString(Axis.AxisGap));
       Write("color", Axis.Color);
       WriteElement("major-tic", Axis.MajorTic, Write);
       WriteElement("minor-tic", Axis.MinorTic, Write);
       WriteElement("major-grid", Axis.MajorGrid, Write);
       WriteElement("minor-grid", Axis.MinorGrid, Write);
+
+      m_xDoc.WriteStartElement("scale");
       Write(Axis.Scale);
+      m_xDoc.WriteEndElement();
+
+      m_xDoc.WriteStartElement("title");
       Write(Axis.Title);
+      m_xDoc.WriteEndElement();
 
       m_xDoc.WriteEndElement();
     }
@@ -303,7 +310,11 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteElementString("exponent", XmlConvert.ToString(Scale.Exponent));
       m_xDoc.WriteElementString("base-tic", XmlConvert.ToString(Scale.BaseTic));
       m_xDoc.WriteElementString("format-auto", XmlConvert.ToString(Scale.FormatAuto));
-      m_xDoc.WriteElementString("format", Scale.Format);
+      if (Scale.Format != null)
+      {
+        m_xDoc.WriteElementString("format", Scale.Format);
+      }
+
       m_xDoc.WriteElementString("magnitude-multiplier", XmlConvert.ToString(Scale.Mag));
       m_xDoc.WriteElementString("magnitude-multiplier-auto", XmlConvert.ToString(Scale.MagAuto));
       m_xDoc.WriteElementString("min-grace", XmlConvert.ToString(Scale.MinGrace));

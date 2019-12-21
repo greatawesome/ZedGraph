@@ -78,12 +78,13 @@ namespace ZedGraph.XmlPersistence
         Axis.CrossAuto = ValueOrDefault(xnAxis, "cross-auto", Axis.CrossAuto); // Must be after Axis.Cross asignment. 
         Axis.MinSpace = ValueOrDefault(xnAxis, "min-space", Axis.MinSpace);
         Axis.Color = ValueOrDefault(xnAxis, "color", Axis.Color);
+        Axis.AxisGap = ValueOrDefault(xnAxis, "axis-gap", Axis.AxisGap);
         Restore(xnAxis.SelectSingleNode("major-tic"), Axis.MajorTic);
         Restore(xnAxis.SelectSingleNode("minor-tic"), Axis.MinorTic);
         Restore(xnAxis.SelectSingleNode("major-grid"), Axis.MajorGrid);
         Restore(xnAxis.SelectSingleNode("minor-grid"), Axis.MinorGrid);
-        Restore(xnAxis, Axis.Scale);
-        Restore(xnAxis, Axis.Title);
+        Restore(xnAxis.SelectSingleNode("scale"), Axis.Scale);
+        Restore(xnAxis.SelectSingleNode("title"), Axis.Title);
 
       }
       catch (Exception ex) when (ex is NullReferenceException || ex is OverflowException)
@@ -141,8 +142,8 @@ namespace ZedGraph.XmlPersistence
 
       Scale.Exponent = ValueOrDefault(xnScale, "exponent", Scale.Exponent);
       Scale.BaseTic = ValueOrDefault(xnScale, "base-tic", Scale.BaseTic);
-      Scale.FormatAuto = ValueOrDefault(xnScale, "format-auto", Scale.FormatAuto);
       Scale.Format = ValueOrDefault(xnScale, "format", Scale.Format);
+      Scale.FormatAuto = ValueOrDefault(xnScale, "format-auto", Scale.FormatAuto); // Must be after Format. 
       Scale.Mag = ValueOrDefault(xnScale, "magnitude-multiplier", Scale.Mag);
       Scale.MagAuto = ValueOrDefault(xnScale, "magnitude-multiplier-auto", Scale.MagAuto);
       Scale.MinGrace = ValueOrDefault(xnScale, "min-grace", Scale.MinGrace);
@@ -173,6 +174,13 @@ namespace ZedGraph.XmlPersistence
       {
         Scale.TextLabels = null;
       }
+    }
+
+    private void Restore(XmlNode xnLabel, AxisLabel al)
+    {
+      al.IsOmitMag = ValueOrDefault(xnLabel, "omit-mag", al.IsOmitMag);
+      al.IsTitleAtCross = ValueOrDefault(xnLabel, "title-at-cross", al.IsTitleAtCross);
+      Restore(xnLabel, (GapLabel)al);
     }
 
     private void Restore(XmlNode xnLabel, GapLabel Label)
@@ -296,6 +304,7 @@ namespace ZedGraph.XmlPersistence
               break;
           }
 
+          fill.Brush = LoadedBrush;
           fill.Color = clr;
           fill.SecondaryValueGradientColor = clrSecondary;
           fill.Angle = fFillAngle;

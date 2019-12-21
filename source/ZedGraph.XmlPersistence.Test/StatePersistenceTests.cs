@@ -12,9 +12,12 @@ using ZedGraph.XmlPersistence.Test.Properties;
 
 namespace ZedGraph.XmlPersistence.Test
 {
+
   [TestClass]
   public class StatePersistenceTests
   {
+    private static readonly Random m_RNG = new Random();
+
     [TestMethod]
     public void PersistTitle()
     {
@@ -117,6 +120,33 @@ namespace ZedGraph.XmlPersistence.Test
     }
 
     [TestMethod]
+    public void TestXAxisDefault()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteXAxis(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreXAxis(Target);
+
+      // Check fidelity. 
+      Check(Target.XAxis, Template.XAxis);
+
+    }
+
+    private void Check(XAxis Test, XAxis Original)
+    {
+      // Ignore cyclic references because scale points back to axis. 
+      // Ignore object handles because brushes have an NativeBrush property that points to a GDI+ brush handle which
+      // is created for each brush. 
+      Test.Should().BeEquivalentTo(Original, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
     public void TestXAxisPersistence()
     {
       GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
@@ -153,6 +183,68 @@ namespace ZedGraph.XmlPersistence.Test
       XAxis.Scale.IsPreventLabelOverlap = !XAxis.Scale.IsPreventLabelOverlap;
       XAxis.Scale.IsVisible = !XAxis.Scale.IsVisible;
 
+      XAxis.Cross = 1.2;
+      XAxis.CrossAuto = false;
+      XAxis.MinSpace = 4;
+      XAxis.Color = Color.Bisque;
+
+
+      {
+        var mg = XAxis.MajorGrid;
+        mg.Color = Color.BlanchedAlmond;
+        mg.DashOff = 3;
+        mg.DashOn = 7;
+        mg.IsVisible = !mg.IsVisible;
+        mg.IsZeroLine = !mg.IsZeroLine;
+        mg.PenWidth = 8;
+      }
+
+      {
+        var mg = XAxis.MinorGrid;
+        mg.Color = Color.AliceBlue;
+        mg.DashOff = 4;
+        mg.DashOn = 6;
+        mg.IsVisible = !mg.IsVisible;
+        mg.PenWidth = 10;
+      }
+
+      {
+        var mt = XAxis.MajorTic;
+        mt.Color = Color.PaleGoldenrod;
+        mt.IsBetweenLabels = !mt.IsBetweenLabels;
+        mt.IsCrossInside = !mt.IsCrossInside;
+        mt.IsCrossOutside = !mt.IsCrossOutside;
+        mt.IsInside = !mt.IsInside;
+        mt.IsOpposite = !mt.IsOpposite;
+        mt.IsOutside = !mt.IsOutside;
+        mt.PenWidth = 11;
+        mt.Size = 3;
+      }
+
+      {
+        var mt = XAxis.MinorTic;
+        mt.Color = Color.IndianRed;
+        mt.IsCrossInside = !mt.IsCrossInside;
+        mt.IsCrossOutside = !mt.IsCrossOutside;
+        mt.IsInside = !mt.IsInside;
+        mt.IsOpposite = !mt.IsOpposite;
+        mt.IsOutside = !mt.IsOutside;
+        mt.PenWidth = 2.32f;
+        mt.Size = 3.2f;
+      }
+
+      XAxis.IsVisible = !XAxis.IsVisible;
+      XAxis.IsAxisSegmentVisible = !XAxis.IsAxisSegmentVisible;
+      XAxis.AxisGap = 8;
+
+      var t = XAxis.Title;
+      CreateFontSpec(t.FontSpec);
+      t.Gap = 47;
+      t.IsOmitMag = !t.IsOmitMag;
+      t.IsTitleAtCross = !t.IsTitleAtCross;
+      t.IsVisible = !t.IsVisible;
+
+
       // Persist the object
       var Persisted = Write(x => x.WriteXAxis(Template));
       Dump(Persisted);
@@ -163,7 +255,7 @@ namespace ZedGraph.XmlPersistence.Test
       Restorer.RestoreXAxis(Target);
 
       // Check fidelity. 
-      Target.XAxis.Should().BeEquivalentTo(Template.XAxis, options => options.Excluding(x => IsObjectHandle(x)));
+      Check(Target.XAxis, Template.XAxis);
 
     }
 
@@ -207,7 +299,7 @@ namespace ZedGraph.XmlPersistence.Test
 
     private static void CreateFontSpec(FontSpec Font)
     {
-      Font.Angle = 11f;
+      Font.Angle = m_RNG.Next(2, 50);
       Font.FontColor = Color.Beige;
       Font.Family = "Comic Sans";
       Font.IsBold = !Font.IsBold;
@@ -216,9 +308,9 @@ namespace ZedGraph.XmlPersistence.Test
       Font.IsAntiAlias = !Font.IsAntiAlias;
       Font.IsDropShadow = !Font.IsDropShadow;
       Font.StringAlignment = StringAlignment.Near;
-      Font.Size *= 2;
+      Font.Size *= m_RNG.Next(2, 5);
       Font.DropShadowColor = Color.Blue;
-      Font.DropShadowOffset = 22;
+      Font.DropShadowOffset = m_RNG.Next(10, 50);
       Font.DropShadowAngle = 11;
       Font.Fill = new Fill(Color.AliceBlue, Color.Azure, 11f);
 
