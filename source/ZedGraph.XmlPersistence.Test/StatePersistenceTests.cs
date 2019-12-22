@@ -257,7 +257,49 @@ namespace ZedGraph.XmlPersistence.Test
       Check(Target.Y2Axis, Template.Y2Axis);
     }
 
+    [TestMethod]
+    public void TestMultipleYAxes()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      Template.YAxisList.Add("Another Y Axis");
 
+      FillAxisValues(Template.YAxis);
+      FillAxisValues(Template.YAxisList[1]);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteYAxisList(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreYAxisCollection(Target);
+
+      // Check fidelity. 
+      Target.YAxisList.Should().BeEquivalentTo(Template.YAxisList, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestMultipleY2Axes()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      Template.Y2AxisList.Add("Another Y Axis");
+
+      FillAxisValues(Template.Y2Axis);
+      FillAxisValues(Template.Y2AxisList[1]);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteY2AxisList(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreY2AxisCollection(Target);
+
+      // Check fidelity. 
+      Target.Y2AxisList.Should().BeEquivalentTo(Template.Y2AxisList, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
 
     #region Helpers
     private XmlDocument Write(Action<StateWriter> fn)
@@ -341,8 +383,8 @@ namespace ZedGraph.XmlPersistence.Test
 
     private static void FillAxisValues(Axis Axis)
     {
-      Axis.Scale.Min = 10;
-      Axis.Scale.Max = 100;
+      Axis.Scale.Min = m_RNG.Next(10, 40);
+      Axis.Scale.Max = m_RNG.Next(100, 200);
       Axis.Scale.MajorStep = 20;
       Axis.Scale.MinorStep = 5;
       Axis.Scale.Exponent = 2;

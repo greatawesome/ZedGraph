@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -23,8 +25,8 @@ namespace ZedGraph.XmlPersistence
     {
       WriteTitle(gp);
       WriteXAxis(gp);
-      WriteYAxis(gp);
-      WriteY2Axis(gp);
+      WriteYAxisList(gp);
+      WriteY2AxisList(gp);
       WriteBackgroundFill(gp);
     }
 
@@ -43,6 +45,16 @@ namespace ZedGraph.XmlPersistence
     public void WriteYAxis(GraphPane gp)
     {
       Write("y-axis", gp.YAxis);
+    }
+
+    public void WriteYAxisList(GraphPane gp)
+    {
+      WriteAxis("y-axis-list", gp.YAxisList);
+    }
+
+    public void WriteY2AxisList(GraphPane gp)
+    {
+      WriteAxis("y2-axis-list", gp.Y2AxisList);
     }
 
     public void WriteY2Axis(GraphPane gp)
@@ -224,6 +236,18 @@ namespace ZedGraph.XmlPersistence
         Write("positions", blend.Positions, "p");
         m_xDoc.WriteEndElement();
       }
+    }
+
+    private void WriteAxis(string strNodeName, IEnumerable<Axis> Axes)
+    {
+      m_xDoc.WriteStartElement(strNodeName);
+
+      foreach (var ax in Axes)
+      {
+        Write("axis", ax);
+      }
+
+      m_xDoc.WriteEndElement();
     }
 
     private void Write(string strNodeName, Axis Axis)

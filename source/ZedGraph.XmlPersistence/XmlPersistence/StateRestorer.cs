@@ -44,6 +44,24 @@ namespace ZedGraph.XmlPersistence
       }
     }
 
+    public void RestoreYAxisCollection(GraphPane gp)
+    {
+      XmlNode xnAxisCollection = m_xnState.SelectSingleNode("y-axis-list");
+      if (xnAxisCollection != null)
+      {
+        Restore(xnAxisCollection, gp.YAxisList);
+      }
+    }
+
+    public void RestoreY2AxisCollection(GraphPane gp)
+    {
+      XmlNode xnAxisCollection = m_xnState.SelectSingleNode("y2-axis-list");
+      if (xnAxisCollection != null)
+      {
+        Restore(xnAxisCollection, gp.Y2AxisList);
+      }
+    }
+
     public void RestoreY2Axis(GraphPane gp)
     {
       XmlNode xnAxis = m_xnState.SelectSingleNode("y2-axis");
@@ -61,6 +79,31 @@ namespace ZedGraph.XmlPersistence
         gp.Chart.Fill = NewFill;
       }
     }
+
+    private void Restore(XmlNode xnAxisCollection, YAxisList Axes)
+    {
+      XmlNodeList xnlAxes = xnAxisCollection.SelectNodes("axis");
+      Axes.Clear();
+      foreach (XmlNode xnAxis in xnlAxes)
+      {
+        var NewAxis = new YAxis();
+        Restore(xnAxis, NewAxis);
+        Axes.Add(NewAxis);
+      }
+    }
+
+    private void Restore(XmlNode xnAxisCollection, Y2AxisList Axes)
+    {
+      XmlNodeList xnlAxes = xnAxisCollection.SelectNodes("axis");
+      Axes.Clear();
+      foreach (XmlNode xnAxis in xnlAxes)
+      {
+        var NewAxis = new Y2Axis();
+        Restore(xnAxis, NewAxis);
+        Axes.Add(NewAxis);
+      }
+    }
+
 
     private void Restore(XmlNode xnAxis, Axis Axis)
     {
