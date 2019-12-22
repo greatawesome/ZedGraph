@@ -198,6 +198,27 @@ namespace ZedGraph.XmlPersistence.Test
     }
 
     [TestMethod]
+    public void TestYAxisLog()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      FillAxisValues(Template.YAxis);
+      Template.YAxis.Type = AxisType.Log;
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteYAxis(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreYAxis(Target);
+
+      // Check fidelity. 
+      Check(Target.YAxis, Template.YAxis);
+    }
+
+    [TestMethod]
     public void TestY2AxisDefault()
     {
       GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
