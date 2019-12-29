@@ -27,7 +27,25 @@ namespace ZedGraph.XmlPersistence
       WriteXAxis(gp);
       WriteYAxisList(gp);
       WriteY2AxisList(gp);
-      WriteBackgroundFill(gp);
+      WriteChart(gp);
+      WriteCursors(gp);
+    }
+
+    public void WriteCursors(GraphPane gp)
+    {
+      m_xDoc.WriteStartElement("cursors");
+      foreach (CursorObj co in gp.Cursors)
+      {
+        Write(co);
+      }
+      m_xDoc.WriteEndElement();
+    }
+
+    public void WriteChart(GraphPane gp)
+    {
+      m_xDoc.WriteStartElement("chart");
+      WriteChart(gp.Chart);
+      m_xDoc.WriteEndElement();
     }
 
     public void WriteTitle(GraphPane gp)
@@ -65,6 +83,30 @@ namespace ZedGraph.XmlPersistence
     public void WriteBackgroundFill(GraphPane gp)
     {
       Write("background-fill", gp.Chart.Fill);
+    }
+
+    public void WriteChart(Chart chrt)
+    {
+      Write("rectangle", chrt.Rect);
+      m_xDoc.WriteElementString("auto-rectangle", XmlConvert.ToString(chrt.IsRectAuto));
+      Write("fill", chrt.Fill);
+      Write("border", chrt.Border);
+    }
+
+    private void Write(CursorObj co)
+    {
+      m_xDoc.WriteStartElement("cursor");
+
+      m_xDoc.WriteElementString("name", co.Name);
+      m_xDoc.WriteElementString("location", XmlConvert.ToString(co.Location));
+      m_xDoc.WriteElementString("orientation", co.Orientation.ToString());
+      m_xDoc.WriteElementString("coordinate-unit", co.CoordinateUnit.ToString());
+
+      m_xDoc.WriteStartElement("line");
+      Write(co.Line);
+      m_xDoc.WriteEndElement();
+
+      m_xDoc.WriteEndElement();
     }
 
     private void Write(string strNodeName, Fill fill)
@@ -390,10 +432,7 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteElementString("angle", XmlConvert.ToString(Font.Angle));
       m_xDoc.WriteElementString("string-alignment", Font.StringAlignment.ToString());
       m_xDoc.WriteElementString("size", XmlConvert.ToString(Font.Size));
-      m_xDoc.WriteStartElement("border");
-      Write(Font.Border);
-      m_xDoc.WriteEndElement();
-
+      Write("border", Font.Border);
       Write("fill", Font.Fill);
 
       m_xDoc.WriteElementString("anti-alias", XmlConvert.ToString(Font.IsAntiAlias));
@@ -405,10 +444,12 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteEndElement();
     }
 
-    private void Write(Border border)
+    private void Write(string strNodeName, Border border)
     {
+      m_xDoc.WriteStartElement(strNodeName);
       m_xDoc.WriteElementString("inflate-factor", XmlConvert.ToString(border.InflateFactor));
       Write((LineBase)border);
+      m_xDoc.WriteEndElement();
     }
 
     private void Write(LineBase lb)

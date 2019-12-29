@@ -59,6 +59,11 @@ namespace ZedGraph
       _line.Style = DashStyle.Dash;
     }
 
+    public CursorObj()
+      : this(0, CursorOrientation.Horizontal)
+    {
+    }
+
     #region Properties
 
     /// <summary>

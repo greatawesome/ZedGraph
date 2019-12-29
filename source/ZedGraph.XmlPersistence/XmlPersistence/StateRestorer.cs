@@ -71,6 +71,32 @@ namespace ZedGraph.XmlPersistence
       }
     }
 
+    public void RestoreCursors(GraphPane gp)
+    {
+      gp.Cursors.Clear();
+      XmlNode xnCursors = m_xnState.SelectSingleNode("cursors");
+      if (xnCursors != null)
+      {
+        Restore(xnCursors, gp.Cursors);
+      }
+    }
+
+    public void RestoreChart(GraphPane gp)
+    {
+      XmlNode xnChart = m_xnState.SelectSingleNode("chart");
+      if (xnChart != null)
+      {
+        var chrt = gp.Chart;
+        chrt.Rect = ReadRectangle(xnChart.SelectSingleNode("rectangle"));
+        chrt.IsRectAuto = ValueOrDefault(xnChart, "auto-rectangle", true);
+        if (Read(xnChart.SelectSingleNode("fill"), out Fill NewFill))
+        {
+          chrt.Fill = NewFill;
+        }
+        Restore(xnChart.SelectSingleNode("border"), chrt.Border);
+      }
+    }
+
     public void RestoreBackgroundFill(GraphPane gp)
     {
       XmlNode xnFill = m_xnState.SelectSingleNode("background-fill");
@@ -104,6 +130,26 @@ namespace ZedGraph.XmlPersistence
       }
     }
 
+    private void Restore(XmlNode xnCursors, CursorObjList cursors)
+    {
+      XmlNodeList xnlCursors = xnCursors.SelectNodes("cursor");
+      foreach (XmlNode xnCursor in xnlCursors)
+      {
+        var NewCursor = new CursorObj();
+        NewCursor.Name = ValueOrDefault(xnCursor, "name", NewCursor.Name);
+        NewCursor.Location = ValueOrDefault(xnCursor, "location", NewCursor.Location);
+        NewCursor.Orientation = ValueOrDefault(xnCursor, "orientation", NewCursor.Orientation);
+        NewCursor.CoordinateUnit = ValueOrDefault(xnCursor, "coordinate-unit", NewCursor.CoordinateUnit);
+        
+        XmlNode xnLine = xnCursor.SelectSingleNode("line");
+        if (xnLine != null)
+        {
+          Restore(xnLine, NewCursor.Line);
+        }
+
+        cursors.Add(NewCursor);
+      }
+    }
 
     private void Restore(XmlNode xnAxis, Axis Axis)
     {
@@ -246,17 +292,17 @@ namespace ZedGraph.XmlPersistence
       }
     }
 
-    private void Restore(XmlNode xnBorder, LineBase lb)
+    private void Restore(XmlNode xnLineBase, LineBase lb)
     {
-      lb.Color = ValueOrDefault(xnBorder, "color", lb.Color);
-      lb.Style = ValueOrDefault(xnBorder, "style", lb.Style);
-      lb.DashOn = ValueOrDefault(xnBorder, "dash-on", lb.DashOn);
-      lb.DashOff = ValueOrDefault(xnBorder, "dash-off", lb.DashOff);
-      lb.Width = ValueOrDefault(xnBorder, "width", lb.Width);
-      lb.IsVisible = ValueOrDefault(xnBorder, "visible", lb.IsVisible);
-      lb.IsAntiAlias = ValueOrDefault(xnBorder, "anti-alias", lb.IsAntiAlias);
+      lb.Color = ValueOrDefault(xnLineBase, "color", lb.Color);
+      lb.Style = ValueOrDefault(xnLineBase, "style", lb.Style);
+      lb.DashOn = ValueOrDefault(xnLineBase, "dash-on", lb.DashOn);
+      lb.DashOff = ValueOrDefault(xnLineBase, "dash-off", lb.DashOff);
+      lb.Width = ValueOrDefault(xnLineBase, "width", lb.Width);
+      lb.IsVisible = ValueOrDefault(xnLineBase, "visible", lb.IsVisible);
+      lb.IsAntiAlias = ValueOrDefault(xnLineBase, "anti-alias", lb.IsAntiAlias);
 
-      if (Read(xnBorder.SelectSingleNode("gradient-fill"), out Fill NewFill))
+      if (Read(xnLineBase.SelectSingleNode("gradient-fill"), out Fill NewFill))
       {
         lb.GradientFill = NewFill;
       }

@@ -301,6 +301,97 @@ namespace ZedGraph.XmlPersistence.Test
       Target.Y2AxisList.Should().BeEquivalentTo(Template.Y2AxisList, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
     }
 
+    [TestMethod]
+    public void TestDefaultChartPersistence()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteChart(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreChart(Target);
+
+      // Check fidelity. 
+      Target.Chart.Should().BeEquivalentTo(Template.Chart, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestChartPersistence()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      Chart chrt = Template.Chart;
+
+      chrt.Rect = new RectangleF(40, 40, 100, 100);
+      chrt.Fill = new Fill(new Color[] { Color.Red, Color.Green, Color.Blue }, 12.43f);
+
+      var Border = chrt.Border;
+      Border.InflateFactor *= 2;
+      Border.Color = Color.Tan;
+      Border.Style = DashStyle.Dot;
+      Border.DashOff *= 2;
+      Border.DashOn *= 3;
+      Border.Width *= 3;
+      Border.IsVisible = !Border.IsVisible;
+      Border.IsAntiAlias = !Border.IsAntiAlias;
+      Border.GradientFill = new Fill(Color.OldLace, Color.AliceBlue, 12f);
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteChart(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreChart(Target);
+
+      // Check fidelity. 
+      Target.Chart.Should().BeEquivalentTo(Template.Chart, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestNoCursors()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteCursors(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreCursors(Target);
+
+      // Check fidelity. 
+      Target.Cursors.Should().BeEquivalentTo(Template.Cursors, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void TestCursors()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      Template.Cursors.Add(new CursorObj(0.12, CursorOrientation.Vertical) { CoordinateUnit = CoordType.ChartFraction, Line = new LineBase(Color.AliceBlue), Name = "My cursor" });
+      Template.Cursors.Add(new CursorObj(12.3, CursorOrientation.Horizontal) { CoordinateUnit = CoordType.AxisXY2Scale, Line = new LineBase(Color.Tomato), Name = "Another cursor" });
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteCursors(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreCursors(Target);
+
+      // Check fidelity. 
+      Target.Cursors.Should().BeEquivalentTo(Template.Cursors, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+
     #region Helpers
     private XmlDocument Write(Action<StateWriter> fn)
     {
