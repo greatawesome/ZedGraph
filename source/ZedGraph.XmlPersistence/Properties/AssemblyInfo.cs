@@ -5,12 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ZedGraph.XmlPersistence")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ZedGraph.XmlPersistence")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyDescription("Xml persistence for ZedGraph library")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,15 +17,13 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("0fe7431f-21d0-4b1e-a80c-58ae7fd42dec")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+/* 
+ * Format is [Major].[Minor].[2 digit year][3 digit day of year].[2-digit month][2-digit day of month]
+ * Here's some power-shell code (can be used in the Package Manager Console too) that gives the last part of the version number:
+    $d = Get-Date
+    "{0:yy}{1:D3}.{0:MMdd}" -f $d, $d.DayOfYear
+*/
+[assembly: AssemblyVersion("1.0.19364.0")]
+
+// Defaults to AssemblyVersion if not given:
+//[assembly: AssemblyFileVersion("1.0.0.0")]  

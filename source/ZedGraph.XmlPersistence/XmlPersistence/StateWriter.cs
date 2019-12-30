@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using System.Windows.Markup;
 using System.Xml;
 
 namespace ZedGraph.XmlPersistence

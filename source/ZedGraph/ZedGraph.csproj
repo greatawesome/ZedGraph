@@ -17,7 +17,7 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <Description></Description>
     <PackageLicenseUrl>http://www.gnu.org/licenses/lgpl-2.1.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/zedgraph/</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/PaulMartinsen/ZedGraph/</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net35|AnyCPU'">
