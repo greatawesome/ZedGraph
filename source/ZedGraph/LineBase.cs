@@ -35,6 +35,7 @@ namespace ZedGraph
   /// <author> John Champion </author>
   /// <version> $Revision: 3.2 $ $Date: 2007-03-17 18:43:44 $ </version>
   [Serializable]
+  [TypeConverter(typeof(ExpandableObjectConverter))]
   public class LineBase : ICloneable, ISerializable
   {
 

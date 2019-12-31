@@ -30,6 +30,50 @@ namespace ZedGraph.XmlPersistence
       WriteCursors(gp);
     }
 
+    public void WriteGraphPane(GraphPane gp)
+    {
+      m_xDoc.WriteStartElement("pane");
+
+      m_xDoc.WriteElementString("ignore-initial", XmlConvert.ToString(gp.IsIgnoreInitial));
+      m_xDoc.WriteElementString("bounded-ranges", XmlConvert.ToString(gp.IsBoundedRanges));
+      m_xDoc.WriteElementString("ignore-missing", XmlConvert.ToString(gp.IsIgnoreMissing));
+      m_xDoc.WriteElementString("align-grids", XmlConvert.ToString(gp.IsAlignGrids));
+      m_xDoc.WriteElementString("line-type", gp.LineType.ToString());
+      m_xDoc.WriteElementString("base-dimension", XmlConvert.ToString(gp.BaseDimension));
+      m_xDoc.WriteElementString("title-gap", XmlConvert.ToString(gp.TitleGap));
+      m_xDoc.WriteElementString("scale-font", XmlConvert.ToString(gp.IsFontsScaled));
+      m_xDoc.WriteElementString("scale-pen-width", XmlConvert.ToString(gp.IsPenWidthScaled));
+
+      Write("rectangle", gp.Rect);
+      Write("border", gp.Border);
+      Write("fill", gp.Fill);
+      Write("margin", gp.Margin);
+
+      // Legend, Title are written separately. 
+
+      m_xDoc.WriteEndElement();
+    }
+
+    public void WriteLegend(GraphPane gp)
+    {
+      m_xDoc.WriteStartElement("legend");
+
+      var lgd = gp.Legend;
+      Write("font", lgd.FontSpec);
+      Write("border", lgd.Border);
+      Write("fill", lgd.Fill);
+      Write("location", lgd.Location);
+
+      m_xDoc.WriteElementString("visible", XmlConvert.ToString(lgd.IsVisible));
+      m_xDoc.WriteElementString("h-stack", XmlConvert.ToString(lgd.IsHStack));
+      m_xDoc.WriteElementString("position", lgd.Position.ToString());
+      m_xDoc.WriteElementString("reverse", XmlConvert.ToString(lgd.IsReverse));
+      m_xDoc.WriteElementString("gap", XmlConvert.ToString(lgd.Gap));
+      m_xDoc.WriteElementString("show-symbols", XmlConvert.ToString(lgd.IsShowLegendSymbols));
+
+      m_xDoc.WriteEndElement();
+    }
+
     public void WriteCursors(GraphPane gp)
     {
       m_xDoc.WriteStartElement("cursors");
@@ -104,6 +148,34 @@ namespace ZedGraph.XmlPersistence
       m_xDoc.WriteStartElement("line");
       Write(co.Line);
       m_xDoc.WriteEndElement();
+
+      m_xDoc.WriteEndElement();
+    }
+
+    private void Write(string strNodeName, Margin m)
+    {
+      m_xDoc.WriteStartElement(strNodeName);
+
+      m_xDoc.WriteElementString("left", XmlConvert.ToString(m.Left));
+      m_xDoc.WriteElementString("right", XmlConvert.ToString(m.Right));
+      m_xDoc.WriteElementString("top", XmlConvert.ToString(m.Top));
+      m_xDoc.WriteElementString("bottom", XmlConvert.ToString(m.Bottom));
+
+
+      m_xDoc.WriteEndElement();
+    }
+
+    private void Write(string strNodeName, Location l)
+    {
+      m_xDoc.WriteStartElement(strNodeName);
+
+      m_xDoc.WriteElementString("align-h", l.AlignH.ToString());
+      m_xDoc.WriteElementString("align-v", l.AlignV.ToString());
+      m_xDoc.WriteElementString("coordinate-frame", l.CoordinateFrame.ToString());
+      m_xDoc.WriteElementString("x", XmlConvert.ToString(l.X));
+      m_xDoc.WriteElementString("y", XmlConvert.ToString(l.Y));
+      m_xDoc.WriteElementString("width", XmlConvert.ToString(l.Width));
+      m_xDoc.WriteElementString("height", XmlConvert.ToString(l.Height));
 
       m_xDoc.WriteEndElement();
     }

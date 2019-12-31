@@ -17,12 +17,67 @@ namespace ZedGraph.XmlPersistence
       m_xnState = xnState ?? throw new ArgumentNullException(nameof(xnState));
     }
 
+    public void RestoreGraphPane(GraphPane gp)
+    {
+      XmlNode xnGraphPane = m_xnState.SelectSingleNode("pane");
+      if (xnGraphPane != null)
+      {
+        gp.IsIgnoreInitial = ValueOrDefault(xnGraphPane, "ignore-initial", gp.IsIgnoreInitial);
+        gp.IsBoundedRanges = ValueOrDefault(xnGraphPane, "bounded-ranges", gp.IsBoundedRanges);
+        gp.IsIgnoreMissing = ValueOrDefault(xnGraphPane, "ignore-missing", gp.IsIgnoreMissing);
+        gp.IsAlignGrids = ValueOrDefault(xnGraphPane, "align-grids", gp.IsAlignGrids);
+        gp.LineType = ValueOrDefault(xnGraphPane, "line-type", gp.LineType);
+        gp.BaseDimension = ValueOrDefault(xnGraphPane, "base-dimension", gp.BaseDimension);
+        gp.TitleGap = ValueOrDefault(xnGraphPane, "title-gap", gp.TitleGap);
+        gp.IsFontsScaled = ValueOrDefault(xnGraphPane, "scale-font", gp.IsFontsScaled);
+        gp.IsPenWidthScaled = ValueOrDefault(xnGraphPane, "scale-pen-width", gp.IsPenWidthScaled);
+
+        gp.Rect = ReadRectangle(xnGraphPane.SelectSingleNode("rectangle"));
+        if (Read(xnGraphPane.SelectSingleNode("fill"), out Fill NewFill))
+        {
+          gp.Fill = NewFill;
+        }
+        Restore(xnGraphPane.SelectSingleNode("border"), gp.Border);
+        gp.Margin = ReadMargin(xnGraphPane.SelectSingleNode("margin"));
+
+      }
+    }
+
     public void RestoreTitle(GraphPane gp)
     {
       XmlNode xnTitle = m_xnState.SelectSingleNode("title");
       if (xnTitle != null)
       {
         Restore(xnTitle, gp.Title);
+      }
+    }
+
+    public void RestoreLegend(GraphPane gp)
+    {
+      XmlNode xnLegend = m_xnState.SelectSingleNode("legend");
+      if (xnLegend != null)
+      {
+        var lgd = gp.Legend;
+
+
+        if (Read(xnLegend.SelectSingleNode("fill"), out Fill NewFill))
+        {
+          lgd.Fill = NewFill;
+        }
+        if (Read(xnLegend.SelectSingleNode("font"), lgd.FontSpec, out FontSpec NewFont))
+        {
+          lgd.FontSpec = NewFont;
+        }
+        Restore(xnLegend.SelectSingleNode("border"), lgd.Border);
+
+        lgd.Location = ReadLocation(xnLegend.SelectSingleNode("location"));
+
+        lgd.IsVisible = ValueOrDefault(xnLegend, "visible", lgd.IsVisible);
+        lgd.IsHStack = ValueOrDefault(xnLegend, "h-stack", lgd.IsHStack);
+        lgd.Position = ValueOrDefault(xnLegend, "position", lgd.Position);
+        lgd.IsReverse = ValueOrDefault(xnLegend, "reverse", lgd.IsReverse);
+        lgd.Gap = ValueOrDefault(xnLegend, "gap", lgd.Gap);
+        lgd.IsShowLegendSymbols = ValueOrDefault(xnLegend, "show-symbols", lgd.IsShowLegendSymbols);
       }
     }
 
@@ -535,6 +590,39 @@ namespace ZedGraph.XmlPersistence
       var ms = new MemoryStream(abyImageContent); // Don't dispose the memory stream. The Image is still using it. 
       return Image.FromStream(ms);
     }
+
+    private Margin ReadMargin(XmlNode xnMargin)
+    {
+      var NewMargin = new Margin(); // default margin. 
+      if (xnMargin != null)
+      {
+        NewMargin.Left = ValueOrDefault(xnMargin, "left", NewMargin.Left);
+        NewMargin.Right = ValueOrDefault(xnMargin, "right", NewMargin.Right);
+        NewMargin.Top = ValueOrDefault(xnMargin, "top", NewMargin.Top);
+        NewMargin.Bottom = ValueOrDefault(xnMargin, "bottom", NewMargin.Bottom);
+      }
+
+      return NewMargin;
+    }
+
+    private Location ReadLocation(XmlNode xnLocation)
+    {
+      var NewLoc = new Location();
+
+      if (xnLocation != null)
+      {
+        NewLoc.AlignH = ValueOrDefault(xnLocation, "align-h", NewLoc.AlignH);
+        NewLoc.AlignV = ValueOrDefault(xnLocation, "align-v", NewLoc.AlignV);
+        NewLoc.CoordinateFrame = ValueOrDefault(xnLocation, "coordinate-frame", NewLoc.CoordinateFrame);
+        NewLoc.X = ValueOrDefault(xnLocation, "x", NewLoc.X);
+        NewLoc.Y = ValueOrDefault(xnLocation, "y", NewLoc.Y);
+        NewLoc.Width = ValueOrDefault(xnLocation, "width", NewLoc.Width);
+        NewLoc.Height = ValueOrDefault(xnLocation, "height", NewLoc.Height);
+      }
+
+      return NewLoc;
+    }
+
 
     private Matrix ReadMatrix(XmlNode xnMatrix)
     {

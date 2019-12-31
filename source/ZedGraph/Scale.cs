@@ -24,6 +24,9 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.ComponentModel;
+using ZedGraph.Editors;
+using System.Drawing.Design;
 
 namespace ZedGraph
 {
@@ -1008,43 +1011,44 @@ namespace ZedGraph
 							type == AxisType.DateAsOrdinal;
 			}
 		}
-/*
-		/// <summary>
-		/// The pixel position at the minimum value for this axis.  This read-only
-		/// value is used/valid only during the Draw process.
-		/// </summary>
-		public float MinPix
-		{
-			get { return _minPix; }
-		}
-		/// <summary>
-		/// The pixel position at the maximum value for this axis.  This read-only
-		/// value is used/valid only during the Draw process.
-		/// </summary>
-		public float MaxPix
-		{
-			get { return _maxPix; }
-		}
-*/
-		/// <summary>
-		/// Gets or sets the minimum scale value for this <see cref="Scale" />.
-		/// </summary>
-		/// <remarks>This value can be set
-		/// automatically based on the state of <see cref="MinAuto"/>.  If
-		/// this value is set manually, then <see cref="MinAuto"/> will
-		/// also be set to false.
-		/// </remarks>
-		/// <value> The value is defined in user scale units for <see cref="AxisType.Log"/>
-		/// and <see cref="AxisType.Linear"/> axes. For <see cref="AxisType.Text"/>
-		/// and <see cref="AxisType.Ordinal"/> axes,
-		/// this value is an ordinal starting with 1.0.  For <see cref="AxisType.Date"/>
-		/// axes, this value is in XL Date format (see <see cref="XDate"/>, which is the
-		/// number of days since the reference date of January 1, 1900.</value>
-		/// <seealso cref="Max"/>
-		/// <seealso cref="MajorStep"/>
-		/// <seealso cref="MinorStep"/>
-		/// <seealso cref="MinAuto"/>
-		public virtual double Min
+    /*
+        /// <summary>
+        /// The pixel position at the minimum value for this axis.  This read-only
+        /// value is used/valid only during the Draw process.
+        /// </summary>
+        public float MinPix
+        {
+          get { return _minPix; }
+        }
+        /// <summary>
+        /// The pixel position at the maximum value for this axis.  This read-only
+        /// value is used/valid only during the Draw process.
+        /// </summary>
+        public float MaxPix
+        {
+          get { return _maxPix; }
+        }
+    */
+    /// <summary>
+    /// Gets or sets the minimum scale value for this <see cref="Scale" />.
+    /// </summary>
+    /// <remarks>This value can be set
+    /// automatically based on the state of <see cref="MinAuto"/>.  If
+    /// this value is set manually, then <see cref="MinAuto"/> will
+    /// also be set to false.
+    /// </remarks>
+    /// <value> The value is defined in user scale units for <see cref="AxisType.Log"/>
+    /// and <see cref="AxisType.Linear"/> axes. For <see cref="AxisType.Text"/>
+    /// and <see cref="AxisType.Ordinal"/> axes,
+    /// this value is an ordinal starting with 1.0.  For <see cref="AxisType.Date"/>
+    /// axes, this value is in XL Date format (see <see cref="XDate"/>, which is the
+    /// number of days since the reference date of January 1, 1900.</value>
+    /// <seealso cref="Max"/>
+    /// <seealso cref="MajorStep"/>
+    /// <seealso cref="MinorStep"/>
+    /// <seealso cref="MinAuto"/>
+    [Description("Minimum value for the scale")]
+    public virtual double Min
 		{
 			get { return _min; }
 			set { _min = value; _minAuto = false; }
@@ -1068,33 +1072,35 @@ namespace ZedGraph
 		/// <seealso cref="MajorStep"/>
 		/// <seealso cref="MinorStep"/>
 		/// <seealso cref="MaxAuto"/>
-		public virtual double Max
+    [Description("Maximum value for the scale")]
+    public virtual double Max
 		{
 			get { return _max; }
 			set { _max = value; _maxAuto = false; }
 		}
-		/// <summary>
-		/// Gets or sets the scale step size for this <see cref="Scale" /> (the increment between
-		/// labeled axis values).
-		/// </summary>
-		/// <remarks>
-		/// This value can be set
-		/// automatically based on the state of <see cref="MajorStepAuto"/>.  If
-		/// this value is set manually, then <see cref="MajorStepAuto"/> will
-		/// also be set to false.  This value is ignored for <see cref="AxisType.Log"/>
-		/// axes.  For <see cref="AxisType.Date"/> axes, this
-		/// value is defined in units of <see cref="MajorUnit"/>.
-		/// </remarks>
-		/// <value> The value is defined in user scale units </value>
-		/// <seealso cref="Min"/>
-		/// <seealso cref="Max"/>
-		/// <seealso cref="MinorStep"/>
-		/// <seealso cref="MajorStepAuto"/>
-		/// <seealso cref="ZedGraph.Scale.Default.TargetXSteps"/>
-		/// <seealso cref="ZedGraph.Scale.Default.TargetYSteps"/>
-		/// <seealso cref="ZedGraph.Scale.Default.ZeroLever"/>
-		/// <seealso cref="ZedGraph.Scale.Default.MaxTextLabels"/>
-		public double MajorStep
+    /// <summary>
+    /// Gets or sets the scale step size for this <see cref="Scale" /> (the increment between
+    /// labeled axis values).
+    /// </summary>
+    /// <remarks>
+    /// This value can be set
+    /// automatically based on the state of <see cref="MajorStepAuto"/>.  If
+    /// this value is set manually, then <see cref="MajorStepAuto"/> will
+    /// also be set to false.  This value is ignored for <see cref="AxisType.Log"/>
+    /// axes.  For <see cref="AxisType.Date"/> axes, this
+    /// value is defined in units of <see cref="MajorUnit"/>.
+    /// </remarks>
+    /// <value> The value is defined in user scale units </value>
+    /// <seealso cref="Min"/>
+    /// <seealso cref="Max"/>
+    /// <seealso cref="MinorStep"/>
+    /// <seealso cref="MajorStepAuto"/>
+    /// <seealso cref="ZedGraph.Scale.Default.TargetXSteps"/>
+    /// <seealso cref="ZedGraph.Scale.Default.TargetYSteps"/>
+    /// <seealso cref="ZedGraph.Scale.Default.ZeroLever"/>
+    /// <seealso cref="ZedGraph.Scale.Default.MaxTextLabels"/>
+    [Description("Distance between labelled axis values.")]
+    public double MajorStep
 		{
 			get { return _majorStep; }
 			set
@@ -1110,23 +1116,24 @@ namespace ZedGraph
 				}
 			}
 		}
-		/// <summary>
-		/// Gets or sets the scale minor step size for this <see cref="Scale" /> (the spacing between
-		/// minor tics).
-		/// </summary>
-		/// <remarks>This value can be set
-		/// automatically based on the state of <see cref="MinorStepAuto"/>.  If
-		/// this value is set manually, then <see cref="MinorStepAuto"/> will
-		/// also be set to false.  This value is ignored for <see cref="AxisType.Log"/> and
-		/// <see cref="AxisType.Text"/> axes.  For <see cref="AxisType.Date"/> axes, this
-		/// value is defined in units of <see cref="MinorUnit"/>.
-		/// </remarks>
-		/// <value> The value is defined in user scale units </value>
-		/// <seealso cref="Min"/>
-		/// <seealso cref="Max"/>
-		/// <seealso cref="MajorStep"/>
-		/// <seealso cref="MinorStepAuto"/>
-		public double MinorStep
+    /// <summary>
+    /// Gets or sets the scale minor step size for this <see cref="Scale" /> (the spacing between
+    /// minor tics).
+    /// </summary>
+    /// <remarks>This value can be set
+    /// automatically based on the state of <see cref="MinorStepAuto"/>.  If
+    /// this value is set manually, then <see cref="MinorStepAuto"/> will
+    /// also be set to false.  This value is ignored for <see cref="AxisType.Log"/> and
+    /// <see cref="AxisType.Text"/> axes.  For <see cref="AxisType.Date"/> axes, this
+    /// value is defined in units of <see cref="MinorUnit"/>.
+    /// </remarks>
+    /// <value> The value is defined in user scale units </value>
+    /// <seealso cref="Min"/>
+    /// <seealso cref="Max"/>
+    /// <seealso cref="MajorStep"/>
+    /// <seealso cref="MinorStepAuto"/>
+    [Description("Distance between minor tick marks.")]
+    public double MinorStep
 		{
 			get { return _minorStep; }
 			set
@@ -1142,18 +1149,19 @@ namespace ZedGraph
 				}
 			}
 		}
-		/// <summary>
-		/// Gets or sets the scale exponent value.  This only applies to <see cref="AxisType.Exponent" />. 
-		/// </summary>
-		/// <seealso cref="Min"/>
-		/// <seealso cref="Max"/>
-		/// <seealso cref="MinorStep"/>
-		/// <seealso cref="MajorStepAuto"/>
-		/// <seealso cref="ZedGraph.Scale.Default.TargetXSteps"/>
-		/// <seealso cref="ZedGraph.Scale.Default.TargetYSteps"/>
-		/// <seealso cref="ZedGraph.Scale.Default.ZeroLever"/>
-		/// <seealso cref="ZedGraph.Scale.Default.MaxTextLabels"/>
-		public double Exponent
+    /// <summary>
+    /// Gets or sets the scale exponent value.  This only applies to <see cref="AxisType.Exponent" />. 
+    /// </summary>
+    /// <seealso cref="Min"/>
+    /// <seealso cref="Max"/>
+    /// <seealso cref="MinorStep"/>
+    /// <seealso cref="MajorStepAuto"/>
+    /// <seealso cref="ZedGraph.Scale.Default.TargetXSteps"/>
+    /// <seealso cref="ZedGraph.Scale.Default.TargetYSteps"/>
+    /// <seealso cref="ZedGraph.Scale.Default.ZeroLever"/>
+    /// <seealso cref="ZedGraph.Scale.Default.MaxTextLabels"/>
+    [Description("Value of exponent for Exponent scales.")]
+    public double Exponent
 		{
 			get { return _exponent; }
 			set { _exponent = value; }
@@ -1182,6 +1190,7 @@ namespace ZedGraph
 		/// <seealso cref="MajorStep"/>
 		/// <seealso cref="MinorStep"/>
 		/// <seealso cref="Axis.Cross"/>
+    [Description("Scale value for first major tick label.")]
 		public double BaseTic
 		{
 			get { return _baseTic; }
@@ -1202,6 +1211,7 @@ namespace ZedGraph
 		/// <seealso cref="MajorStep"/>
 		/// <seealso cref="MinorStep"/>
 		/// <seealso cref="MajorStepAuto"/>
+    [Description("Unit for the distance between labels (date axis only).")]
 		public DateUnit MajorUnit
 		{
 			get { return _majorUnit; }
@@ -1221,7 +1231,8 @@ namespace ZedGraph
 		/// <seealso cref="MajorStep"/>
 		/// <seealso cref="MinorStep"/>
 		/// <seealso cref="MinorStepAuto"/>
-		public DateUnit MinorUnit
+    [Description("Unit for the distance between minor tick marks (date axis only).")]
+    public DateUnit MinorUnit
 		{
 			get { return _minorUnit; }
 			set { _minorUnit = value; }
@@ -1253,17 +1264,18 @@ namespace ZedGraph
 			get { return 1.0; }
 		}
 
-		/// <summary>
-		/// Gets or sets a value that determines whether or not the minimum scale value <see cref="Min"/>
-		/// is set automatically.
-		/// </summary>
-		/// <remarks>
-		/// This value will be set to false if
-		/// <see cref="Min"/> is manually changed.
-		/// </remarks>
-		/// <value>true for automatic mode, false for manual mode</value>
-		/// <seealso cref="Min"/>
-		public bool MinAuto
+    /// <summary>
+    /// Gets or sets a value that determines whether or not the minimum scale value <see cref="Min"/>
+    /// is set automatically.
+    /// </summary>
+    /// <remarks>
+    /// This value will be set to false if
+    /// <see cref="Min"/> is manually changed.
+    /// </remarks>
+    /// <value>true for automatic mode, false for manual mode</value>
+    /// <seealso cref="Min"/>
+    [Description("Set minimum scale value automatically.")]
+    public bool MinAuto
 		{
 			get { return _minAuto; }
 			set { _minAuto = value; }
@@ -1278,7 +1290,8 @@ namespace ZedGraph
 		/// </remarks>
 		/// <value>true for automatic mode, false for manual mode</value>
 		/// <seealso cref="Max"/>
-		public bool MaxAuto
+    [Description("Set maximum scale value automatically.")]
+    public bool MaxAuto
 		{
 			get { return _maxAuto; }
 			set { _maxAuto = value; }
@@ -1293,7 +1306,8 @@ namespace ZedGraph
 		/// </remarks>
 		/// <value>true for automatic mode, false for manual mode</value>
 		/// <seealso cref="MajorStep"/>
-		public bool MajorStepAuto
+    [Description("Set distance between labels (major ticks) automatically.")]
+    public bool MajorStepAuto
 		{
 			get { return _majorStepAuto; }
 			set { _majorStepAuto = value; }
@@ -1308,26 +1322,28 @@ namespace ZedGraph
 		/// </remarks>
 		/// <value>true for automatic mode, false for manual mode</value>
 		/// <seealso cref="MinorStep"/>
-		public bool MinorStepAuto
+    [Description("Set minor step distance automatically automatically.")]
+    public bool MinorStepAuto
 		{
 			get { return _minorStepAuto; }
 			set { _minorStepAuto = value; }
 		}
 
-		/// <summary>
-		/// Determines whether or not the scale label format <see cref="Format"/>
-		/// is determined automatically based on the range of data values.
-		/// </summary>
-		/// <remarks>
-		/// This value will be set to false if
-		/// <see cref="Format"/> is manually changed.
-		/// </remarks>
-		/// <value>true if <see cref="Format"/> will be set automatically, false
-		/// if it is to be set manually by the user</value>
-		/// <seealso cref="Mag"/>
-		/// <seealso cref="Format"/>
-		/// <seealso cref="FontSpec"/>
-		public bool FormatAuto
+    /// <summary>
+    /// Determines whether or not the scale label format <see cref="Format"/>
+    /// is determined automatically based on the range of data values.
+    /// </summary>
+    /// <remarks>
+    /// This value will be set to false if
+    /// <see cref="Format"/> is manually changed.
+    /// </remarks>
+    /// <value>true if <see cref="Format"/> will be set automatically, false
+    /// if it is to be set manually by the user</value>
+    /// <seealso cref="Mag"/>
+    /// <seealso cref="Format"/>
+    /// <seealso cref="FontSpec"/>
+    [Description("Automatically determine format of scale labels.")]
+    public bool FormatAuto
 		{
 			get { return _formatAuto; }
 			set { _formatAuto = value; }
@@ -1350,6 +1366,8 @@ namespace ZedGraph
 		/// <seealso cref="FormatAuto"/>
 		/// <seealso cref="FontSpec"/>
 		// /// <seealso cref="NumDec"/>
+    [Description("Custom format for scale labels (used when " + nameof(FormatAuto) + " is false).")]
+    [Editor(typeof(FormatSelector), typeof(UITypeEditor))]
 		public string Format
 		{
 			get { return _format; }

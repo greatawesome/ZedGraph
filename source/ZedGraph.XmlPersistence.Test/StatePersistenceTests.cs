@@ -19,6 +19,111 @@ namespace ZedGraph.XmlPersistence.Test
     private static readonly Random m_RNG = new Random();
 
     [TestMethod]
+    public void PersistDefaultGraphPaneSettings()
+    {
+      GraphPane Template = new GraphPane();
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteGraphPane(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreGraphPane(Target);
+
+      // Check fidelity. 
+      Target.Should().BeEquivalentTo(Template, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void PersistGraphPaneSettings()
+    {
+      GraphPane Template = new GraphPane();
+      Template.IsIgnoreInitial = !Template.IsIgnoreInitial;
+      Template.IsBoundedRanges = !Template.IsBoundedRanges;
+      Template.IsIgnoreMissing = !Template.IsIgnoreMissing;
+      Template.IsAlignGrids = !Template.IsAlignGrids;
+      Template.LineType = LineType.Stack;
+      Template.Rect = new RectangleF(5, 10, 15, 20);
+      FillBorderValues(Template.Border);
+      Template.Fill = new Fill(Color.PaleGreen, Color.Gainsboro, 34);
+      Template.Margin.Left = 3;
+      Template.Margin.Top = 7;
+      Template.Margin.Right = 11;
+      Template.Margin.Bottom = 22;
+      Template.BaseDimension = 5;
+      Template.TitleGap = 8.3f;
+      Template.IsFontsScaled = !Template.IsFontsScaled;
+      Template.IsPenWidthScaled = !Template.IsPenWidthScaled;
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteGraphPane(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreGraphPane(Target);
+
+      // Check fidelity. 
+      Target.Should().BeEquivalentTo(Template, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+
+    }
+
+    [TestMethod]
+    public void PersistDefaultLegendSettings()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteLegend(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreLegend(Target);
+
+      // Check fidelity. 
+      Target.Legend.Should().BeEquivalentTo(Template.Legend, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
+    public void PersistLegendSettings()
+    {
+      GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
+      var lgd = Template.Legend;
+      FillFontValues(lgd.FontSpec);
+      lgd.IsVisible = !lgd.IsVisible;
+      FillBorderValues(lgd.Border);
+      lgd.Fill = new Fill(Color.Orchid, Color.WhiteSmoke, 34);
+      lgd.Position = LegendPos.Bottom;
+      lgd.Location.AlignH = AlignH.Left;
+      lgd.Location.AlignV = AlignV.Top;
+      lgd.Location.Height = 50;
+      lgd.Location.Width = 24;
+      lgd.Location.X = 11;
+      lgd.Location.Y = 12;
+      lgd.Location.CoordinateFrame = CoordType.XChartFractionY2Scale;
+      lgd.Gap = 9.2f;
+      lgd.IsReverse = !lgd.IsReverse;
+      lgd.IsShowLegendSymbols = !lgd.IsShowLegendSymbols;
+
+      // Persist the object
+      var Persisted = Write(x => x.WriteLegend(Template));
+      Dump(Persisted);
+
+      // Restore it. 
+      var Target = new GraphPane();
+      var Restorer = new StateRestorer(Persisted.DocumentElement);
+      Restorer.RestoreLegend(Target);
+
+      // Check fidelity. 
+      Target.Legend.Should().BeEquivalentTo(Template.Legend, options => options.IgnoringCyclicReferences().Excluding(x => IsObjectHandle(x)));
+    }
+
+    [TestMethod]
     public void PersistTitle()
     {
       GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
@@ -29,7 +134,7 @@ namespace ZedGraph.XmlPersistence.Test
       Title.IsVisible = !Title.IsVisible;
 
       var Font = Title.FontSpec;
-      CreateFontSpec(Font);
+      FillFontValues(Font);
 
       // Persist the object
       var Persisted = Write(x => x.WriteTitle(Template));
@@ -242,7 +347,7 @@ namespace ZedGraph.XmlPersistence.Test
       GraphPane Template = new GraphPane(new RectangleF(10, 12, 100, 150), "My graph", "X Title", "Y Title");
 
       FillAxisValues(Template.Y2Axis);
-      Template.Y2Axis.Title.Text= "Y2 Axis";
+      Template.Y2Axis.Title.Text = "Y2 Axis";
 
       // Persist the object
       var Persisted = Write(x => x.WriteY2Axis(Template));
@@ -329,15 +434,7 @@ namespace ZedGraph.XmlPersistence.Test
       chrt.Fill = new Fill(new Color[] { Color.Red, Color.Green, Color.Blue }, 12.43f);
 
       var Border = chrt.Border;
-      Border.InflateFactor *= 2;
-      Border.Color = Color.Tan;
-      Border.Style = DashStyle.Dot;
-      Border.DashOff *= 2;
-      Border.DashOn *= 3;
-      Border.Width *= 3;
-      Border.IsVisible = !Border.IsVisible;
-      Border.IsAntiAlias = !Border.IsAntiAlias;
-      Border.GradientFill = new Fill(Color.OldLace, Color.AliceBlue, 12f);
+      FillBorderValues(Border);
 
       // Persist the object
       var Persisted = Write(x => x.WriteChart(Template));
@@ -442,7 +539,7 @@ namespace ZedGraph.XmlPersistence.Test
     #endregion
 
     #region Setup values. 
-    private static void CreateFontSpec(FontSpec Font)
+    private static void FillFontValues(FontSpec Font)
     {
       Font.Angle = m_RNG.Next(2, 50);
       Font.FontColor = Color.Beige;
@@ -472,6 +569,19 @@ namespace ZedGraph.XmlPersistence.Test
       Border.GradientFill = new Fill(Color.OldLace, Color.AliceBlue, 12f);
     }
 
+    private static void FillBorderValues(Border Border)
+    {
+      Border.InflateFactor *= 2;
+      Border.Color = Color.Tan;
+      Border.Style = DashStyle.Dot;
+      Border.DashOff *= 2;
+      Border.DashOn *= 3;
+      Border.Width *= 3;
+      Border.IsVisible = !Border.IsVisible;
+      Border.IsAntiAlias = !Border.IsAntiAlias;
+      Border.GradientFill = new Fill(Color.OldLace, Color.AliceBlue, 12f);
+    }
+
     private static void FillAxisValues(Axis Axis)
     {
       Axis.Scale.Min = m_RNG.Next(10, 40);
@@ -494,7 +604,7 @@ namespace ZedGraph.XmlPersistence.Test
       Axis.Scale.MaxGrace = 1.3;
       Axis.Scale.Align = AlignP.Outside;
       Axis.Scale.AlignH = AlignH.Left;
-      CreateFontSpec(Axis.Scale.FontSpec);
+      FillFontValues(Axis.Scale.FontSpec);
       Axis.Scale.LabelGap = 4.2f;
       Axis.Scale.IsLabelsInside = !Axis.Scale.IsLabelsInside;
       Axis.Scale.IsSkipFirstLabel = !Axis.Scale.IsSkipFirstLabel;
@@ -560,7 +670,7 @@ namespace ZedGraph.XmlPersistence.Test
       Axis.AxisGap = 8;
 
       var t = Axis.Title;
-      CreateFontSpec(t.FontSpec);
+      FillFontValues(t.FontSpec);
       t.Gap = 47;
       t.IsOmitMag = !t.IsOmitMag;
       t.IsTitleAtCross = !t.IsTitleAtCross;
