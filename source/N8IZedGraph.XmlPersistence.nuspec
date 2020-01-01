@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>N8I.ZedGraph.XmlPersistence</id>
-    <version>1.0.19364.0</version>
+    <version>1.0.20001.0101</version>
     <title />
     <authors>Number Eight Innovation</authors>
     <owners>Number Eight Innovation</owners>
@@ -20,7 +20,7 @@
       <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net47" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="N8I.ZedGraph" version="6.7.19364.1230" />
+      <dependency id="N8I.ZedGraph" version="6.7.20001.0101" />
     </dependencies>
   </metadata>
   <files>

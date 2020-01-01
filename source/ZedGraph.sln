@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		msbuild.proj = msbuild.proj
 		N8IZedGraph.nuspec = N8IZedGraph.nuspec
 		N8IZedGraph.WinForms.nuspec = N8IZedGraph.WinForms.nuspec
+		N8IZedGraph.XmlPersistence.nuspec = N8IZedGraph.XmlPersistence.nuspec
 		packages.config = packages.config
 		..\README.md = ..\README.md
 		ZedGraph.nuspec = ZedGraph.nuspec
@@ -28,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGraph", "TestGraph\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZedGraph.N8ITests", "ZedGraph.N8ITests\ZedGraph.N8ITests.csproj", "{52890292-7603-473F-8DC0-575AE1D217A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZedGraph.XmlPersistence", "ZedGraph.XmlPersistence\ZedGraph.XmlPersistence.csproj", "{0FE7431F-21D0-4B1E-A80C-58AE7FD42DEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZedGraph.XmlPersistence", "ZedGraph.XmlPersistence\ZedGraph.XmlPersistence.csproj", "{0FE7431F-21D0-4B1E-A80C-58AE7FD42DEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZedGraph.XmlPersistence.Test", "ZedGraph.XmlPersistence.Test\ZedGraph.XmlPersistence.Test.csproj", "{7A112636-DA31-44B8-AA5D-42F02842D3B5}"
 EndProject

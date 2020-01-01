@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
     $d = Get-Date
     "{0:yy}{1:D3}.{0:MMdd}" -f $d, $d.DayOfYear
 */
-[assembly: AssemblyVersion("1.0.19364.0")]
+[assembly: AssemblyVersion("1.0.20001.0101")]
 
 // Defaults to AssemblyVersion if not given:
 //[assembly: AssemblyFileVersion("1.0.0.0")]  
