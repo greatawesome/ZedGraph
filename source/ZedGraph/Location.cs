@@ -18,6 +18,7 @@
 //=============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -121,30 +122,32 @@ namespace ZedGraph
 			get { return _y; }
 			set { _y = value; }
 		}
-		/// <summary>
-		/// The x1 position of the object (an alias for the x position).
-		/// </summary>
-		/// <remarks>
-		/// The units of this position
-		/// are specified by the <see cref="CoordinateFrame"/> property.
-		/// The object will be aligned to this position based on the
-		/// <see cref="AlignH"/> property.
-		/// </remarks>
-		public double X1
+    /// <summary>
+    /// The x1 position of the object (an alias for the x position).
+    /// </summary>
+    /// <remarks>
+    /// The units of this position
+    /// are specified by the <see cref="CoordinateFrame"/> property.
+    /// The object will be aligned to this position based on the
+    /// <see cref="AlignH"/> property.
+    /// </remarks>
+    [Browsable(false)]
+    public double X1
 		{
 			get { return _x; }
 			set { _x = value; }
 		}
-		/// <summary>
-		/// The y1 position of the object (an alias for the y position).
-		/// </summary>
-		/// <remarks>
-		/// The units of this position
-		/// are specified by the <see cref="CoordinateFrame"/> property.
-		/// The object will be aligned to this position based on the
-		/// <see cref="AlignV"/> property.
-		/// </remarks>
-		public double Y1
+    /// <summary>
+    /// The y1 position of the object (an alias for the y position).
+    /// </summary>
+    /// <remarks>
+    /// The units of this position
+    /// are specified by the <see cref="CoordinateFrame"/> property.
+    /// The object will be aligned to this position based on the
+    /// <see cref="AlignV"/> property.
+    /// </remarks>
+    [Browsable(false)]
+    public double Y1
 		{
 			get { return _y; }
 			set { _y = value; }
@@ -173,36 +176,38 @@ namespace ZedGraph
 			get { return _height; }
 			set { _height = value; }
 		}
-		/// <summary>
-		/// The x2 position of the object.
-		/// </summary>
-		/// <remarks>
-		/// The units of this position are specified by the
-		/// <see cref="CoordinateFrame"/> property.
-		/// The object will be aligned to this position based on the
-		/// <see cref="AlignH"/> property.  This position is only used for
-		/// objects such as <see cref="ArrowObj"/>, where it makes sense
-		/// to have a second coordinate.  Note that the X2 position is stored
-		/// internally as a <see cref="Width"/> offset from <see cref="X"/>.
-		/// </remarks>
-		public double X2
+    /// <summary>
+    /// The x2 position of the object.
+    /// </summary>
+    /// <remarks>
+    /// The units of this position are specified by the
+    /// <see cref="CoordinateFrame"/> property.
+    /// The object will be aligned to this position based on the
+    /// <see cref="AlignH"/> property.  This position is only used for
+    /// objects such as <see cref="ArrowObj"/>, where it makes sense
+    /// to have a second coordinate.  Note that the X2 position is stored
+    /// internally as a <see cref="Width"/> offset from <see cref="X"/>.
+    /// </remarks>
+    [Browsable(false)]
+    public double X2
 		{
 			get { return _x+_width; }
 			//set { width = value-x; }
 		}
-		/// <summary>
-		/// The y2 position of the object.
-		/// </summary>
-		/// <remarks>
-		/// The units of this position
-		/// are specified by the <see cref="CoordinateFrame"/> property.
-		/// The object will be aligned to this position based on the
-		/// <see cref="AlignV"/> property.  This position is only used for
-		/// objects such as <see cref="ArrowObj"/>, where it makes sense
-		/// to have a second coordinate.  Note that the Y2 position is stored
-		/// internally as a <see cref="Height"/> offset from <see cref="Y"/>.
-		/// </remarks>
-		public double Y2
+    /// <summary>
+    /// The y2 position of the object.
+    /// </summary>
+    /// <remarks>
+    /// The units of this position
+    /// are specified by the <see cref="CoordinateFrame"/> property.
+    /// The object will be aligned to this position based on the
+    /// <see cref="AlignV"/> property.  This position is only used for
+    /// objects such as <see cref="ArrowObj"/>, where it makes sense
+    /// to have a second coordinate.  Note that the Y2 position is stored
+    /// internally as a <see cref="Height"/> offset from <see cref="Y"/>.
+    /// </remarks>
+    [Browsable(false)]
+    public double Y2
 		{
 			get { return _y+_height; }
 			//set { height = value-y; }
@@ -220,6 +225,7 @@ namespace ZedGraph
 		/// </remarks>
 		/// <value>A <see cref="RectangleF"/> in <see cref="CoordinateFrame"/>
 		/// units.</value>
+    [Browsable(false)]
 		public RectangleF Rect
 		{
 			get { return new RectangleF( (float)_x, (float)_y, (float)_width, (float)_height ); }
@@ -232,31 +238,33 @@ namespace ZedGraph
 			}
 		}
 
-		/// <summary>
-		/// The top-left <see cref="PointF"/> for this <see cref="Location"/>.
-		/// </summary>
-		/// <remarks>
-		/// Note that this method reduces the precision of the location coordinates from double
-		/// precision to single precision.  In some cases, such as <see cref="AxisType.Date" />, it
-		/// may affect the resolution of the point location.
-		/// </remarks>
-		/// <value>A <see cref="PointF"/> in <see cref="CoordinateFrame"/> units.</value>
-		public PointF TopLeft
+    /// <summary>
+    /// The top-left <see cref="PointF"/> for this <see cref="Location"/>.
+    /// </summary>
+    /// <remarks>
+    /// Note that this method reduces the precision of the location coordinates from double
+    /// precision to single precision.  In some cases, such as <see cref="AxisType.Date" />, it
+    /// may affect the resolution of the point location.
+    /// </remarks>
+    /// <value>A <see cref="PointF"/> in <see cref="CoordinateFrame"/> units.</value>
+    [Browsable(false)]
+    public PointF TopLeft
 		{
 			get { return new PointF( (float)_x, (float)_y ); }
 			set { _x = value.X; _y = value.Y; }
 		}
 
-		/// <summary>
-		/// The bottom-right <see cref="PointF"/> for this <see cref="Location"/>.
-		/// </summary>
-		/// <remarks>
-		/// Note that this method reduces the precision of the location coordinates from double
-		/// precision to single precision.  In some cases, such as <see cref="AxisType.Date" />, it
-		/// may affect the resolution of the point location.
-		/// </remarks>
-		/// <value>A <see cref="PointF"/> in <see cref="CoordinateFrame"/> units.</value>
-		public PointF BottomRight
+    /// <summary>
+    /// The bottom-right <see cref="PointF"/> for this <see cref="Location"/>.
+    /// </summary>
+    /// <remarks>
+    /// Note that this method reduces the precision of the location coordinates from double
+    /// precision to single precision.  In some cases, such as <see cref="AxisType.Date" />, it
+    /// may affect the resolution of the point location.
+    /// </remarks>
+    /// <value>A <see cref="PointF"/> in <see cref="CoordinateFrame"/> units.</value>
+    [Browsable(false)]
+    public PointF BottomRight
 		{
 			get { return new PointF( (float)this.X2, (float)this.Y2 ); }
 			//set { this.X2 = value.X; this.Y2 = value.Y; }

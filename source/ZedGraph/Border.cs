@@ -18,6 +18,7 @@
 //=============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -34,7 +35,8 @@ namespace ZedGraph
 	/// <author> John Champion </author>
 	/// <version> $Revision: 3.18 $ $Date: 2007-03-17 18:43:44 $ </version>
 	[Serializable]
-	public class Border : LineBase, ISerializable, ICloneable
+  [TypeConverter(typeof(ExpandableObjectConverter))]
+  public class Border : LineBase, ISerializable, ICloneable
 	{
 	#region Fields
 

@@ -27,98 +27,98 @@ using System.ComponentModel;
 
 namespace ZedGraph
 {
-	/// <summary>
-	/// Class that holds the specific properties for the minor tics.
-	/// </summary>
-	/// <author> John Champion </author>
-	/// <version> $Revision: 3.1 $ $Date: 2006-06-24 20:26:44 $ </version>
-	[Serializable]
+  /// <summary>
+  /// Class that holds the specific properties for the minor tics.
+  /// </summary>
+  /// <author> John Champion </author>
+  /// <version> $Revision: 3.1 $ $Date: 2006-06-24 20:26:44 $ </version>
+  [Serializable]
   [TypeConverter(typeof(ExpandableObjectConverter))]
   public class MinorTic : ICloneable, ISerializable
-	{
-		internal bool	_isOutside,
-							_isInside,
-							_isOpposite,
-							_isCrossOutside,
-							_isCrossInside;
+  {
+    internal bool _isOutside,
+              _isInside,
+              _isOpposite,
+              _isCrossOutside,
+              _isCrossInside;
 
-		internal float _penWidth,
-							_size;
+    internal float _penWidth,
+              _size;
 
-		internal Color _color;
+    internal Color _color;
 
-	#region Constructors
+    #region Constructors
 
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
-		public MinorTic()
-		{
-			_size = Default.Size;
-			_color = Default.Color;
-			_penWidth = Default.PenWidth;
+    /// <summary>
+    /// Default Constructor
+    /// </summary>
+    public MinorTic()
+    {
+      _size = Default.Size;
+      _color = Default.Color;
+      _penWidth = Default.PenWidth;
 
-			this.IsOutside = Default.IsOutside;
-			this.IsInside = Default.IsInside;
-			this.IsOpposite = Default.IsOpposite;
-			_isCrossOutside = Default.IsCrossOutside;
-			_isCrossInside = Default.IsCrossInside;
-		}
+      this.IsOutside = Default.IsOutside;
+      this.IsInside = Default.IsInside;
+      this.IsOpposite = Default.IsOpposite;
+      _isCrossOutside = Default.IsCrossOutside;
+      _isCrossInside = Default.IsCrossInside;
+    }
 
-		/// <summary>
-		/// Copy constructor.
-		/// </summary>
-		/// <param name="rhs">The <see cref="MinorTic" /> that is to be copied.</param>
-		public MinorTic( MinorTic rhs )
-		{
-			_size = rhs._size;
-			_color = rhs._color;
-			_penWidth = rhs._penWidth;
+    /// <summary>
+    /// Copy constructor.
+    /// </summary>
+    /// <param name="rhs">The <see cref="MinorTic" /> that is to be copied.</param>
+    public MinorTic(MinorTic rhs)
+    {
+      _size = rhs._size;
+      _color = rhs._color;
+      _penWidth = rhs._penWidth;
 
-			this.IsOutside = rhs.IsOutside;
-			this.IsInside = rhs.IsInside;
-			this.IsOpposite = rhs.IsOpposite;
-			_isCrossOutside = rhs._isCrossOutside;
-			_isCrossInside = rhs._isCrossInside;
-		}
+      this.IsOutside = rhs.IsOutside;
+      this.IsInside = rhs.IsInside;
+      this.IsOpposite = rhs.IsOpposite;
+      _isCrossOutside = rhs._isCrossOutside;
+      _isCrossInside = rhs._isCrossInside;
+    }
 
-		/// <summary>
-		/// Implement the <see cref="ICloneable" /> interface in a typesafe manner by just
-		/// calling the typed version of <see cref="Clone" />
-		/// </summary>
-		/// <returns>A deep copy of this object</returns>
-		object ICloneable.Clone()
-		{
-			return this.Clone();
-		}
+    /// <summary>
+    /// Implement the <see cref="ICloneable" /> interface in a typesafe manner by just
+    /// calling the typed version of <see cref="Clone" />
+    /// </summary>
+    /// <returns>A deep copy of this object</returns>
+    object ICloneable.Clone()
+    {
+      return this.Clone();
+    }
 
-		/// <summary>
-		/// Typesafe, deep-copy clone method.
-		/// </summary>
-		/// <returns>A new, independent copy of this class</returns>
-		public MinorTic Clone()
-		{
-			return new MinorTic( this );
-		}
+    /// <summary>
+    /// Typesafe, deep-copy clone method.
+    /// </summary>
+    /// <returns>A new, independent copy of this class</returns>
+    public MinorTic Clone()
+    {
+      return new MinorTic(this);
+    }
 
-	#endregion
+    #endregion
 
-	#region Properties
+    #region Properties
 
-		/// <summary>
-		/// The color to use for drawing the tics of this class instance
-		/// </summary>
-		/// <value> The color is defined using the
-		/// <see cref="System.Drawing.Color"/> class</value>
-		/// <seealso cref="Default.Color"/>.
-		/// <seealso cref="IsOutside"/>
-		/// <seealso cref="Axis.IsVisible"/>
+    /// <summary>
+    /// The color to use for drawing the tics of this class instance
+    /// </summary>
+    /// <value> The color is defined using the
+    /// <see cref="System.Drawing.Color"/> class</value>
+    /// <seealso cref="Default.Color"/>.
+    /// <seealso cref="IsOutside"/>
+    /// <seealso cref="Axis.IsVisible"/>
     [DefaultValue(typeof(Color), Default.DefaultColourValue)]
-		public Color Color
-		{
-			get { return _color; }
-			set { _color = value; }
-		}
+    public Color Color
+    {
+      get { return _color; }
+      set { _color = value; }
+    }
 
     /// <summary>
     /// The length of the major tic marks.
@@ -135,77 +135,78 @@ namespace ZedGraph
     /// <seealso cref="Color"/>
     [DefaultValue(Default.Size)]
     public float Size
-		{
-			get { return _size; }
-			set { _size = value; }
-		}
-		/// <summary>
-		/// Calculate the scaled tic size for this <see cref="Axis"/>
-		/// </summary>
-		/// <param name="scaleFactor">
-		/// The scaling factor to be used for rendering objects.  This is calculated and
-		/// passed down by the parent <see cref="GraphPane"/> object using the
-		/// <see cref="PaneBase.CalcScaleFactor"/> method, and is used to proportionally adjust
-		/// font sizes, etc. according to the actual size of the graph.
-		/// </param>
-		/// <returns>The scaled tic size, in points (1/72 inch)</returns>
-		/// <seealso cref="Size"/>
-		/// <seealso cref="Scale.FontSpec"/>
-		/// <seealso cref="PaneBase.CalcScaleFactor"/>
-		public float ScaledTic( float scaleFactor )
-		{
-			return (float)( _size * scaleFactor );
-		}
+    {
+      get { return _size; }
+      set { _size = value; }
+    }
+    /// <summary>
+    /// Calculate the scaled tic size for this <see cref="Axis"/>
+    /// </summary>
+    /// <param name="scaleFactor">
+    /// The scaling factor to be used for rendering objects.  This is calculated and
+    /// passed down by the parent <see cref="GraphPane"/> object using the
+    /// <see cref="PaneBase.CalcScaleFactor"/> method, and is used to proportionally adjust
+    /// font sizes, etc. according to the actual size of the graph.
+    /// </param>
+    /// <returns>The scaled tic size, in points (1/72 inch)</returns>
+    /// <seealso cref="Size"/>
+    /// <seealso cref="Scale.FontSpec"/>
+    /// <seealso cref="PaneBase.CalcScaleFactor"/>
+    public float ScaledTic(float scaleFactor)
+    {
+      return (float)(_size * scaleFactor);
+    }
 
-		/// <summary>
-		/// This is convenience property sets the status of all the different
-		/// tic properties in this instance to the same value.  true to activate all tics,
-		/// false to clear all tics.
-		/// </summary>
-		/// <remarks>
-		/// This setting does not persist.  That is, you can clear all the tics with
-		/// <see cref="IsAllTics" /> = false, then activate them individually (example:
-		/// <see cref="IsOutside" /> = true).
-		/// </remarks>
-		/// <seealso cref="IsOutside"/>
-		/// <seealso cref="IsInside"/>
-		/// <seealso cref="IsOpposite"/>
-		/// <seealso cref="IsCrossInside"/>
-		/// <seealso cref="IsCrossOutside"/>
+    /// <summary>
+    /// This is convenience property sets the status of all the different
+    /// tic properties in this instance to the same value.  true to activate all tics,
+    /// false to clear all tics.
+    /// </summary>
+    /// <remarks>
+    /// This setting does not persist.  That is, you can clear all the tics with
+    /// <see cref="IsAllTics" /> = false, then activate them individually (example:
+    /// <see cref="IsOutside" /> = true).
+    /// </remarks>
+    /// <seealso cref="IsOutside"/>
+    /// <seealso cref="IsInside"/>
+    /// <seealso cref="IsOpposite"/>
+    /// <seealso cref="IsCrossInside"/>
+    /// <seealso cref="IsCrossOutside"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool IsAllTics
-		{
-			set
-			{
-				this.IsOutside = value;
-				this.IsInside = value;
-				this.IsOpposite = value;
-				_isCrossOutside = value;
-				_isCrossInside = value;
-			}
-		}
+    {
+      set
+      {
+        this.IsOutside = value;
+        this.IsInside = value;
+        this.IsOpposite = value;
+        _isCrossOutside = value;
+        _isCrossInside = value;
+      }
+    }
 
-		/// <summary>
-		/// Gets or sets a property that determines whether or not the minor outside tic marks
-		/// are shown.
-		/// </summary>
-		/// <remarks>
-		/// These are the tic marks on the outside of the <see cref="Axis"/> border.
-		/// The minor tic spacing is controlled by <see cref="Scale.MinorStep"/>.
-		/// </remarks>
-		/// <value>true to show the minor outside tic marks, false otherwise</value>
-		/// <seealso cref="Default.IsOutside"/>.
-		/// <seealso cref="IsOutside"/>
-		/// <seealso cref="IsInside"/>
-		/// <seealso cref="IsOpposite"/>
-		/// <seealso cref="IsCrossInside"/>
-		/// <seealso cref="IsCrossOutside"/>
-	  [DefaultValue(Default.IsOutside)]
-	  public bool IsOutside
-		{
-			get { return _isOutside; }
-			set { _isOutside = value; }
-		}
+    /// <summary>
+    /// Gets or sets a property that determines whether or not the minor outside tic marks
+    /// are shown.
+    /// </summary>
+    /// <remarks>
+    /// These are the tic marks on the outside of the <see cref="Axis"/> border.
+    /// The minor tic spacing is controlled by <see cref="Scale.MinorStep"/>.
+    /// </remarks>
+    /// <value>true to show the minor outside tic marks, false otherwise</value>
+    /// <seealso cref="Default.IsOutside"/>.
+    /// <seealso cref="IsOutside"/>
+    /// <seealso cref="IsInside"/>
+    /// <seealso cref="IsOpposite"/>
+    /// <seealso cref="IsCrossInside"/>
+    /// <seealso cref="IsCrossOutside"/>
+    [DefaultValue(Default.IsOutside)]
+    [Description("Display tick marks outside the graph border.")]
+    public bool IsOutside
+    {
+      get { return _isOutside; }
+      set { _isOutside = value; }
+    }
 
     /// <summary>
     /// Gets or sets a property that determines whether or not the major inside tic marks
@@ -223,6 +224,7 @@ namespace ZedGraph
     /// <seealso cref="IsCrossInside"/>
     /// <seealso cref="IsCrossOutside"/>
     [DefaultValue(Default.IsInside)]
+    [Description("Display tick marks inside the graph border.")]
     public bool IsInside
 		{
 			get { return _isInside; }
@@ -246,6 +248,7 @@ namespace ZedGraph
     /// <seealso cref="IsCrossInside"/>
     /// <seealso cref="IsCrossOutside"/>
     [DefaultValue(Default.IsOpposite)]
+    [Description("Display tick marks on edge of graph opposite the axis.")]
     public bool IsOpposite
 		{
 			get { return _isOpposite; }
@@ -269,6 +272,7 @@ namespace ZedGraph
     /// </remarks>
     /// <value>true to show the major cross tic marks, false otherwise</value>
     [DefaultValue(Default.IsCrossOutside)]
+    [Description("Display tick marks on outside edge of axis.")]
     public bool IsCrossOutside
 		{
 			get { return _isCrossOutside; }
@@ -291,6 +295,7 @@ namespace ZedGraph
     /// </remarks>
     /// <value>true to show the major cross tic marks, false otherwise</value>
     [DefaultValue(Default.IsCrossInside)]
+    [Description("Display tick marks on inside edge of axis.")]
     public bool IsCrossInside
 		{
 			get { return _isCrossInside; }
@@ -306,6 +311,7 @@ namespace ZedGraph
 		/// <seealso cref="IsOutside"/>
 		/// <seealso cref="Color"/>
     [DefaultValue(Default.PenWidth)]
+    [Description("Width of tick-mark lines")]
 		public float PenWidth
 		{
 			get { return _penWidth; }

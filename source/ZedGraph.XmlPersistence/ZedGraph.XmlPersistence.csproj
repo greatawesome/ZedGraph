@@ -1,16 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;net46;net472</TargetFrameworks>
+    <TargetFrameworks>net40;net45;net46;net472</TargetFrameworks>
     <RootNamespace>ZedGraph</RootNamespace>
-    <AssemblyName>ZedGraph</AssemblyName>
+    <AssemblyName>ZedGraph.XmlPersistence</AssemblyName>
 
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\zedgraphkey.snk</AssemblyOriginatorKeyFile>
 
     <Product>ZedGraph Library</Product>
-    <Company>John Champion, et al.</Company>
-    <Authors>ZedGraph Project</Authors>
-    <Copyright>Copyright © 2003-2018 John Champion</Copyright>
+    <Company>Number Eight Innovation</Company>
+    <Authors>Paul Martinsen</Authors>
+    <Copyright>Copyright © Number Eight Innovation</Copyright>
 
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
@@ -20,9 +20,6 @@
     <PackageProjectUrl>https://github.com/PaulMartinsen/ZedGraph/</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net35|AnyCPU'">
-    <DocumentationFile>bin\Release\net35\ZedGraph.xml</DocumentationFile>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
     <DocumentationFile>bin\Release\net40\ZedGraph.xml</DocumentationFile>
   </PropertyGroup>
@@ -37,11 +34,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="3.6.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
+    <ProjectReference Include="..\ZedGraph\ZedGraph.csproj" />
   </ItemGroup>
 
 </Project>

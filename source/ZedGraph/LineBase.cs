@@ -35,6 +35,7 @@ namespace ZedGraph
   /// <author> John Champion </author>
   /// <version> $Revision: 3.2 $ $Date: 2007-03-17 18:43:44 $ </version>
   [Serializable]
+  [TypeConverter(typeof(ExpandableObjectConverter))]
   public class LineBase : ICloneable, ISerializable
   {
 
@@ -190,7 +191,7 @@ namespace ZedGraph
     /// <seealso cref="IsVisible"/>
     /// <seealso cref="Default.DashOn"/>.
     [DefaultValue(Default.DashOn)]
-    [Description("The Dash On mode for drawing the line.")]
+    [Description("The length of dash segments for custom Style.")]
     public float DashOn
     {
       get { return _dashOn; }
@@ -209,7 +210,7 @@ namespace ZedGraph
     /// <seealso cref="IsVisible"/>
     /// <seealso cref="Default.DashOff"/>.
     [DefaultValue(Default.DashOff)]
-    [Description("The Dash Off mode for drawing the line.")]
+    [Description("The length of gaps in dashed lines for custom Style.")]
     public float DashOff
     {
       get { return _dashOff; }

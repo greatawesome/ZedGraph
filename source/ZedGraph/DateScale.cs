@@ -24,6 +24,7 @@ using System.Drawing;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using ZedGraph.Editors;
 
 namespace ZedGraph
 {
@@ -99,6 +100,7 @@ namespace ZedGraph
     /// in that it automatically limits the value to the range of valid dates for the
     /// <see cref="XDate" /> struct.
     /// </remarks>
+    [Browsable(false)]
     public override double Min
     {
       get { return _min; }
@@ -113,6 +115,7 @@ namespace ZedGraph
     /// in that it automatically limits the value to the range of valid dates for the
     /// <see cref="XDate" /> struct.
     /// </remarks>
+    [Browsable(false)]
     public override double Max
     {
       get { return _max; }
@@ -120,12 +123,16 @@ namespace ZedGraph
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Description("Minimum value for the scale")]
+    [TypeConverter(typeof(FullDateTimeConverter))]
     public DateTime Start
     {
       get { return XDate.XLDateToDateTime(_min); }
       set { _min = XDate.DateTimeToXLDate(value); }
     }
 
+    [Description("Maximum value for the scale")]
+    [TypeConverter(typeof(FullDateTimeConverter))]
     public DateTime End
     {
       get { return XDate.XLDateToDateTime(_max); }

@@ -87,25 +87,26 @@ namespace ZedGraph
 			return new MajorTic( this );
 		}
 
-	#endregion
+    #endregion
 
-	#region Properties
+    #region Properties
 
-		/// <summary>
-		/// Gets or sets a property that determines whether or not the major tics will be drawn
-		/// inbetween the labels, rather than right at the labels.
-		/// </summary>
-		/// <remarks>
-		/// Note that this setting is only
-		/// applicable if <see cref="Axis.Type"/> = <see cref="AxisType.Text"/>.
-		/// </remarks>
-		/// <value>true to place the text between the labels for text axes, false otherwise</value>
-		/// <seealso cref="MinorTic.IsOutside"/>
-		/// <seealso cref="MinorTic.IsInside"/>
-		/// <seealso cref="MinorTic.IsOpposite"/>
-		/// <seealso cref="MinorTic.IsCrossOutside"/>
-		/// <seealso cref="MinorTic.IsCrossInside"/>
-		public bool IsBetweenLabels
+    /// <summary>
+    /// Gets or sets a property that determines whether or not the major tics will be drawn
+    /// inbetween the labels, rather than right at the labels.
+    /// </summary>
+    /// <remarks>
+    /// Note that this setting is only
+    /// applicable if <see cref="Axis.Type"/> = <see cref="AxisType.Text"/>.
+    /// </remarks>
+    /// <value>true to place the text between the labels for text axes, false otherwise</value>
+    /// <seealso cref="MinorTic.IsOutside"/>
+    /// <seealso cref="MinorTic.IsInside"/>
+    /// <seealso cref="MinorTic.IsOpposite"/>
+    /// <seealso cref="MinorTic.IsCrossOutside"/>
+    /// <seealso cref="MinorTic.IsCrossInside"/>
+    [Description("Draw tick marks between labels instead of at the labels.")]
+    public bool IsBetweenLabels
 		{
 			get { return _isBetweenLabels; }
 			set { _isBetweenLabels = value; }

@@ -202,7 +202,14 @@ namespace ZedGraph
 			Init();
 			_color = color;
 			_brush = brush;
-			_type = type;
+      if (brush == null && type == FillType.Brush)
+      {
+        _type = FillType.Solid;
+      }
+      else
+      {
+        _type = type;
+      }
 		}
 		
 		/// <summary>
@@ -445,7 +452,7 @@ namespace ZedGraph
 			Init();
 			_isScaled = isScaled;
 			_color = Color.White;
-			_brush = (Brush) brush.Clone();
+			_brush = CloneBrush(brush);
 			_type = FillType.Brush;
 		}
 		
@@ -468,7 +475,7 @@ namespace ZedGraph
 			_alignV = alignV;
 			_isScaled = false;
 			_color = Color.White;
-			_brush = (Brush) brush.Clone();
+			_brush = CloneBrush(brush);
 			_type = FillType.Brush;
 		}
 
@@ -482,7 +489,7 @@ namespace ZedGraph
 			_secondaryValueGradientColor = rhs._color;
 
 			if ( rhs._brush != null )
-				_brush = (Brush) rhs._brush.Clone();
+				_brush = CloneBrush(rhs._brush);
 			else
 				_brush = null;
 			_type = rhs._type;
@@ -533,6 +540,24 @@ namespace ZedGraph
 		{
 			return new Fill( this );
 		}
+
+    /// <summary>
+    /// Custom brush clone to work around problem described in
+    /// https://stackoverflow.com/questions/30798318/exception-after-lineargradientbrush-clone
+    /// </summary>
+    /// <param name="b">Brush to clone. </param>
+    /// <returns>Clone of brush.</returns>
+    private Brush CloneBrush(Brush b)
+    {
+      Brush Clone = (Brush) b.Clone();
+      if (Clone is LinearGradientBrush lgb)
+      {
+        // We don't have to clone the interpolation colors because the
+        // linear gradient brush handles that internally. 
+        lgb.InterpolationColors = ((LinearGradientBrush)b).InterpolationColors;
+      }
+      return Clone;
+    }
 
 		private void CreateBrushFromBlend( ColorBlend blend, float angle )
 		{
@@ -683,7 +708,11 @@ namespace ZedGraph
 
     [DefaultValue(0f)]
     [Description("Angle of gradient fills")]
-    public float Angle { get { return _angle; } }
+    public float Angle
+    {
+      get{ return _angle; }
+      set { _angle = value; }
+    }
 
 		/// <summary>
 		/// The custom fill brush.  This can be a <see cref="SolidBrush"/>, a
@@ -1012,112 +1041,114 @@ namespace ZedGraph
 
 		private Brush ScaleBrush( RectangleF rect, Brush brush, bool isScaled )
 		{
-			if ( brush != null )
-			{
-				if ( brush is SolidBrush )
-				{
-					return (Brush) brush.Clone();
-				}
-				else if ( brush is LinearGradientBrush )
-				{
-					LinearGradientBrush linBrush = (LinearGradientBrush) brush.Clone();
-					
-					if ( isScaled )
-					{
-						linBrush.ScaleTransform( rect.Width / linBrush.Rectangle.Width,
-							rect.Height / linBrush.Rectangle.Height, MatrixOrder.Append );
-						linBrush.TranslateTransform( rect.Left - linBrush.Rectangle.Left,
-							rect.Top - linBrush.Rectangle.Top, MatrixOrder.Append );
-					}
-					else
-					{
-						float	dx = 0,
-								dy = 0;
-						switch ( _alignH )
-						{
-						case AlignH.Left:
-							dx = rect.Left - linBrush.Rectangle.Left;
-							break;
-						case AlignH.Center:
-							dx = ( rect.Left + rect.Width / 2.0F ) - linBrush.Rectangle.Left;
-							break;
-						case AlignH.Right:
-							dx = ( rect.Left + rect.Width ) - linBrush.Rectangle.Left;
-							break;
-						}
-						
-						switch ( _alignV )
-						{
-						case AlignV.Top:
-							dy = rect.Top - linBrush.Rectangle.Top;
-							break;
-						case AlignV.Center:
-							dy = ( rect.Top + rect.Height / 2.0F ) - linBrush.Rectangle.Top;
-							break;
-						case AlignV.Bottom:
-							dy = ( rect.Top + rect.Height) - linBrush.Rectangle.Top;
-							break;
-						}
+      if (brush != null)
+      {
+        if (brush is SolidBrush)
+        {
+          return (Brush)brush.Clone();
+        }
+        else if (brush is LinearGradientBrush)
+        {
+          LinearGradientBrush linBrush = (LinearGradientBrush)CloneBrush(brush);
 
-						linBrush.TranslateTransform( dx, dy, MatrixOrder.Append );
-					}
-					
-					return linBrush;
-					
-				} // LinearGradientBrush
-				else if ( brush is TextureBrush )
-				{
-					TextureBrush texBrush = (TextureBrush) brush.Clone();
-					
-					if ( isScaled )
-					{
-						texBrush.ScaleTransform( rect.Width / texBrush.Image.Width,
-							rect.Height / texBrush.Image.Height, MatrixOrder.Append );
-						texBrush.TranslateTransform( rect.Left, rect.Top, MatrixOrder.Append );
-					}
-					else
-					{
-						float	dx = 0,
-								dy = 0;
-						switch ( _alignH )
-						{
-						case AlignH.Left:
-							dx = rect.Left;
-							break;
-						case AlignH.Center:
-							dx = ( rect.Left + rect.Width / 2.0F );
-							break;
-						case AlignH.Right:
-							dx = ( rect.Left + rect.Width );
-							break;
-						}
-						
-						switch ( _alignV )
-						{
-						case AlignV.Top:
-							dy = rect.Top;
-							break;
-						case AlignV.Center:
-							dy = ( rect.Top + rect.Height / 2.0F );
-							break;
-						case AlignV.Bottom:
-							dy = ( rect.Top + rect.Height);
-							break;
-						}
+          if (isScaled)
+          {
+            linBrush.ScaleTransform(rect.Width / linBrush.Rectangle.Width,
+              rect.Height / linBrush.Rectangle.Height, MatrixOrder.Append);
+            linBrush.TranslateTransform(rect.Left - linBrush.Rectangle.Left,
+              rect.Top - linBrush.Rectangle.Top, MatrixOrder.Append);
+          }
+          else
+          {
+            float dx = 0,
+                dy = 0;
+            switch (_alignH)
+            {
+              case AlignH.Left:
+                dx = rect.Left - linBrush.Rectangle.Left;
+                break;
+              case AlignH.Center:
+                dx = (rect.Left + rect.Width / 2.0F) - linBrush.Rectangle.Left;
+                break;
+              case AlignH.Right:
+                dx = (rect.Left + rect.Width) - linBrush.Rectangle.Left;
+                break;
+            }
 
-						texBrush.TranslateTransform( dx, dy, MatrixOrder.Append );
-					}
-					
-					return texBrush;
-				}
-				else // other brush type
-				{
-					return (Brush) brush.Clone();
-				}
-			}
-			else
-				// If they didn't provide a brush, make one using the fillcolor gradient to white
-				return new LinearGradientBrush( rect, Color.White, _color, 0F );
+            switch (_alignV)
+            {
+              case AlignV.Top:
+                dy = rect.Top - linBrush.Rectangle.Top;
+                break;
+              case AlignV.Center:
+                dy = (rect.Top + rect.Height / 2.0F) - linBrush.Rectangle.Top;
+                break;
+              case AlignV.Bottom:
+                dy = (rect.Top + rect.Height) - linBrush.Rectangle.Top;
+                break;
+            }
+
+            linBrush.TranslateTransform(dx, dy, MatrixOrder.Append);
+          }
+
+          return linBrush;
+
+        } // LinearGradientBrush
+        else if (brush is TextureBrush)
+        {
+          TextureBrush texBrush = (TextureBrush)brush.Clone();
+
+          if (isScaled)
+          {
+            texBrush.ScaleTransform(rect.Width / texBrush.Image.Width,
+              rect.Height / texBrush.Image.Height, MatrixOrder.Append);
+            texBrush.TranslateTransform(rect.Left, rect.Top, MatrixOrder.Append);
+          }
+          else
+          {
+            float dx = 0,
+                dy = 0;
+            switch (_alignH)
+            {
+              case AlignH.Left:
+                dx = rect.Left;
+                break;
+              case AlignH.Center:
+                dx = (rect.Left + rect.Width / 2.0F);
+                break;
+              case AlignH.Right:
+                dx = (rect.Left + rect.Width);
+                break;
+            }
+
+            switch (_alignV)
+            {
+              case AlignV.Top:
+                dy = rect.Top;
+                break;
+              case AlignV.Center:
+                dy = (rect.Top + rect.Height / 2.0F);
+                break;
+              case AlignV.Bottom:
+                dy = (rect.Top + rect.Height);
+                break;
+            }
+
+            texBrush.TranslateTransform(dx, dy, MatrixOrder.Append);
+          }
+
+          return texBrush;
+        }
+        else // other brush type
+        {
+          return (Brush)brush.Clone();
+        }
+      }
+      else
+      {
+        // If they didn't provide a brush, make one using the fillcolor gradient to white
+        return new LinearGradientBrush(rect, Color.White, _color, 0F);
+      }
 		}
 
 		/// <summary>
