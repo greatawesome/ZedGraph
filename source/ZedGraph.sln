@@ -33,6 +33,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZedGraph.XmlPersistence", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZedGraph.XmlPersistence.Test", "ZedGraph.XmlPersistence.Test\ZedGraph.XmlPersistence.Test.csproj", "{7A112636-DA31-44B8-AA5D-42F02842D3B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZedGraph.Eto", "ZedGraph.Eto\ZedGraph.Eto.csproj", "{5D248FA3-5957-419C-8ABB-1678589C723A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2541686B-1673-43BF-AF89-3163945DB009} = {2541686B-1673-43BF-AF89-3163945DB009}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGraph.Eto", "TestGraph.Eto\TestGraph.Eto\TestGraph.Eto.csproj", "{62A9D888-B501-4D69-BECE-A846E420B422}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGraph.Eto.Gtk", "TestGraph.Eto\TestGraph.Eto.Gtk\TestGraph.Eto.Gtk.csproj", "{AAA30A82-3C76-4956-9716-FC4768B5B79A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGraph.Eto.Mac", "TestGraph.Eto\TestGraph.Eto.Mac\TestGraph.Eto.Mac.csproj", "{8884DB9E-2392-4CA3-92BC-C8D46DD2BFE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGraph.Eto.Wpf", "TestGraph.Eto\TestGraph.Eto.Wpf\TestGraph.Eto.Wpf.csproj", "{1E59D842-2180-4D16-9691-272F1C6895BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGraph.Eto.WinForms", "TestGraph.Eto\TestGraph.Eto.Winforms\TestGraph.Eto.WinForms.csproj", "{4177335D-6B9A-4EFA-80B5-98A0580A18E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +85,30 @@ Global
 		{7A112636-DA31-44B8-AA5D-42F02842D3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A112636-DA31-44B8-AA5D-42F02842D3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A112636-DA31-44B8-AA5D-42F02842D3B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D248FA3-5957-419C-8ABB-1678589C723A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D248FA3-5957-419C-8ABB-1678589C723A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D248FA3-5957-419C-8ABB-1678589C723A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D248FA3-5957-419C-8ABB-1678589C723A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62A9D888-B501-4D69-BECE-A846E420B422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62A9D888-B501-4D69-BECE-A846E420B422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62A9D888-B501-4D69-BECE-A846E420B422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62A9D888-B501-4D69-BECE-A846E420B422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAA30A82-3C76-4956-9716-FC4768B5B79A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAA30A82-3C76-4956-9716-FC4768B5B79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAA30A82-3C76-4956-9716-FC4768B5B79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAA30A82-3C76-4956-9716-FC4768B5B79A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8884DB9E-2392-4CA3-92BC-C8D46DD2BFE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8884DB9E-2392-4CA3-92BC-C8D46DD2BFE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8884DB9E-2392-4CA3-92BC-C8D46DD2BFE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8884DB9E-2392-4CA3-92BC-C8D46DD2BFE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E59D842-2180-4D16-9691-272F1C6895BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E59D842-2180-4D16-9691-272F1C6895BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E59D842-2180-4D16-9691-272F1C6895BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E59D842-2180-4D16-9691-272F1C6895BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4177335D-6B9A-4EFA-80B5-98A0580A18E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4177335D-6B9A-4EFA-80B5-98A0580A18E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4177335D-6B9A-4EFA-80B5-98A0580A18E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4177335D-6B9A-4EFA-80B5-98A0580A18E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

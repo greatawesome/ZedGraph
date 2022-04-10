@@ -118,44 +118,56 @@
         /// <param name="rectangle">The rectangle.</param>
         public static void Draw(Graphics g, Color backgroundColor, Rectangle rectangle)
         {
-            RasterOperation mode;
-            Color alternateColor;
-            if (backgroundColor.GetBrightness() < 0.5)
-            {
-                mode = RasterOperation.NOTXORPEN;
-                alternateColor = Color.White;
-            }
-            else
-            {
-                mode = RasterOperation.XORPEN;
-                alternateColor = Color.Black;
-            }
 
-            var hdc = g.GetHdc();
+            // NOTE: Need a way to get this to work cross platform!
 
             try
             {
-                IntPtr pen = CreatePen((int)PenStyle.Dot, 1, ColorTranslator.ToWin32(backgroundColor));
-
-                int previousMode = SetROP2(new HandleRef(null, hdc), (int)mode);
-                IntPtr previousBrush = SelectObject(new HandleRef(null, hdc), new HandleRef(null, GetStockObject((int)StockObject.NullBrush)));
-                IntPtr previousPen = SelectObject(new HandleRef(null, hdc), new HandleRef(null, pen));
-                SetBkColor(new HandleRef(null, hdc), ColorTranslator.ToWin32(alternateColor));
-
-                Rectangle(new HandleRef(null, hdc), rectangle.X, rectangle.Y, rectangle.Right, rectangle.Bottom);
-
-                SetROP2(new HandleRef(null, hdc), previousMode);
-                SelectObject(new HandleRef(null, hdc), new HandleRef(null, previousBrush));
-                SelectObject(new HandleRef(null, hdc), new HandleRef(null, previousPen));
-
-                if (pen != IntPtr.Zero)
+                RasterOperation mode;
+                Color alternateColor;
+                if (backgroundColor.GetBrightness() < 0.5)
                 {
-                    DeleteObject(new HandleRef(null, pen));
+                    mode = RasterOperation.NOTXORPEN;
+                    alternateColor = Color.White;
+                }
+                else
+                {
+                    mode = RasterOperation.XORPEN;
+                    alternateColor = Color.Black;
+                }
+
+                var hdc = g.GetHdc();
+
+                try
+                {
+                    IntPtr pen = CreatePen((int)PenStyle.Dot, 1, ColorTranslator.ToWin32(backgroundColor));
+
+                    int previousMode = SetROP2(new HandleRef(null, hdc), (int)mode);
+                    IntPtr previousBrush = SelectObject(new HandleRef(null, hdc), new HandleRef(null, GetStockObject((int)StockObject.NullBrush)));
+                    IntPtr previousPen = SelectObject(new HandleRef(null, hdc), new HandleRef(null, pen));
+                    SetBkColor(new HandleRef(null, hdc), ColorTranslator.ToWin32(alternateColor));
+
+                    Rectangle(new HandleRef(null, hdc), rectangle.X, rectangle.Y, rectangle.Right, rectangle.Bottom);
+
+                    SetROP2(new HandleRef(null, hdc), previousMode);
+                    SelectObject(new HandleRef(null, hdc), new HandleRef(null, previousBrush));
+                    SelectObject(new HandleRef(null, hdc), new HandleRef(null, previousPen));
+
+                    if (pen != IntPtr.Zero)
+                    {
+                        DeleteObject(new HandleRef(null, pen));
+                    }
+                }
+                finally
+                {
+                    g.ReleaseHdc();
                 }
             }
-            finally
+            catch 
             {
-                g.ReleaseHdc();
+#if DEBUG
+                Console.WriteLine("Exception in Reversible Frame");
+#endif
             }
         }
 

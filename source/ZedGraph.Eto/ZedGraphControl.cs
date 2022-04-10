@@ -1,6 +1,8 @@
-//============================================================================
+﻿//============================================================================
 //ZedGraph Class Library - A Flexible Line Graph/Bar Graph Library in C#
-//Copyright � 2004  John Champion
+//Copyright © 2004  John Champion
+//
+//Adapted for Eto by Brian Gallaway, Copyright © 2022
 //
 //This library is free software; you can redistribute it and/or
 //modify it under the terms of the GNU Lesser General Public
@@ -18,60 +20,16 @@
 //=============================================================================
 
 using System;
-using System.ComponentModel;
+using Eto.Forms;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.Drawing.Imaging;
-using System.Drawing.Printing;
-using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Resources;
-using System.Reflection;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading;
+using System.ComponentModel;
+using ZedGraph;
 
 namespace ZedGraph
 {
-/*
-	/// <summary>
-	/// 
-	/// </summary>
-	public struct DrawingThreadData
+	public partial class ZedGraphControl : ImageView
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public Graphics _g;
-		/// <summary>
-		/// 
-		/// </summary>
-		public MasterPane _masterPane;
-
-//		public DrawingThread( Graphics g, MasterPane masterPane )
-//		{
-//			_g = g;
-//			_masterPane = masterPane;
-//		}
-	}
-*/
-
-	/// <summary>
-	/// The ZedGraphControl class provides a UserControl interface to the
-	/// <see cref="ZedGraph"/> class library.  This allows ZedGraph to be installed
-	/// as a control in the Visual Studio toolbox.  You can use the control by simply
-	/// dragging it onto a form in the Visual Studio form editor.  All graph
-	/// attributes are accessible via the <see cref="ZedGraphControl.GraphPane"/>
-	/// property.
-	/// </summary>
-	/// <author> John Champion revised by Jerry Vos </author>
-	/// <version> $Revision: 3.86 $ $Date: 2007-11-03 04:41:29 $ </version>
-	public partial class ZedGraphControl : UserControl
-	{
-
-	#region Private Fields
+		#region Private Fields
 
 		/// <summary>
 		/// This private field contains the instance for the MasterPane object of this control.
@@ -260,16 +218,22 @@ namespace ZedGraph
 		//private List<CurveItem> _selection = new List<CurveItem>();
 		private Selection _selection = new Selection();
 
-	#endregion
+		//With the WInForms control, these was defined in the Designer
+		private Eto.Forms.ContextMenu contextMenuStrip1;
+		//private VScrollBar vScrollBar1;
+		//private HScrollBar hScrollBar1;
+		//private System.Windows.Forms.ToolTip pointToolTip;
 
-	#region Fields: Buttons & Keys Properties
+		#endregion
+
+		#region Fields: Buttons & Keys Properties
 
 		/// <summary>
 		/// Gets or sets a value that determines which Mouse button will be used to click on
 		/// linkable objects
 		/// </summary>
 		/// <seealso cref="LinkModifierKeys" />
-		private MouseButtons _linkButtons = MouseButtons.Left;
+		private MouseButtons _linkButtons = MouseButtons.Primary;
 		/// <summary>
 		/// Gets or sets a value that determines which modifier keys will be used to click
 		/// on linkable objects
@@ -286,7 +250,7 @@ namespace ZedGraph
 		/// <see cref="IsEnableVEdit" /> are true.
 		/// </remarks>
 		/// <seealso cref="EditModifierKeys" />
-		private MouseButtons _editButtons = MouseButtons.Right;
+		private MouseButtons _editButtons = MouseButtons.Alternate;
 		/// <summary>
 		/// Gets or sets a value that determines which modifier keys will be used to edit point
 		/// data values
@@ -306,7 +270,7 @@ namespace ZedGraph
 		/// This setting only applies if <see cref="IsEnableSelection" /> is true.
 		/// </remarks>
 		/// <seealso cref="SelectModifierKeys" />
-		private MouseButtons _selectButtons = MouseButtons.Left;
+		private MouseButtons _selectButtons = MouseButtons.Primary;
 		/// <summary>
 		/// Gets or sets a value that determines which modifier keys will be used to select
 		/// <see cref="CurveItem" />'s.
@@ -330,7 +294,7 @@ namespace ZedGraph
 		/// <seealso cref="ZoomModifierKeys" />
 		/// <seealso cref="ZoomButtons2" />
 		/// <seealso cref="ZoomModifierKeys2" />
-		private MouseButtons _zoomButtons = MouseButtons.Left;
+		private MouseButtons _zoomButtons = MouseButtons.Primary;
 		/// <summary>
 		/// Gets or sets a value that determines which modifier keys will be used to perform
 		/// zoom operations
@@ -382,7 +346,7 @@ namespace ZedGraph
 		/// <seealso cref="PanModifierKeys" />
 		/// <seealso cref="PanButtons2" />
 		/// <seealso cref="PanModifierKeys2" />
-		private MouseButtons _panButtons = MouseButtons.Left;
+		private MouseButtons _panButtons = MouseButtons.Primary;
 
 		// Setting this field to Keys.Shift here
 		// causes an apparent bug to crop up in VS 2003, by which it will have the value:
@@ -435,9 +399,9 @@ namespace ZedGraph
 		/// <seealso cref="PanModifierKeys" />
 		private Keys _panModifierKeys2 = Keys.None;
 
-	#endregion
+		#endregion
 
-	#region Fields: Temporary state variables
+		#region Fields: Temporary state variables
 
 		/// <summary>
 		/// Internal variable that indicates the control is currently being zoomed. 
@@ -452,12 +416,12 @@ namespace ZedGraph
 		/// </summary>
 		private bool _isEditing = false;
 
-    /// <summary>
-    /// Variable that indicates a cursor is currently being edited. The cursor
-    /// being edited is stored in <see cref="_dragCursor"/> and the graph pane 
-    /// it belongs to is in <see cref="_dragPane"/>
-    /// </summary>
-    private bool _isEditingCursor = false;
+		/// <summary>
+		/// Variable that indicates a cursor is currently being edited. The cursor
+		/// being edited is stored in <see cref="_dragCursor"/> and the graph pane 
+		/// it belongs to is in <see cref="_dragPane"/>
+		/// </summary>
+		private bool _isEditingCursor = false;
 
 		// Revision: JCarpenter 10/06
 		/// <summary>
@@ -481,10 +445,10 @@ namespace ZedGraph
 		private CurveItem _dragCurve;
 		private PointPair _dragStartPair;
 
-    /// <summary>
-    /// Cursor being edited when <see cref="_isEditingCursor"/> is true. 
-    /// </summary>
-    private CursorObj _dragCursor;
+		/// <summary>
+		/// Cursor being edited when <see cref="_isEditingCursor"/> is true. 
+		/// </summary>
+		private CursorObj _dragCursor;
 
 		/// <summary>
 		/// private field that stores the state of the scale ranges prior to starting a panning action.
@@ -498,65 +462,77 @@ namespace ZedGraph
 		// that we have the point at which the context menu was first right-clicked
 		internal Point _menuClickPt;
 
-	#endregion
+		#endregion
 
-	#region Constructors
+		#region Constructors
 
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
 		public ZedGraphControl()
 		{
-			//BDG: Set font defaults back to WinForms defaults
-			Axis.Default.TitleFontFamily = FontSpec.Default.FontFamily = Legend.Default.FontFamily = PaneBase.Default.FontFamily = ZedGraph.Scale.Default.FontFamily = TextObj.Default.FontFamily = DefaultFont.FontFamily.Name;
+			//From InitializeComponents in WinForms version
+			this.contextMenuStrip1 = new ContextMenu();
+			this.contextMenuStrip1.Opening += new System.EventHandler<System.EventArgs>( this.contextMenuStrip1_Opening );
 
-			InitializeComponent();
-			this.tooltip = ValuesToolTip.Create(this, this.pointToolTip);
+			//BDG TODO - ImageView has no context menu, so we'd need to deal with it ourselves on a right click, or make this control more complex by making it an imageview inside a panel
+			//Handled with mouseDown method with Button.Alternate
 
-			// These commands do nothing, but they get rid of the compiler warnings for
-			// unused events
-			bool b = MouseDown == null || MouseUp == null || MouseMove == null;
+			//this.ContextMenu = this.contextMenuStrip1;
+			this.SizeChanged += new System.EventHandler<System.EventArgs>( this.ZedGraphControl_ReSize );
+			this.KeyUp += new System.EventHandler<Eto.Forms.KeyEventArgs>( this.ZedGraphControl_KeyUp );
+			this.KeyDown += new System.EventHandler<Eto.Forms.KeyEventArgs>( this.ZedGraphControl_KeyDown );
+			this.MouseWheel += new System.EventHandler<Eto.Forms.MouseEventArgs>( this.ZedGraphControl_MouseWheel );
+			this.Shown += new System.EventHandler<System.EventArgs>( this.ZedGraphControl_Shown );
 
-			// Link in these events from the base class, since we disable them from this class.
-			base.MouseDown += new System.Windows.Forms.MouseEventHandler( this.ZedGraphControl_MouseDown );
-			base.MouseUp += new System.Windows.Forms.MouseEventHandler( this.ZedGraphControl_MouseUp );
-			base.MouseMove += new System.Windows.Forms.MouseEventHandler( this.ZedGraphControl_MouseMove );
+			base.MouseDown += new EventHandler<MouseEventArgs>( this.ZedGraphControl_MouseDown );
+			base.MouseUp += new EventHandler<MouseEventArgs>( this.ZedGraphControl_MouseUp );
+			base.MouseMove += new EventHandler<MouseEventArgs>( this.ZedGraphControl_MouseMove );
 
-			//this.MouseWheel += new System.Windows.Forms.MouseEventHandler( this.ZedGraphControl_MouseWheel );
+			this.tooltip = ValuesToolTip.Create( this );
 
-			// Use double-buffering for flicker-free updating:
-			SetStyle( ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
-				| ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true );
-			//isTransparentBackground = false;
-			//SetStyle( ControlStyles.Opaque, false );
-			SetStyle( ControlStyles.SupportsTransparentBackColor, true );
-			//this.BackColor = Color.Transparent;
+			//Eto starts with -1 by -1 size, so we need to handle that
 
 			Rectangle rect = new Rectangle( 0, 0, this.Size.Width, this.Size.Height );
+			if (this.Size.Width <= 0 || this.Size.Height <= 0)
+			{
+				//User MasterPane's default for now
+				rect = new Rectangle( 0, 0, 500, 375 );
+			}
+
 			_masterPane = new MasterPane( "", rect );
 			_masterPane.Margin.All = 0;
 			_masterPane.Title.IsVisible = false;
+
+			//BDG TODO: Get ZedGraphLocale working in Eto/NetStandard2.0
 
 			string titleStr = ZedGraphLocale.title_def;
 			string xStr = ZedGraphLocale.x_title_def;
 			string yStr = ZedGraphLocale.y_title_def;
 
+			//string titleStr = "Title";
+			//string xStr = "X Axis";
+			//string yStr = "Y Axis";
+
 			//GraphPane graphPane = new GraphPane( rect, "Title", "X Axis", "Y Axis" );
 			GraphPane graphPane = new GraphPane( rect, titleStr, xStr, yStr );
-			using ( Graphics g = this.CreateGraphics() )
+
+			using (Bitmap bitmap = new Bitmap( 10, 10 ))
+			using (Graphics g = Graphics.FromImage( bitmap ))
 			{
 				graphPane.AxisChange( g );
 				//g.Dispose();
 			}
+
 			_masterPane.Add( graphPane );
 
-			this.hScrollBar1.Minimum = 0;
-			this.hScrollBar1.Maximum = 100;
-			this.hScrollBar1.Value = 0;
+			//this.hScrollBar1.Minimum = 0;
+			//this.hScrollBar1.Maximum = 100;
+			//this.hScrollBar1.Value = 0;
 
-			this.vScrollBar1.Minimum = 0;
-			this.vScrollBar1.Maximum = 100;
-			this.vScrollBar1.Value = 0;
+			//this.vScrollBar1.Minimum = 0;
+			//this.vScrollBar1.Maximum = 100;
+			//this.vScrollBar1.Value = 0;
 
 			_xScrollRange = new ScrollRange( true );
 			_yScrollRangeList = new ScrollRangeList();
@@ -567,113 +543,31 @@ namespace ZedGraph
 
 			_zoomState = null;
 			_zoomStateStack = new ZoomStateStack();
+
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if the components should be
-		/// disposed, false otherwise</param>
-		protected override void Dispose( bool disposing )
+		///// <summary>
+		///// Clean up any resources being used.
+		///// </summary>
+		///// <param name="disposing">true if the components should be
+		///// disposed, false otherwise</param>
+		//protected override void Dispose( bool disposing )
+		//{
+		//	lock (this)
+		//	{
+		//		base.Dispose( disposing );
+
+		//		_masterPane = null;
+		//	}
+		//}
+		#endregion
+
+		#region Methods
+		protected void ZedGraphControl_Shown( object sender, System.EventArgs e )
 		{
-			lock ( this )
-			{
-				if ( disposing )
-				{
-					if ( components != null )
-						components.Dispose();
-				}
-				base.Dispose( disposing );
-
-				_masterPane = null;
-			}
+			ZedGraphControl_ReSize( sender, e );
+			AxisChange();
 		}
-	
-	#endregion
-
-	#region Methods
-
-		/// <summary>
-		/// Called by the system to update the control on-screen
-		/// </summary>
-		/// <param name="e">
-		/// A PaintEventArgs object containing the Graphics specifications
-		/// for this Paint event.
-		/// </param>
-		protected override void OnPaint( PaintEventArgs e )
-		{
-			lock ( this )
-			{
-				if ( BeenDisposed || _masterPane == null || this.GraphPane == null )
-					return;
-
-				if ( hScrollBar1 != null && this.GraphPane != null &&
-					vScrollBar1 != null && _yScrollRangeList != null )
-				{
-					SetScroll( hScrollBar1, this.GraphPane.XAxis, _xScrollRange.Min, _xScrollRange.Max );
-					SetScroll( vScrollBar1, this.GraphPane.YAxis, _yScrollRangeList[0].Min,
-						_yScrollRangeList[0].Max );
-				}
-
-				base.OnPaint( e );
-
-				// Add a try/catch pair since the users of the control can't catch this one
-				try { _masterPane.Draw( e.Graphics ); }
-				catch { }
-			}
-
-/*
-			// first, see if an old thread is still running
-			if ( t != null && t.IsAlive )
-			{
-				t.Abort();
-			}
-
-			//dt = new DrawingThread( e.Graphics, _masterPane );
-			//g = e.Graphics;
-
-			// Fire off the new thread
-			t = new Thread( new ParameterizedThreadStart( DoDrawingThread ) );
-			//ct.ApartmentState = ApartmentState.STA;
-			//ct.SetApartmentState( ApartmentState.STA );
-			DrawingThreadData dtd;
-			dtd._g = e.Graphics;
-			dtd._masterPane = _masterPane;
-
-			t.Start( dtd );
-			//ct.Join();
-*/
-		}
-
-//		Thread t = null;
-		//DrawingThread dt = null;
-
-/*
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="dtdobj"></param>
-		public void DoDrawingThread( object dtdobj )
-		{
-			try
-			{
-				DrawingThreadData dtd = (DrawingThreadData) dtdobj;
-
-				if ( dtd._g != null && dtd._masterPane != null )
-					dtd._masterPane.Draw( dtd._g );
-
-				//				else
-				//				{
-				//					using ( Graphics g2 = CreateGraphics() )
-				//						_masterPane.Draw( g2 );
-				//				}
-			}
-			catch
-			{
-
-			}
-		}
-*/
 
 		/// <summary>
 		/// Called when the control has been resized.
@@ -684,43 +578,64 @@ namespace ZedGraph
 		/// <param name="e">
 		/// An EventArgs object.
 		/// </param>
-		protected void ZedGraphControl_ReSize( object sender, System.EventArgs e )
+		protected void ZedGraphControl_ReSize( object sender, EventArgs e )
 		{
-			lock ( this )
+			lock (this)
 			{
-				if ( BeenDisposed || _masterPane == null )
+				if (BeenDisposed || _masterPane == null)
 					return;
 
-				Size newSize = this.Size;
+				Size newSize = new Size( this.Size.Width, this.Size.Height );
 
-				if ( _isShowHScrollBar )
-				{
-					hScrollBar1.Visible = true;
-					newSize.Height -= this.hScrollBar1.Size.Height;
-					hScrollBar1.Location = new Point( 0, newSize.Height );
-					hScrollBar1.Size = new Size( newSize.Width, hScrollBar1.Height );
-				}
-				else
-					hScrollBar1.Visible = false;
+				//if ( _isShowHScrollBar )
+				//{
+				//	hScrollBar1.Visible = true;
+				//	newSize.Height -= this.hScrollBar1.Size.Height;
+				//	hScrollBar1.Location = new Point( 0, newSize.Height );
+				//	hScrollBar1.Size = new Size( newSize.Width, hScrollBar1.Height );
+				//}
+				//else
+				//	hScrollBar1.Visible = false;
 
-				if ( _isShowVScrollBar )
+				//if ( _isShowVScrollBar )
+				//{
+				//	vScrollBar1.Visible = true;
+				//	newSize.Width -= this.vScrollBar1.Size.Width;
+				//	vScrollBar1.Location = new Point( newSize.Width, 0 );
+				//	vScrollBar1.Size = new Size( vScrollBar1.Width, newSize.Height );
+				//}
+				//else
+				//	vScrollBar1.Visible = false;
+				//if (SupportsCreateGraphics)
+				//{
+				try
 				{
-					vScrollBar1.Visible = true;
-					newSize.Width -= this.vScrollBar1.Size.Width;
-					vScrollBar1.Location = new Point( newSize.Width, 0 );
-					vScrollBar1.Size = new Size( vScrollBar1.Width, newSize.Height );
-				}
-				else
-					vScrollBar1.Visible = false;
+					using (Bitmap bitmap = new Bitmap( 10, 10 ))
+					using (Graphics g = this.CreateGraphics( bitmap ))
+					{
+						if (g != null)
+						{
 
-				using ( Graphics g = this.CreateGraphics() )
-				{
-					_masterPane.ReSize( g, new RectangleF( 0, 0, newSize.Width, newSize.Height ) );
-					//g.Dispose();
+							_masterPane.ReSize( g, new RectangleF( 0, 0, newSize.Width, newSize.Height ) );
+							//g.Dispose();
+						}
+					}
 				}
+				catch { }
+				//}
+				//else
+				//{
+				//	if (_masterPane.Rect.Width > 0 && _masterPane.Rect.Height > 0)
+				//	{
+				//		using (var img = new Bitmap((int)_masterPane.Rect.Width, (int)_masterPane.Rect.Height, PixelFormat.Format32bppRgba))
+				//		using (Graphics g = new Graphics(img))
+				//			_masterPane.ReSize(g, new RectangleF(0, 0, newSize.Width, newSize.Height));
+				//	}
+				//}
 				this.Invalidate();
 			}
 		}
+
 		/// <summary>This performs an axis change command on the graphPane.
 		/// </summary>
 		/// <remarks>
@@ -731,24 +646,45 @@ namespace ZedGraph
 		/// </remarks>
 		public virtual void AxisChange()
 		{
-			lock ( this )
+			lock (this)
 			{
-				if ( BeenDisposed || _masterPane == null )
+				if (/*BeenDisposed || */_masterPane == null)
 					return;
 
-				using ( Graphics g = this.CreateGraphics() )
+				using (Bitmap bitmap = new Bitmap( 10, 10 ))
+				using (Graphics g = this.CreateGraphics( bitmap ))
 				{
 					_masterPane.AxisChange( g );
 					//g.Dispose();
 				}
 
-				if ( _isAutoScrollRange )
-					SetScrollRangeFromData();
+				//if (_isAutoScrollRange)
+				//	SetScrollRangeFromData();
 			}
 		}
-	#endregion
 
-	#region Zoom States
+		public void Invalidate()
+		{
+			if (this.Width > 0 && this.Height > 0)
+				Image = _masterPane.GetImage( this.Width, this.Height, Screen.FromRectangle( this.Bounds ).DPI ).ToEto();
+			base.Invalidate();
+		}
+
+		public void Refresh()
+		{
+			//Invalidate(true);
+			Invalidate();
+		}
+
+		//Similar API to Eto.Drawable, creating graphics from the control
+		//For now, create from a bitmap.
+		public Graphics CreateGraphics( Bitmap bitmap )
+		{
+			return Graphics.FromImage( bitmap );
+		}
+		#endregion
+
+		#region Zoom States
 
 		/// <summary>
 		/// Save the current states of the GraphPanes to a separate collection.  Save a single
@@ -767,12 +703,12 @@ namespace ZedGraph
 		{
 			ZoomStateClear();
 
-			if ( _isSynchronizeXAxes || _isSynchronizeYAxes )
+			if (_isSynchronizeXAxes || _isSynchronizeYAxes)
 			{
 				foreach (var pane in _masterPane.PaneList)
 				{
 					ZoomState state = new ZoomState( pane, type );
-					if ( pane == primaryPane )
+					if (pane == primaryPane)
 						_zoomState = state;
 					_zoomStateStack.Add( state );
 				}
@@ -795,15 +731,15 @@ namespace ZedGraph
 		/// are taking place</param>
 		private void ZoomStateRestore( GraphPane primaryPane )
 		{
-			if ( _isSynchronizeXAxes || _isSynchronizeYAxes )
+			if (_isSynchronizeXAxes || _isSynchronizeYAxes)
 			{
 				for (int i = 0; i < _masterPane.PaneList.Count; i++)
 				{
-					if ( i < _zoomStateStack.Count )
-						_zoomStateStack[i].ApplyState(_masterPane.PaneList[i]);
+					if (i < _zoomStateStack.Count)
+						_zoomStateStack[i].ApplyState( _masterPane.PaneList[i] );
 				}
 			}
-			else if ( _zoomState != null )
+			else if (_zoomState != null)
 				_zoomState.ApplyState( primaryPane );
 
 			ZoomStateClear();
@@ -824,15 +760,15 @@ namespace ZedGraph
 		/// </returns>
 		private void ZoomStatePush( GraphPane primaryPane )
 		{
-			if ( _isSynchronizeXAxes || _isSynchronizeYAxes )
+			if (_isSynchronizeXAxes || _isSynchronizeYAxes)
 			{
 				for (int i = 0; i < _masterPane.PaneList.Count; i++)
 				{
-					if ( i < _zoomStateStack.Count )
-						_masterPane.PaneList[i].ZoomStack.Add(_zoomStateStack[i]);
+					if (i < _zoomStateStack.Count)
+						_masterPane.PaneList[i].ZoomStack.Add( _zoomStateStack[i] );
 				}
 			}
-			else if ( _zoomState != null )
+			else if (_zoomState != null)
 				primaryPane.ZoomStack.Add( _zoomState );
 
 			ZoomStateClear();
@@ -856,7 +792,7 @@ namespace ZedGraph
 				pane.ZoomStack.Clear();
 		}
 
-	#endregion
+		#endregion
 
 	}
 }

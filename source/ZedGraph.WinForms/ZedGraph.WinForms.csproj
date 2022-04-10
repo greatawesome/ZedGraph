@@ -4,8 +4,8 @@
     <RootNamespace>ZedGraph</RootNamespace>
     <AssemblyName>ZedGraph.WinForms</AssemblyName>
 
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\zedgraphkey.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>zedgraphkey.snk</AssemblyOriginatorKeyFile>
 
     <Product>ZedGraph Library</Product>
     <Company>John Champion, et al.</Company>
@@ -35,10 +35,6 @@
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="3.6.5" />
   </ItemGroup>
 
   <ItemGroup>

@@ -258,10 +258,17 @@ namespace ZedGraph
       /// </summary>
       public const float Size = 12.0F;
 
-		}
-	#endregion
+			/// <summary>
+			/// The default font family for the <see cref="FontSpec"/> <see cref="Title" /> text
+			/// font specification.
+			/// </summary>
+			public static string FontFamily = "Arial";
 
-	#region Properties
+
+		}
+		#endregion
+
+		#region Properties
 		/// <summary>
 		/// The color of the font characters for this <see cref="FontSpec"/>.
 		/// Note that the border and background
@@ -269,7 +276,7 @@ namespace ZedGraph
 		/// <see cref="ZedGraph.Fill.Color"/> properties, respectively.
 		/// </summary>
 		/// <value>A system <see cref="System.Drawing.Color"/> reference.</value>
-    [DefaultValue(typeof(Color), Default.FillColorString)]
+		[DefaultValue(typeof(Color), Default.FillColorString)]
     [Description("Color of the font")]
 		public Color FontColor
 		{
@@ -511,7 +518,7 @@ namespace ZedGraph
 		/// Construct a <see cref="FontSpec"/> object with default properties.
 		/// </summary>
 		public FontSpec()
-      : this(System.Windows.Forms.Control.DefaultFont.FontFamily.Name, Default.Size, Color.Black, false, false, false)
+      : this(Default.FontFamily, Default.Size, Color.Black, false, false, false)
 		{
 		}
 

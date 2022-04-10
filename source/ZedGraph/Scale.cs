@@ -564,7 +564,7 @@ namespace ZedGraph
 			/// font specification <see cref="FontSpec"/>
 			/// (<see cref="ZedGraph.FontSpec.Family"/> property).
 			/// </summary>
-      public static string FontFamily = System.Windows.Forms.Control.DefaultFont.FontFamily.Name;
+      public static string FontFamily = "Arial";
 			/// <summary>
 			/// The default font size for the <see cref="Axis"/> scale values
 			/// font specification <see cref="FontSpec"/>
@@ -1367,7 +1367,6 @@ namespace ZedGraph
 		/// <seealso cref="FontSpec"/>
 		// /// <seealso cref="NumDec"/>
     [Description("Custom format for scale labels (used when " + nameof(FormatAuto) + " is false).")]
-    [Editor(typeof(FormatSelector), typeof(UITypeEditor))]
 		public string Format
 		{
 			get { return _format; }
